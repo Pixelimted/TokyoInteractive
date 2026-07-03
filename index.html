@@ -3,20 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unknown.gg | Dashboard</title>
+<title>Unknown Bot Dashboard</title>
 <link rel="icon" type="image/png" href="icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #050507;
-    --card: #0c0c0e;
-    --card-hover: #121216;
-    --border: #1c1c22;
+    --bg: #0f1115;
+    --card: #181b22;
+    --card-hover: #1f232b;
+    --border: #2d323f;
     --text: #ffffff;
-    --text-muted: #71717a;
-    --accent: #bc77ff; /* Sleek Honeypot-inspired purple tint */
-    --accent-glow: rgba(188, 119, 255, 0.15);
-    --red: #ff4a6b;
+    --text-muted: #94a3b8;
+    --accent: #7c3aed;
+    --red: #ef4444;
     --green: #22c55e;
   }
 
@@ -24,191 +23,178 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
 
   a { color: inherit; text-decoration: none; }
   .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
 
-  /* Background Aesthetics */
-  .blur-glow {
-    position: fixed; top: -15%; left: 50%; transform: translateX(-50%);
-    width: 500px; height: 500px; z-index: -1;
-    background: radial-gradient(circle, var(--accent-glow) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none;
-  }
-
-  /* Navbar styling */
+  /* Navbar */
   nav {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px; border-bottom: 1px solid var(--border);
-    background: rgba(5, 5, 7, 0.8); backdrop-filter: blur(12px);
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    background: #14171e;
     position: sticky; top: 0; z-index: 100;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
-  .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+  .brand img { width: 32px; height: 32px; border-radius: 6px; }
   
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
 
   /* Buttons */
   .btn {
-    padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    padding: 10px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
-    transition: all 0.2s ease; font-family: inherit;
+    transition: background 0.15s, transform 0.1s; font-family: inherit;
   }
+  .btn:active { transform: scale(0.98); }
   .btn-login { background: #5865F2; color: #fff; }
-  .btn-login:hover { background: #4752C4; transform: translateY(-1px); }
-  .btn-action { background: var(--text); color: var(--bg); font-weight: 700; }
-  .btn-action:hover { transform: translateY(-1px); opacity: 0.95; }
+  .btn-login:hover { background: #4752C4; }
+  .btn-action { background: var(--text); color: var(--bg); }
+  .btn-action:hover { opacity: 0.9; }
   .btn-nav { background: var(--card); border: 1px solid var(--border); color: var(--text); }
-  .btn-nav:hover { background: var(--card-hover); border-color: #3f3f46; }
+  .btn-nav:hover { background: var(--card-hover); }
 
-  /* Dynamic Route Router views */
+  /* Views Switching */
   #landing-view { display: block; }
   #dashboard-view { display: none; }
 
-  /* Clean Aesthetic Landing Page */
-  .hero { max-width: 680px; margin: 160px auto 0; text-align: center; padding: 0 24px; }
-  .hero h1 { font-size: 3.8rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1.05; margin-bottom: 18px; }
-  .hero h1 span { background: linear-gradient(90deg, #ffffff, var(--accent)); -webkit-background-clip: text; color: transparent; }
-  .hero p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; max-width: 480px; margin: 0 auto 32px; font-weight: 500; }
+  /* Landing Screen */
+  .hero { max-width: 600px; margin: 150px auto 0; text-align: center; padding: 0 20px; }
+  .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+  .hero p { color: var(--text-muted); font-size: 1rem; line-height: 1.5; max-width: 460px; margin: 0 auto 24px; }
 
-  /* Dashboard Panel Side Grid */
+  /* Layout Split */
   .layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 65px); }
   
-  sidebar { background: #070709; border-right: 1px solid var(--border); padding: 24px 12px; display: flex; flex-direction: column; gap: 4px; }
+  sidebar { background: #14171e; border-right: 1px solid var(--border); padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; }
   .tab-btn {
-    padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 500;
-    color: var(--text-muted); cursor: pointer; transition: all 0.15s ease;
+    padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; font-weight: 500;
+    color: var(--text-muted); cursor: pointer; transition: all 0.1s;
   }
   .tab-btn:hover { color: var(--text); background: var(--card); }
   .tab-btn.active { color: var(--text); background: var(--card); font-weight: 600; border: 1px solid var(--border); }
 
-  main { padding: 40px; width: 100%; max-width: 1100px; margin: 0 auto; }
+  main { padding: 32px; width: 100%; max-width: 1000px; margin: 0 auto; }
   .page { display: none; }
   .page.active { display: block; }
-  .page-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
+  .page-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
   .page-desc { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
 
-  /* UI Cards System */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
-  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: border-color 0.2s; }
-  .stat-card:hover { border-color: #27272a; }
-  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
-  .stat-num { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+  /* Grid Cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+  .stat-num { font-size: 1.75rem; font-weight: 700; }
 
-  /* Server Select Rows */
-  .server-box { display: flex; flex-direction: column; gap: 10px; }
+  /* Servers List */
+  .server-box { display: flex; flex-direction: column; gap: 12px; }
   .server-card {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px;
   }
   .server-left { display: flex; align-items: center; gap: 12px; }
-  .server-icon { width: 38px; height: 38px; background: var(--border); border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+  .server-icon { width: 36px; height: 36px; background: var(--border); border-radius: 6px; display: grid; place-items: center; font-weight: 700; color: var(--text); }
 
   /* Console Layout */
-  .console { background: #030304; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .console-top { background: var(--card); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
-  .console-screen { padding: 16px; height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; }
+  .console { background: #0b0c10; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .console-top { background: var(--card); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); }
+  .console-screen { padding: 16px; height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; }
   
   .log { display: flex; gap: 8px; line-height: 1.4; }
-  .log-time { color: #3f3f46; }
-  .log-user { color: var(--accent); font-weight: 600; }
-  .log-msg { color: #e4e4e7; }
+  .log-time { color: #4b5563; }
+  .log-user { color: #a78bfa; font-weight: 600; }
+  .log-msg { color: #e2e8f0; }
   .log-error { color: var(--red); }
   .log-success { color: var(--green); }
 
-  .console-bar { display: grid; grid-template-columns: 200px 1fr; border-top: 1px solid var(--border); background: #060608; }
-  .console-bar select { background: transparent; color: var(--text); border: none; padding: 0 12px; border-right: 1px solid var(--border); outline: none; font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: 500; }
+  .console-bar { display: grid; grid-template-columns: 200px 1fr; border-top: 1px solid var(--border); background: #14171e; }
+  .console-bar select { background: transparent; color: var(--text); border: none; padding: 0 12px; border-right: 1px solid var(--border); outline: none; font-family: inherit; font-size: 0.85rem; cursor: pointer; }
   .console-bar input { background: transparent; border: none; color: var(--text); padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; outline: none; width: 100%; }
 
-  /* Discord Authenticated Badge */
+  /* Profile Layout */
   .profile-badge { display: flex; align-items: center; gap: 10px; }
   .profile-badge img { width: 28px; height: 28px; border-radius: 50%; }
   .profile-name { font-size: 0.85rem; font-weight: 600; }
-
 </style>
 </head>
 <body>
 
-<div class="blur-glow"></div>
-
 <nav>
   <div class="brand">
-    <img src="icon.png" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22><rect width=%2232%22 height=%2232%22 fill=%22%230c0c0e%22/><circle cx=%2216%22 cy=%2216%22 r=%226%22 fill=%22%23bc77ff%22/></svg>'">
-    Unknown
+    <img src="icon.png" alt="Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22><rect width=%2232%22 height=%2232%22 fill=%22%23181b22%22/></svg>'">
+    Unknown Bot
   </div>
   <div style="display: flex; align-items: center; gap: 16px;">
-    <div class="status"><span class="status-dot"></span>System online</div>
+    <div class="status"><span class="status-dot"></span>Bot Online</div>
     <div id="login-container">
-      <button class="btn btn-login" onclick="simulateLogin()">Login with Discord</button>
+      <button class="btn btn-login" onclick="redirectToDiscord()">Login with Discord</button>
     </div>
   </div>
 </nav>
 
 <div id="landing-view">
   <div class="hero">
-    <h1>Control everything <br><span>from your browser.</span></h1>
-    <p>Run commands straight to live game servers, monitor active records, and manage moderation parameters instantly.</p>
-    <button class="btn btn-action" onclick="simulateLogin()">Launch Dashboard</button>
+    <h1>Manage your game right from the web.</h1>
+    <p>Run console commands straight into live Roblox servers, view active user counts, and look up mod records instantly.</p>
+    <button class="btn btn-action" onclick="redirectToDiscord()">Open Web Panel</button>
   </div>
 </div>
 
 <div id="dashboard-view">
   <div class="layout">
     <sidebar>
-      <div class="tab-btn active" data-pane="stats" onclick="switchPane(this)">Live Stats</div>
-      <div class="tab-btn" data-pane="guilds" onclick="switchPane(this)">Servers</div>
+      <div class="tab-btn active" data-pane="stats" onclick="switchPane(this)">Stats Overview</div>
+      <div class="tab-btn" data-pane="guilds" onclick="switchPane(this)">Discord Servers</div>
       <div class="tab-btn" data-pane="console" onclick="switchPane(this)">Roblox Console</div>
     </sidebar>
 
     <main>
       <div id="pane-stats" class="page active">
-        <div class="page-title">Live Metrics</div>
-        <div class="page-desc">Overview of global actions across all active clusters.</div>
+        <div class="page-title">Live Numbers</div>
+        <div class="page-desc">Current mod tracking across all connected game servers.</div>
         
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-label">Total Cases Logged</div>
+            <div class="stat-label">Total Bans & Warns</div>
             <div class="stat-num" id="stat-cases">0</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Active Shards</div>
+            <div class="stat-label">Online Roblox Servers</div>
             <div class="stat-num" id="stat-servers">0</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Total Sessions Active</div>
+            <div class="stat-label">Online Players</div>
             <div class="stat-num" id="stat-players">0</div>
           </div>
         </div>
       </div>
 
       <div id="pane-guilds" class="page">
-        <div class="page-title">Authorized Domains</div>
-        <div class="page-desc">Select a specific environment to manage localized module settings.</div>
+        <div class="page-title">Your Discord Servers</div>
+        <div class="page-desc">Select a server to adjust settings and roles.</div>
         <div class="server-box" id="guilds-list"></div>
       </div>
 
       <div id="pane-console" class="page">
-        <div class="page-title">Remote Bridge Execution</div>
-        <div class="page-desc">Push explicit strings directly to active instances tracking game heartbeats.</div>
+        <div class="page-title">Roblox Console Bridge</div>
+        <div class="page-desc">Send commands directly to active Roblox servers running your script.</div>
         
         <div class="console mono">
           <div class="console-top">
-            <span>WebSocket Live Relay Session</span>
+            <span>Live Server Command Line</span>
           </div>
           <div class="console-screen" id="console-logs">
-            <div class="log"><span class="log-time">[00:00:00]</span> <span class="log-msg">Bridge connected. Terminal ready for processing instructions...</span></div>
+            <div class="log"><span class="log-time">[00:00:00]</span> <span class="log-msg">Bridge active. Awaiting panel commands...</span></div>
           </div>
           <form id="console-form" onsubmit="sendConsoleCommand(event)">
             <div class="console-bar">
               <select id="target-server">
-                <option value="all">Global Broadcast (All Shards)</option>
+                <option value="all">All Roblox Servers</option>
               </select>
-              <input type="text" id="console-input" placeholder="Enter Cmdr arguments (ex: /announce Event scheduled) or type 'help'..." autocomplete="off">
+              <input type="text" id="console-input" placeholder="Type a command (ex: /announce Event starting!) or 'help'..." autocomplete="off">
             </div>
           </form>
         </div>
@@ -218,32 +204,58 @@
 </div>
 
 <script>
-  // Point this directly to your live Railway app URL string
+  // Point this to your live Railway app backend URL
   const BOT_API_URL = "https://unknown-bot-production.up.railway.app";
-  
-  let appState = { loggedIn: false, servers: [] };
+  const CLIENT_ID = "1519215093760397413";
 
-  function simulateLogin() {
-    appState.loggedIn = true;
-    appState.servers = [
-      { name: "Unknown RNG Main Base", users: 15420 },
-      { name: "Staff Testing Shard", users: 34 }
-    ];
+  // Handles Discord login redirection using your explicit Client ID
+  function redirectToDiscord() {
+    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+    window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=identify+guilds`;
+  }
 
+  // Checks the URL hash to see if the user just returned from a successful Discord login
+  function checkAuthResponse() {
+    const fragments = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = fragments.get("access_token");
+
+    if (accessToken) {
+      // Clear the ugly token data out of the URL bar
+      window.history.replaceState({}, document.title, window.location.pathname);
+      loadDashboardWithAuth(accessToken);
+    }
+  }
+
+  async function loadDashboardWithAuth(token) {
     document.getElementById('landing-view').style.display = 'none';
     document.getElementById('dashboard-view').style.display = 'block';
 
+    // Update login button to show profile state
     document.getElementById('login-container').innerHTML = `
       <div class="profile-badge">
-        <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
-        <span class="profile-name">Admin Session</span>
+        <span class="profile-name">Authenticated Staff</span>
         <button class="btn btn-nav" style="padding: 6px 12px; font-size:0.8rem;" onclick="window.location.reload()">Log out</button>
       </div>
     `;
 
-    fetchDataMetrics();
-    setInterval(fetchDataMetrics, 15000);
-    renderAuthorizedServers();
+    // Fetch live user data and server names straight from Discord's API using the token
+    try {
+      const guildRes = await fetch("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (guildRes.ok) {
+        const guilds = await guildRes.json();
+        // Filter servers down to ones where the user has management permissions (0x20 is MANAGE_GUILD)
+        const adminGuilds = guilds.filter(g => (g.permissions & 0x20) === 0x20);
+        renderServers(adminGuilds);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user servers from Discord:", err);
+    }
+
+    // Run stats collection loops
+    fetchStats();
+    setInterval(fetchStats, 10000);
   }
 
   function switchPane(button) {
@@ -255,41 +267,38 @@
     document.getElementById(`pane-${paneId}`).classList.add('active');
   }
 
-  function renderAuthorizedServers() {
+  function renderServers(guilds) {
     const box = document.getElementById('guilds-list');
-    box.innerHTML = appState.servers.map(s => `
+    if (guilds.length === 0) {
+      box.innerHTML = `<div style="color: var(--text-muted); font-size: 0.9rem;">No servers found where you have staff permissions.</div>`;
+      return;
+    }
+    
+    box.innerHTML = guilds.map(g => `
       <div class="server-card">
         <div class="server-left">
-          <div class="server-icon">${s.name.charAt(0)}</div>
+          <div class="server-icon">${g.name.charAt(0)}</div>
           <div>
-            <div style="font-weight:600; font-size:0.95rem; margin-bottom:2px;">${s.name}</div>
-            <div style="color: var(--text-muted); font-size:0.8rem;">${s.users.toLocaleString()} members</div>
+            <div style="font-weight:600; font-size:0.95rem; margin-bottom:2px;">${g.name}</div>
+            <div style="color: var(--text-muted); font-size:0.8rem;">ID: ${g.id}</div>
           </div>
         </div>
-        <button class="btn btn-nav">Configure</button>
+        <button class="btn btn-nav">Manage Settings</button>
       </div>
     `).join('');
   }
 
-  async function fetchDataMetrics() {
+  async function fetchStats() {
     try {
       const res = await fetch(`${BOT_API_URL}/stats`, { cache: "no-store" });
       if (!res.ok) throw new Error();
       const data = await res.json();
 
-      document.getElementById('stat-cases').innerText = data.totalCases.toLocaleString();
-      document.getElementById('stat-servers').innerText = data.liveServers.toLocaleString();
-      document.getElementById('stat-players').innerText = data.totalPlayers.toLocaleString();
-
-      // Dynamically load the actual live server JobIDs straight into the console drop-down selection module
-      if (data.liveServers > 0) {
-        // Automatically populating live dropdown logic details once dynamic endpoints provide responses
-      }
-    } catch {
-      // Graceful clear baseline default data fallbacks if connection pipeline isn't handling requests instantly
-      document.getElementById('stat-cases').innerText = "1,420";
-      document.getElementById('stat-servers').innerText = "3";
-      document.getElementById('stat-players').innerText = "24";
+      document.getElementById('stat-cases').innerText = (data.totalCases || 0).toLocaleString();
+      document.getElementById('stat-servers').innerText = (data.liveServers || 0).toLocaleString();
+      document.getElementById('stat-players').innerText = (data.totalPlayers || 0).toLocaleString();
+    } catch (err) {
+      console.error("Web console failed to connect to your live backend server endpoint:", err);
     }
   }
 
@@ -305,13 +314,15 @@
 
     if (!command) return;
 
+    // Output live log directly to panel screen instantly
     logs.innerHTML += `
       <div class="log">
         <span class="log-time">[${time}]</span>
-        <span class="log-user">Dispatched to [${serverName}]:</span>
+        <span class="log-user">Panel User to [${serverName}]:</span>
         <span class="log-msg">"${command}"</span>
       </div>
     `;
+    logs.scrollTop = logs.scrollHeight;
 
     try {
       const response = await fetch(`${BOT_API_URL}/api/run-command`, {
@@ -322,27 +333,20 @@
       const resultData = await response.json();
 
       if (response.ok) {
-        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-success">Success: ${resultData.message}</span></div>`;
+        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-success">Backend: ${resultData.message}</span></div>`;
       } else {
-        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Error: ${resultData.error}</span></div>`;
+        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Backend Error: ${resultData.error}</span></div>`;
       }
     } catch (err) {
-      // Offline visual terminal presentation tracking falls back securely if route parameters aren't running locally yet
-      setTimeout(() => {
-        if(command.toLowerCase() === 'help') {
-          logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-success">Directives available: /announce [string], /kick [username], /shutdown</span></div>`;
-        } else if (command.startsWith('/')) {
-          logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-success">Instruction array safely enqueued into the server memory stream.</span></div>`;
-        } else {
-          logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Rejected: Custom commands string configurations must begin explicitly with a "/" prefix.</span></div>`;
-        }
-        logs.scrollTop = logs.scrollHeight;
-      }, 200);
+      logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Network Error: Failed to hit your live backend api.</span></div>`;
     }
 
     input.value = '';
     logs.scrollTop = logs.scrollHeight;
   }
+
+  // Run initial URL hash checker on load execution
+  checkAuthResponse();
 </script>
 
 </body>
