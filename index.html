@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unknown — Moderation for Unknown RNG</title>
 <meta name="description" content="The moderation bot built for Unknown RNG. Bans, mutes, warnings, case logs, and in-game commands, all from Discord.">
+<meta property="og:title" content="Unknown — Moderation for Unknown RNG">
+<meta property="og:description" content="Bans, mutes, warnings, case logs, and in-game commands, all from Discord.">
+<meta property="og:image" content="banner.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#00d9ff">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -249,6 +256,50 @@
   }
   footer a:hover{ color:var(--text-dim); }
   .footer-links{ display:flex; gap:24px; }
+
+  /* brand icon image */
+  .brand-mark-img{ width:30px; height:30px; border-radius:8px; display:block; object-fit:cover; }
+  .verified-badge{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:15px; height:15px; border-radius:50%; background:var(--cyan);
+    color:#04040a; font-size:9px; margin-left:2px;
+  }
+
+  /* hero brand row above heading */
+  .hero-brand-row{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .hero-brand-row img{ width:44px; height:44px; border-radius:11px; box-shadow:0 6px 20px rgba(0,217,255,0.2); }
+  .hero-brand-row .name{ font-family:'Space Grotesk'; font-weight:700; font-size:1.05rem; display:flex; align-items:center; gap:6px; }
+  .hero-brand-row .sub{ font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono'; }
+
+  /* github / self-host section */
+  .repo-panel{
+    display:grid; grid-template-columns:1fr auto; gap:32px; align-items:center;
+    background:var(--panel); border:1px solid var(--border); border-radius:16px;
+    padding:40px 44px;
+  }
+  .repo-panel h3{ font-size:1.3rem; margin-bottom:10px; letter-spacing:-0.01em; }
+  .repo-panel p{ color:var(--text-dim); font-size:0.92rem; line-height:1.6; max-width:520px; }
+  .repo-stack{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .repo-pill{
+    font-family:'JetBrains Mono'; font-size:0.72rem; color:var(--text-dim);
+    border:1px solid var(--border); border-radius:20px; padding:5px 12px;
+    background:var(--panel-2);
+  }
+  .btn-github{
+    background:#161b22; border:1px solid #30363d; color:#fff;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-github:hover{ border-color:#8b949e; transform:translateY(-2px); }
+  @media (max-width: 860px){ .repo-panel{ grid-template-columns:1fr; text-align:left; } }
+
+  /* status pill in nav */
+  .status-pill{
+    display:flex; align-items:center; gap:6px; font-size:0.75rem;
+    color:var(--text-faint); font-family:'JetBrains Mono';
+    padding:6px 10px; border:1px solid var(--border); border-radius:20px;
+  }
+  .status-pill .pulse{ margin:0; }
+  @media (max-width: 860px){ .status-pill{ display:none; } }
 </style>
 </head>
 <body>
@@ -258,24 +309,35 @@
 
 <nav>
   <div class="brand">
-    <div class="brand-mark">U</div>
+    <img src="icon.png" alt="Unknown bot icon" class="brand-mark-img">
     Unknown
   </div>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#commands">Commands</a>
     <a href="#ingame">In-Game</a>
+    <a href="https://github.com/YOUR-GITHUB/unknown-bot" target="_blank" rel="noopener">GitHub</a>
   </div>
-  <a href="#" class="nav-cta">Add to Discord</a>
+  <div style="display:flex; align-items:center; gap:14px;">
+    <div class="status-pill" id="nav-status"><span class="pulse" id="nav-pulse"></span><span id="nav-status-text">Checking status…</span></div>
+    <a href="#" class="nav-cta" id="invite-btn-nav">Add to Discord</a>
+  </div>
 </nav>
 
 <section class="hero">
   <div>
+    <div class="hero-brand-row">
+      <img src="icon.png" alt="Unknown bot icon">
+      <div>
+        <div class="name">Unknown <span class="verified-badge">✓</span></div>
+        <div class="sub">by Unknown RNG · Discord App</div>
+      </div>
+    </div>
     <div class="eyebrow"><span class="dot"></span> Built for Unknown RNG</div>
     <h1 class="display">Moderation that reaches <span>into the game.</span></h1>
     <p>Unknown handles bans, mutes, and warnings like any good mod bot &mdash; then goes further, running live commands directly inside your Roblox servers from a single Discord command.</p>
     <div class="hero-ctas">
-      <a href="#" class="btn btn-primary">Add to Discord</a>
+      <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=1099780064310&scope=bot%20applications.commands" class="btn btn-primary" target="_blank" rel="noopener">Add to Discord</a>
       <a href="#commands" class="btn btn-secondary">View Commands</a>
     </div>
     <div class="hero-stats">
@@ -439,10 +501,31 @@
   </div>
 </section>
 
+<section id="opensource">
+  <div class="repo-panel">
+    <div>
+      <div class="section-eyebrow">Open Source</div>
+      <h3 class="display">Self-host it yourself.</h3>
+      <p>Unknown's full source is on GitHub &mdash; Node.js, discord.js v14, and PostgreSQL, deployed on Railway. Clone it, drop in your own bot token and database URL, and it's running in minutes.</p>
+      <div class="repo-stack">
+        <span class="repo-pill">Node.js</span>
+        <span class="repo-pill">discord.js v14</span>
+        <span class="repo-pill">PostgreSQL</span>
+        <span class="repo-pill">Railway</span>
+        <span class="repo-pill">MIT License</span>
+      </div>
+    </div>
+    <a href="https://github.com/YOUR-GITHUB/unknown-bot" target="_blank" rel="noopener" class="btn btn-github">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+</section>
+
 <div class="final-cta">
   <h2 class="display">Set it up in under a minute.</h2>
   <p>Add Unknown, set your mod role and log channels, and you're covered.</p>
-  <a href="#" class="btn btn-primary">Add to Discord</a>
+  <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=1099780064310&scope=bot%20applications.commands" class="btn btn-primary" target="_blank" rel="noopener">Add to Discord</a>
 </div>
 
 <footer>
@@ -450,11 +533,17 @@
   <div class="footer-links">
     <a href="#commands">Commands</a>
     <a href="#ingame">In-Game</a>
+    <a href="https://github.com/YOUR-GITHUB/unknown-bot" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
 
 <script>
-  const logs = [
+  // ── Mod-log terminal feed ──────────────────────────────────────────────────
+  // Tries your bot's real recent-activity endpoint first. Falls back to demo
+  // data (clearly labeled) if that endpoint isn't set up yet.
+  const LOGS_API = "https://unknown-bot-production.up.railway.app/recent-logs"; // optional endpoint on your bot
+
+  const demoLogs = [
     { tag: "BAN",    cls: "tag-ban",    text: '<b>ysl_zenokei</b> banned for exploiting' },
     { tag: "WARN",   cls: "tag-warn",   text: '<b>quartz_dev</b> warned — spam in #trading' },
     { tag: "MUTE",   cls: "tag-mute",   text: '<b>foggyrbx</b> muted for 1h' },
@@ -467,49 +556,115 @@
     { tag: "UNBAN",  cls: "tag-mute",   text: '<b>ghostwire</b> appeal accepted' },
   ];
 
-  function timeNow(){
-    const d = new Date();
+  function timeNow(t){
+    const d = t ? new Date(t) : new Date();
     return d.toLocaleTimeString('en-US', { hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
   }
 
   const body = document.getElementById('log-body');
-  let i = 0;
+  const terminalTitle = document.querySelector('.terminal-title');
 
-  function pushLog(){
-    const entry = logs[i % logs.length];
+  function renderLine(entry, timestamp){
     const line = document.createElement('div');
     line.className = 'log-line';
-    line.innerHTML = `<span class="log-time">${timeNow()}</span><span class="tag ${entry.cls}">${entry.tag}</span><span class="log-text">${entry.text}</span>`;
+    line.innerHTML = `<span class="log-time">${timeNow(timestamp)}</span><span class="tag ${entry.cls}">${entry.tag}</span><span class="log-text">${entry.text}</span>`;
     body.appendChild(line);
     if (body.children.length > 12) body.removeChild(body.firstChild);
     body.scrollTop = body.scrollHeight;
-    i++;
   }
 
-  for (let n = 0; n < 8; n++) pushLog();
-  setInterval(pushLog, 2200);
+  let demoIndex = 0;
+  function pushDemoLog(){
+    renderLine(demoLogs[demoIndex % demoLogs.length]);
+    demoIndex++;
+  }
+
+  const typeToTag = {
+    ban: { tag: "BAN", cls: "tag-ban" },
+    unban: { tag: "UNBAN", cls: "tag-mute" },
+    kick: { tag: "KICK", cls: "tag-kick" },
+    mute: { tag: "MUTE", cls: "tag-mute" },
+    unmute: { tag: "UNMUTE", cls: "tag-mute" },
+    warn: { tag: "WARN", cls: "tag-warn" },
+    ingame: { tag: "INGAME", cls: "tag-ingame" },
+  };
+
+  let usingRealLogs = false;
+  let lastLogId = null;
+
+  async function pollRealLogs(){
+    try {
+      const res = await fetch(LOGS_API, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json(); // expects: [{ id, type, text, timestamp }, ...] newest last
+      if (!Array.isArray(data) || data.length === 0) throw new Error("empty");
+
+      usingRealLogs = true;
+      terminalTitle.textContent = "#mod-log";
+
+      const newEntries = lastLogId ? data.filter(e => e.id > lastLogId) : data.slice(-8);
+      newEntries.forEach(e => {
+        const meta = typeToTag[e.type] || { tag: e.type?.toUpperCase() || "LOG", cls: "tag-ingame" };
+        renderLine({ tag: meta.tag, cls: meta.cls, text: e.text }, e.timestamp);
+        lastLogId = e.id;
+      });
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  async function initLogFeed(){
+    const gotReal = await pollRealLogs();
+    if (!gotReal) {
+      terminalTitle.textContent = "#mod-log (demo data)";
+      for (let n = 0; n < 8; n++) pushDemoLog();
+    }
+  }
+
+  initLogFeed();
+
+  setInterval(async () => {
+    if (usingRealLogs) {
+      await pollRealLogs();
+    } else {
+      // keep retrying the real endpoint quietly; fall back to demo ticks meanwhile
+      const gotReal = await pollRealLogs();
+      if (!gotReal) pushDemoLog();
+    }
+  }, 3000);
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduceMotion) {
     document.querySelectorAll('.log-line').forEach(el => el.style.animation = 'none');
   }
 
+
   // ── Live stats ──────────────────────────────────────────────────────────────
-  // Replace this with your Unknown bot's actual Railway URL.
-  const STATS_API = "https://unknown-bot-production.up.railway.app/stats";
+  // CONFIG — replace these two values with your actual deployment details.
+  const STATS_API = "unknown-bot-production.up.railway.app"; // your Railway service URL + /stats
+  const DISCORD_CLIENT_ID = "1519215093760397413"; // Discord Developer Portal → OAuth2 → Client ID
+
+  document.querySelectorAll('#invite-btn-nav').forEach(el => {
+    el.href = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=1099780064310&scope=bot%20applications.commands`;
+  });
 
   function fmt(n){
     if (n === undefined || n === null) return "-";
     return n.toLocaleString();
   }
 
+  let backoff = 30000; // ms, grows on repeated failure, resets on success
+
   async function loadStats(){
     const badge = document.getElementById('live-badge');
     const status = document.getElementById('live-status');
+    const navStatus = document.getElementById('nav-status-text');
+    const navPulse = document.getElementById('nav-pulse');
 
     try {
       const res = await fetch(STATS_API, { cache: "no-store" });
-      if (!res.ok) throw new Error("bad response");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
       document.getElementById('stat-cases').textContent   = fmt(data.totalCases);
@@ -525,15 +680,23 @@
 
       badge.classList.add('live');
       status.textContent = "Live — updated just now";
+      navStatus.textContent = "All systems operational";
+      navPulse.style.background = "var(--green)";
+      navPulse.style.boxShadow = "0 0 8px var(--green)";
+      backoff = 30000; // reset on success
     } catch (err) {
       badge.classList.remove('live');
-      status.textContent = "Stats unavailable right now";
+      status.textContent = "Stats unavailable — retrying…";
+      navStatus.textContent = "Bot unreachable";
+      navPulse.style.background = "var(--red)";
+      navPulse.style.boxShadow = "0 0 8px var(--red)";
       console.error("Failed to load stats:", err);
+      backoff = Math.min(backoff * 1.5, 120000); // exponential backoff, capped at 2 min
     }
   }
 
   loadStats();
-  setInterval(loadStats, 30000);
+  setInterval(() => loadStats(), 30000);
 </script>
 
 </body>
