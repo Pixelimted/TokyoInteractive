@@ -3,350 +3,511 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unknown.gg</title>
-<link rel="icon" type="image/png" href="icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<title>Unknown — Moderation for Unknown RNG</title>
+<meta name="description" content="The moderation bot built for Unknown RNG. Bans, mutes, warnings, case logs, and in-game commands, all from Discord.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1115;
-    --card: #181b22;
-    --card-hover: #1f232b;
-    --border: #2d323f;
-    --text: #ffffff;
-    --text-muted: #94a3b8;
-    --accent: #7c3aed;
-    --red: #ef4444;
-    --green: #22c55e;
+  :root{
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --panel-2: #171721;
+    --border: #23232f;
+    --text: #eaeaf2;
+    --text-dim: #9797a8;
+    --text-faint: #5c5c6e;
+    --cyan: #00d9ff;
+    --violet: #7b5fff;
+    --red: #ff4d5e;
+    --amber: #ffb84d;
+    --green: #4dffa0;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .display{ font-family:'Space Grotesk', sans-serif; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--cyan); color:#000; }
+  img{ max-width:100%; }
+
+  .bg-grid{
+    position:fixed; inset:0; z-index:-2;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .bg-glow{
+    position:fixed; top:-20%; left:50%; transform:translateX(-50%);
+    width:900px; height:900px; z-index:-1;
+    background: radial-gradient(circle, rgba(0,217,255,0.10) 0%, rgba(123,95,255,0.06) 40%, transparent 70%);
+    pointer-events:none;
   }
 
-  a { color: inherit; text-decoration: none; }
-  .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-
-  /* Navbar */
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 24px; border-bottom: 1px solid var(--border);
-    background: #14171e;
-    position: sticky; top: 0; z-index: 100;
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px clamp(20px, 5vw, 48px);
+    background:rgba(10,10,15,0.75);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
-  .brand img { width: 32px; height: 32px; border-radius: 6px; }
-  
-  .status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
-
-  /* Buttons */
-  .btn {
-    padding: 10px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
-    display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
-    transition: background 0.15s, transform 0.1s; font-family: inherit;
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.05rem; letter-spacing:-0.01em;}
+  .brand-mark{
+    width:30px; height:30px; border-radius:8px; flex-shrink:0;
+    background:linear-gradient(135deg, var(--cyan), var(--violet));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk'; font-weight:700; font-size:0.85rem; color:#04040a;
   }
-  .btn:active { transform: scale(0.98); }
-  .btn-login { background: #5865F2; color: #fff; }
-  .btn-login:hover { background: #4752C4; }
-  .btn-action { background: var(--text); color: var(--bg); }
-  .btn-action:hover { opacity: 0.9; }
-  .btn-nav { background: var(--card); border: 1px solid var(--border); color: var(--text); }
-  .btn-nav:hover { background: var(--card-hover); }
-
-  /* Views Switching */
-  #landing-view { display: block; }
-  #dashboard-view { display: none; }
-
-  /* Landing Screen */
-  .hero { max-width: 600px; margin: 150px auto 0; text-align: center; padding: 0 20px; }
-  .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
-  .hero p { color: var(--text-muted); font-size: 1rem; line-height: 1.5; max-width: 460px; margin: 0 auto 24px; }
-
-  /* Layout Split */
-  .layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 65px); }
-  
-  sidebar { background: #14171e; border-right: 1px solid var(--border); padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; }
-  .tab-btn {
-    padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; font-weight: 500;
-    color: var(--text-muted); cursor: pointer; transition: all 0.1s;
+  .nav-links{ display:flex; gap:36px; font-size:0.9rem; color:var(--text-dim); }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{
+    padding:9px 18px; border-radius:8px;
+    background:var(--text); color:#0a0a0f;
+    font-size:0.85rem; font-weight:600; white-space:nowrap;
+    transition:opacity .15s ease;
   }
-  .tab-btn:hover { color: var(--text); background: var(--card); }
-  .tab-btn.active { color: var(--text); background: var(--card); font-weight: 600; border: 1px solid var(--border); }
+  .nav-cta:hover{ opacity:0.85; }
 
-  main { padding: 32px; width: 100%; max-width: 1000px; margin: 0 auto; }
-  .page { display: none; }
-  .page.active { display: block; }
-  .page-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-  .page-desc { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+  @media (max-width: 860px){ .nav-links{ display:none; } }
+  @media (max-width: 480px){ .nav-cta{ padding:8px 14px; font-size:0.8rem; } }
 
-  /* Grid Cards */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
-  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
-  .stat-num { font-size: 1.75rem; font-weight: 700; }
-
-  /* Servers List */
-  .server-box { display: flex; flex-direction: column; gap: 12px; }
-  .server-card {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  .hero{
+    padding:clamp(60px, 10vw, 120px) clamp(20px, 5vw, 48px) 90px;
+    max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:clamp(32px, 6vw, 64px);
+    align-items:center;
   }
-  .server-left { display: flex; align-items: center; gap: 12px; }
-  .server-icon { width: 36px; height: 36px; background: var(--border); border-radius: 6px; display: grid; place-items: center; font-weight: 700; color: var(--text); }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.78rem; color:var(--cyan); font-weight:600;
+    letter-spacing:0.04em; text-transform:uppercase;
+    padding:6px 12px; border:1px solid rgba(0,217,255,0.25);
+    border-radius:20px; background:rgba(0,217,255,0.06);
+    margin-bottom:24px;
+  }
+  .dot{ width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); flex-shrink:0; }
 
-  /* Console Layout */
-  .console { background: #0b0c10; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .console-top { background: var(--card); padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); }
-  .console-screen { padding: 16px; height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; }
-  
-  .log { display: flex; gap: 8px; line-height: 1.4; }
-  .log-time { color: #4b5563; }
-  .log-user { color: #a78bfa; font-weight: 600; }
-  .log-msg { color: #e2e8f0; }
-  .log-error { color: var(--red); }
-  .log-success { color: var(--green); }
+  .hero h1{
+    font-size:clamp(2.1rem, 5vw, 3.6rem); line-height:1.08; letter-spacing:-0.03em;
+    font-weight:700; margin-bottom:22px;
+  }
+  .hero h1 span{
+    background:linear-gradient(90deg, var(--cyan), var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p{
+    font-size:clamp(0.95rem, 2vw, 1.08rem); color:var(--text-dim); line-height:1.65;
+    max-width:480px; margin-bottom:34px;
+  }
+  .hero-ctas{ display:flex; gap:14px; margin-bottom:32px; flex-wrap:wrap; }
+  .btn{
+    padding:13px 24px; border-radius:9px; font-weight:600; font-size:0.92rem;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg, var(--cyan), var(--violet)); color:#04040a;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,217,255,0.25); }
+  .btn-secondary{
+    background:var(--panel); border:1px solid var(--border); color:var(--text);
+  }
+  .btn-secondary:hover{ border-color:var(--text-faint); transform:translateY(-2px); }
 
-  .console-bar { display: grid; grid-template-columns: 200px 1fr; border-top: 1px solid var(--border); background: #14171e; }
-  .console-bar select { background: transparent; color: var(--text); border: none; padding: 0 12px; border-right: 1px solid var(--border); outline: none; font-family: inherit; font-size: 0.85rem; cursor: pointer; }
-  .console-bar input { background: transparent; border: none; color: var(--text); padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; outline: none; width: 100%; }
+  .hero-stats{ display:flex; gap:clamp(20px, 4vw, 36px); flex-wrap:wrap; }
+  .stat-num{ font-family:'Space Grotesk'; font-size:1.5rem; font-weight:700; }
+  .stat-label{ font-size:0.78rem; color:var(--text-faint); margin-top:2px; }
+  .live-badge{
+    display:flex; align-items:center; gap:8px; margin-top:22px;
+    font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono';
+  }
+  .live-badge.live{ color:var(--green); }
+  .pulse{ width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; box-shadow:0 0 6px var(--green); flex-shrink:0; }
 
-  /* Profile Layout */
-  .profile-badge { display: flex; align-items: center; gap: 10px; }
-  .profile-badge img { width: 28px; height: 28px; border-radius: 50%; }
-  .profile-name { font-size: 0.85rem; font-weight: 600; }
+  .terminal{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px;
+    overflow:hidden; box-shadow:0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px; border-bottom:1px solid var(--border);
+    background:var(--panel-2);
+  }
+  .terminal-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .terminal-title{ margin-left:8px; font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono'; }
+  .terminal-body{ padding:18px 20px; font-family:'JetBrains Mono'; font-size:0.8rem; line-height:2; height:340px; overflow:hidden; }
+  .log-line{ display:flex; gap:10px; opacity:0; animation:logIn .4s ease forwards; white-space:nowrap; }
+  .log-time{ color:var(--text-faint); }
+  .tag{ padding:1px 7px; border-radius:4px; font-weight:600; font-size:0.72rem; flex-shrink:0; }
+  .tag-ban{ background:rgba(255,77,94,0.15); color:var(--red); }
+  .tag-warn, .tag-kick{ background:rgba(255,184,77,0.15); color:var(--amber); }
+  .tag-mute{ background:rgba(123,95,255,0.18); color:#b3a3ff; }
+  .tag-ingame{ background:rgba(0,217,255,0.15); color:var(--cyan); }
+  .log-text{ color:var(--text-dim); }
+  .log-text b{ color:var(--text); font-weight:600; }
+
+  @keyframes logIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:translateY(0);} }
+
+  @media (max-width: 980px){
+    .hero{ grid-template-columns:1fr; padding-top:70px; }
+    .terminal{ order:-1; }
+    .terminal-body{ height:280px; }
+  }
+  @media (max-width: 480px){
+    .terminal-body{ height:220px; font-size:0.72rem; }
+  }
+
+  section{ max-width:1180px; margin:0 auto; padding:clamp(60px, 8vw, 100px) clamp(20px, 5vw, 48px); }
+  .section-head{ max-width:560px; margin-bottom:clamp(32px, 6vw, 56px); }
+  .section-eyebrow{ font-size:0.78rem; color:var(--violet); font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:14px; }
+  .section-head h2{ font-size:clamp(1.7rem, 4vw, 2.2rem); letter-spacing:-0.02em; font-weight:700; margin-bottom:14px; }
+  .section-head p{ color:var(--text-dim); font-size:1.02rem; line-height:1.6; }
+
+  .grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+  .card{ background:var(--panel); padding:28px 24px; transition:background .2s ease; }
+  .card:hover{ background:var(--panel-2); }
+  .card-icon{
+    width:38px; height:38px; border-radius:9px; margin-bottom:18px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(0,217,255,0.08); border:1px solid rgba(0,217,255,0.18);
+  }
+  .card h3{ font-size:1.02rem; font-weight:600; margin-bottom:8px; letter-spacing:-0.01em; }
+  .card p{ font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
+  .stats-grid .card h3{ font-family:'Space Grotesk'; font-size:2.1rem; font-weight:700; color:var(--cyan); }
+  .stats-grid .card p{ font-size:0.85rem; }
+
+  @media (max-width: 900px){ .grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width: 620px){ .grid{ grid-template-columns:1fr; } }
+
+  .cmd-table{ border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  .cmd-row{
+    display:grid; grid-template-columns:180px 1fr; gap:24px;
+    padding:16px 22px; border-bottom:1px solid var(--border);
+    align-items:center;
+  }
+  .cmd-row:last-child{ border-bottom:none; }
+  .cmd-row:nth-child(even){ background:rgba(255,255,255,0.012); }
+  .cmd-name{ font-family:'JetBrains Mono'; font-size:0.86rem; color:var(--cyan); font-weight:500; }
+  .cmd-desc{ font-size:0.86rem; color:var(--text-dim); }
+
+  @media (max-width: 640px){ .cmd-row{ grid-template-columns:1fr; gap:6px; padding:14px 18px; } }
+
+  .callout{
+    display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px, 6vw, 56px); align-items:center;
+    background:linear-gradient(160deg, var(--panel), var(--panel-2));
+    border:1px solid var(--border); border-radius:20px; padding:clamp(28px, 6vw, 56px);
+  }
+  .callout-visual{
+    border:1px solid var(--border); border-radius:12px; background:var(--bg);
+    padding:20px; font-family:'JetBrains Mono'; font-size:0.8rem;
+  }
+  .callout-visual .row{ display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); gap:12px; }
+  .callout-visual .row:last-child{ border-bottom:none; }
+  .callout-visual .room{ color:var(--text); display:flex; align-items:center; }
+  .callout-visual .players{ color:var(--text-faint); white-space:nowrap; }
+
+  @media (max-width: 900px){ .callout{ grid-template-columns:1fr; } }
+
+  .final-cta{ text-align:center; padding:clamp(70px, 10vw, 120px) clamp(20px, 5vw, 48px); border-top:1px solid var(--border); }
+  .final-cta h2{ font-size:clamp(1.7rem, 4vw, 2.4rem); letter-spacing:-0.02em; margin-bottom:16px; font-weight:700; }
+  .final-cta p{ color:var(--text-dim); margin-bottom:36px; }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:28px clamp(20px, 5vw, 48px); display:flex; justify-content:space-between; align-items:center;
+    font-size:0.82rem; color:var(--text-faint); flex-wrap:wrap; gap:12px;
+  }
+  footer a:hover{ color:var(--text-dim); }
+  .footer-links{ display:flex; gap:24px; }
 </style>
 </head>
 <body>
 
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
 <nav>
   <div class="brand">
-    <img src="icon.png" alt="Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22><rect width=%2232%22 height=%2232%22 fill=%22%23181b22%22/></svg>'">
-    Unknown Bot
+    <div class="brand-mark">U</div>
+    Unknown
   </div>
-  <div style="display: flex; align-items: center; gap: 16px;">
-    <div class="status"><span class="status-dot"></span>Bot Online</div>
-    <div id="login-container">
-      <button class="btn btn-login" onclick="redirectToDiscord()">Login with Discord</button>
-    </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#commands">Commands</a>
+    <a href="#ingame">In-Game</a>
   </div>
+  <a href="dashboard.html" class="nav-cta">Dashboard</a>
 </nav>
 
-<div id="landing-view">
-  <div class="hero">
-    <h1>Manage your game right from the web.</h1>
-    <p>Run console commands straight into live Roblox servers, view active user counts, and look up mod records instantly.</p>
-    <button class="btn btn-action" onclick="redirectToDiscord()">Open Web Panel</button>
+<section class="hero">
+  <div>
+    <div class="eyebrow"><span class="dot"></span> Built for Unknown RNG</div>
+    <h1 class="display">Moderation that reaches <span>into the game.</span></h1>
+    <p>Unknown handles bans, mutes, and warnings like any good mod bot &mdash; then goes further, running live commands directly inside your Roblox servers from a single Discord command.</p>
+    <div class="hero-ctas">
+      <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
+      <a href="#commands" class="btn btn-secondary">View Commands</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num display" id="stat-cases">-</div>
+        <div class="stat-label">Total Cases</div>
+      </div>
+      <div>
+        <div class="stat-num display" id="stat-servers">-</div>
+        <div class="stat-label">Live Servers</div>
+      </div>
+      <div>
+        <div class="stat-num display" id="stat-players">-</div>
+        <div class="stat-label">Players Online</div>
+      </div>
+    </div>
+    <div class="live-badge" id="live-badge">
+      <span class="pulse"></span><span id="live-status">Connecting to live stats...</span>
+    </div>
   </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot" style="background:#ff5f57;"></div>
+      <div class="terminal-dot" style="background:#febc2e;"></div>
+      <div class="terminal-dot" style="background:#28c840;"></div>
+      <div class="terminal-title">#mod-log</div>
+    </div>
+    <div class="terminal-body" id="log-body"></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="section-head">
+    <div class="section-eyebrow">Core Moderation</div>
+    <h2 class="display">Every action, logged twice.</h2>
+    <p>A summary line for the overview channel, a full case card for the detailed log. Nothing gets missed, nothing gets buried.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">⛔</div>
+      <h3>Bans &amp; Timed Bans</h3>
+      <p>Permanent or scheduled, with optional message history cleanup and full DM notice to the user.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👢</div>
+      <h3>Kicks</h3>
+      <p>Instant removal with reason logging and role-hierarchy checks baked in.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔇</div>
+      <h3>Mutes</h3>
+      <p>Native timeout-based mutes up to 28 days, with automatic expiry tracked in the background.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚠️</div>
+      <h3>Warnings</h3>
+      <p>Every warning counts toward auto-escalation &mdash; kick at 3, ban at 5, no manual tracking needed.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗂️</div>
+      <h3>Case History</h3>
+      <p>Pull a user's full record with <span class="mono">/cases</span>, or look up any single case by ID.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <h3>Roblox Linking</h3>
+      <p>Attach a Roblox username to any Discord account so every case carries their in-game identity.</p>
+    </div>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="section-head">
+    <div class="section-eyebrow">Right Now</div>
+    <h2 class="display">Live from the bot.</h2>
+    <p>Pulled directly from Unknown's database and its connected Roblox servers. Refreshes automatically while this page is open.</p>
+  </div>
+
+  <div class="grid stats-grid">
+    <div class="card"><div class="card-icon">⛔</div><h3 id="stat-bans">-</h3><p>Bans issued</p></div>
+    <div class="card"><div class="card-icon">👢</div><h3 id="stat-kicks">-</h3><p>Kicks issued</p></div>
+    <div class="card"><div class="card-icon">🔇</div><h3 id="stat-mutes-active">-</h3><p>Active mutes right now</p></div>
+    <div class="card"><div class="card-icon">⚠️</div><h3 id="stat-warns">-</h3><p>Warnings logged</p></div>
+    <div class="card"><div class="card-icon">🖥️</div><h3 id="stat-servers-2">-</h3><p>Roblox servers online</p></div>
+    <div class="card"><div class="card-icon">🏠</div><h3 id="stat-guilds">-</h3><p>Discord servers protected</p></div>
+  </div>
+</section>
+
+<section id="commands">
+  <div class="section-head">
+    <div class="section-eyebrow">Reference</div>
+    <h2 class="display">Commands</h2>
+    <p>Every command respects your mod role and Discord permissions together &mdash; both need to check out.</p>
+  </div>
+
+  <div class="cmd-table">
+    <div class="cmd-row"><div class="cmd-name">/ban</div><div class="cmd-desc">Ban a user, permanently or for a set duration</div></div>
+    <div class="cmd-row"><div class="cmd-name">/unban</div><div class="cmd-desc">Lift a ban using a user ID</div></div>
+    <div class="cmd-row"><div class="cmd-name">/kick</div><div class="cmd-desc">Remove a user from the server</div></div>
+    <div class="cmd-row"><div class="cmd-name">/mute</div><div class="cmd-desc">Timeout a user for a given duration</div></div>
+    <div class="cmd-row"><div class="cmd-name">/unmute</div><div class="cmd-desc">Lift an active timeout early</div></div>
+    <div class="cmd-row"><div class="cmd-name">/warn</div><div class="cmd-desc">Log a warning, counts toward auto-escalation</div></div>
+    <div class="cmd-row"><div class="cmd-name">/unwarn</div><div class="cmd-desc">Remove a warning by case ID</div></div>
+    <div class="cmd-row"><div class="cmd-name">/note</div><div class="cmd-desc">Attach a private mod-only note to a user</div></div>
+    <div class="cmd-row"><div class="cmd-name">/cases</div><div class="cmd-desc">View a user's full moderation history</div></div>
+    <div class="cmd-row"><div class="cmd-name">/case</div><div class="cmd-desc">Look up one case by its ID</div></div>
+    <div class="cmd-row"><div class="cmd-name">/viewlog</div><div class="cmd-desc">See recent moderation activity server-wide</div></div>
+    <div class="cmd-row"><div class="cmd-name">/reason</div><div class="cmd-desc">Edit the reason on an existing case</div></div>
+    <div class="cmd-row"><div class="cmd-name">/roblox</div><div class="cmd-desc">Link, view, or remove a Roblox username</div></div>
+    <div class="cmd-row"><div class="cmd-name">/purge</div><div class="cmd-desc">Bulk delete messages, optionally by user</div></div>
+    <div class="cmd-row"><div class="cmd-name">/slowmode</div><div class="cmd-desc">Set a channel's slowmode delay</div></div>
+    <div class="cmd-row"><div class="cmd-name">/lock &amp; /unlock</div><div class="cmd-desc">Restrict or restore send permissions in a channel</div></div>
+    <div class="cmd-row"><div class="cmd-name">/userinfo</div><div class="cmd-desc">Pull account age, roles, and case count</div></div>
+    <div class="cmd-row"><div class="cmd-name">/ingame</div><div class="cmd-desc">Pick a live server and run a command inside it</div></div>
+    <div class="cmd-row"><div class="cmd-name">/setup</div><div class="cmd-desc">Configure mod role and log channels</div></div>
+  </div>
+</section>
+
+<section id="ingame">
+  <div class="callout">
+    <div>
+      <div class="section-eyebrow">The Part Most Bots Don't Do</div>
+      <h2 class="display" style="font-size:clamp(1.4rem, 3vw, 2rem); margin-bottom:16px;">Run commands where the game actually lives.</h2>
+      <p style="color:var(--text-dim); line-height:1.65; margin-bottom:24px;">
+        <span class="mono" style="color:var(--cyan);">/ingame</span> shows every live Roblox server tied to your game, public and private, with real player counts pulled straight from the servers themselves. Pick one, type a command, and it runs through Cmdr in that exact server &mdash; no restart, no waiting.
+      </p>
+      <a href="dashboard.html" class="btn btn-secondary">Try it from the dashboard</a>
+    </div>
+    <div class="callout-visual">
+      <div class="row"><span class="room"><span class="pulse" style="margin-right:8px;"></span>Public Server 1</span><span class="players">14 players</span></div>
+      <div class="row"><span class="room"><span class="pulse" style="margin-right:8px;"></span>Public Server 2</span><span class="players">9 players</span></div>
+      <div class="row"><span class="room"><span class="pulse" style="margin-right:8px;"></span>Reserved Server</span><span class="players">3 players</span></div>
+      <div class="row"><span class="room"><span class="pulse" style="margin-right:8px;"></span>Private Server</span><span class="players">1 player</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2 class="display">Set it up in under a minute.</h2>
+  <p>Add Unknown, set your mod role and log channels, and you're covered.</p>
+  <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
 </div>
 
-<div id="dashboard-view">
-  <div class="layout">
-    <sidebar>
-      <div class="tab-btn active" data-pane="stats" onclick="switchPane(this)">Stats Overview</div>
-      <div class="tab-btn" data-pane="guilds" onclick="switchPane(this)">Discord Servers</div>
-      <div class="tab-btn" data-pane="console" onclick="switchPane(this)">Roblox Console</div>
-    </sidebar>
-
-    <main>
-      <div id="pane-stats" class="page active">
-        <div class="page-title">Live Numbers</div>
-        <div class="page-desc">Current mod tracking across all connected game servers.</div>
-        
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Total Bans & Warns</div>
-            <div class="stat-num" id="stat-cases">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Online Roblox Servers</div>
-            <div class="stat-num" id="stat-servers">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Online Players</div>
-            <div class="stat-num" id="stat-players">0</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="pane-guilds" class="page">
-        <div class="page-title">Your Discord Servers</div>
-        <div class="page-desc">Select a server to adjust settings and roles.</div>
-        <div class="server-box" id="guilds-list"></div>
-      </div>
-
-      <div id="pane-console" class="page">
-        <div class="page-title">Roblox Console Bridge</div>
-        <div class="page-desc">Send commands directly to active Roblox servers running your script.</div>
-        
-        <div class="console mono">
-          <div class="console-top">
-            <span>Live Server Command Line</span>
-          </div>
-          <div class="console-screen" id="console-logs">
-            <div class="log"><span class="log-time">[00:00:00]</span> <span class="log-msg">Bridge active. Awaiting panel commands...</span></div>
-          </div>
-          <form id="console-form" onsubmit="sendConsoleCommand(event)">
-            <div class="console-bar">
-              <select id="target-server">
-                <option value="all">All Roblox Servers</option>
-              </select>
-              <input type="text" id="console-input" placeholder="Type a command (ex: /announce Event starting!) or 'help'..." autocomplete="off">
-            </div>
-          </form>
-        </div>
-      </div>
-    </main>
+<footer>
+  <div>Unknown &mdash; built for Unknown RNG</div>
+  <div class="footer-links">
+    <a href="#commands">Commands</a>
+    <a href="#ingame">In-Game</a>
+    <a href="dashboard.html">Dashboard</a>
   </div>
-</div>
+</footer>
 
 <script>
-  // Point this to your live Railway app backend URL
-  const BOT_API_URL = "https://unknown-bot-production.up.railway.app";
-  const CLIENT_ID = "1519215093760397413";
+  const logs = [
+    { tag: "BAN",    cls: "tag-ban",    text: '<b>ysl_zenokei</b> banned for exploiting' },
+    { tag: "WARN",   cls: "tag-warn",   text: '<b>quartz_dev</b> warned — spam in #trading' },
+    { tag: "MUTE",   cls: "tag-mute",   text: '<b>foggyrbx</b> muted for 1h' },
+    { tag: "KICK",   cls: "tag-kick",   text: '<b>nullbyte</b> kicked — alt account' },
+    { tag: "INGAME", cls: "tag-ingame", text: 'ran <b>extinction</b> in Public Server 2' },
+    { tag: "BAN",    cls: "tag-ban",    text: '<b>rustyrbx</b> banned 7d — item dupe' },
+    { tag: "WARN",   cls: "tag-warn",   text: '<b>ember_x</b> warned — 2/3' },
+    { tag: "INGAME", cls: "tag-ingame", text: 'ran <b>announce</b> in Public Server 1' },
+    { tag: "MUTE",   cls: "tag-mute",   text: '<b>lunarshade</b> muted for 30m' },
+    { tag: "UNBAN",  cls: "tag-mute",   text: '<b>ghostwire</b> appeal accepted' },
+  ];
 
-  // Handles Discord login redirection using your explicit Client ID
-  function redirectToDiscord() {
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
-    window.location.href = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${redirectUri}&scope=identify+guilds`;
+  function timeNow(){
+    const d = new Date();
+    return d.toLocaleTimeString('en-US', { hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit' });
   }
 
-  // Checks the URL hash to see if the user just returned from a successful Discord login
-  function checkAuthResponse() {
-    const fragments = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = fragments.get("access_token");
+  const body = document.getElementById('log-body');
+  let i = 0;
+  let logTimer = null;
 
-    if (accessToken) {
-      // Clear the ugly token data out of the URL bar
-      window.history.replaceState({}, document.title, window.location.pathname);
-      loadDashboardWithAuth(accessToken);
-    }
+  function pushLog(){
+    const entry = logs[i % logs.length];
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = '<span class="log-time">' + timeNow() + '</span><span class="tag ' + entry.cls + '">' + entry.tag + '</span><span class="log-text">' + entry.text + '</span>';
+    body.appendChild(line);
+    if (body.children.length > 10) body.removeChild(body.firstChild);
+    body.scrollTop = body.scrollHeight;
+    i++;
   }
 
-  async function loadDashboardWithAuth(token) {
-    document.getElementById('landing-view').style.display = 'none';
-    document.getElementById('dashboard-view').style.display = 'block';
+  for (let n = 0; n < 6; n++) pushLog();
 
-    // Update login button to show profile state
-    document.getElementById('login-container').innerHTML = `
-      <div class="profile-badge">
-        <span class="profile-name">Authenticated Staff</span>
-        <button class="btn btn-nav" style="padding: 6px 12px; font-size:0.8rem;" onclick="window.location.reload()">Log out</button>
-      </div>
-    `;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion) {
+    logTimer = setInterval(pushLog, 2400);
+  }
 
-    // Fetch live user data and server names straight from Discord's API using the token
+  // ── Live stats ──────────────────────────────────────────────────────────────
+  // Fetched once on load, then re-fetched only while the tab is actually
+  // visible. This avoids burning Railway request quota when the page is
+  // sitting open in a background tab nobody is looking at.
+  const STATS_API = "https://unknown-bot-production.up.railway.app/stats";
+  let statsTimer = null;
+
+  function fmt(n){ return (n === undefined || n === null) ? "-" : n.toLocaleString(); }
+
+  async function loadStats(){
+    const badge  = document.getElementById('live-badge');
+    const status = document.getElementById('live-status');
+
     try {
-      const guildRes = await fetch("https://discord.com/api/users/@me/guilds", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (guildRes.ok) {
-        const guilds = await guildRes.json();
-        // Filter servers down to ones where the user has management permissions (0x20 is MANAGE_GUILD)
-        const adminGuilds = guilds.filter(g => (g.permissions & 0x20) === 0x20);
-        renderServers(adminGuilds);
-      }
-    } catch (err) {
-      console.error("Failed to fetch user servers from Discord:", err);
-    }
-
-    // Run stats collection loops
-    fetchStats();
-    setInterval(fetchStats, 10000);
-  }
-
-  function switchPane(button) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    button.classList.add('active');
-
-    const paneId = button.getAttribute('data-pane');
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(`pane-${paneId}`).classList.add('active');
-  }
-
-  function renderServers(guilds) {
-    const box = document.getElementById('guilds-list');
-    if (guilds.length === 0) {
-      box.innerHTML = `<div style="color: var(--text-muted); font-size: 0.9rem;">No servers found where you have staff permissions.</div>`;
-      return;
-    }
-    
-    box.innerHTML = guilds.map(g => `
-      <div class="server-card">
-        <div class="server-left">
-          <div class="server-icon">${g.name.charAt(0)}</div>
-          <div>
-            <div style="font-weight:600; font-size:0.95rem; margin-bottom:2px;">${g.name}</div>
-            <div style="color: var(--text-muted); font-size:0.8rem;">ID: ${g.id}</div>
-          </div>
-        </div>
-        <button class="btn btn-nav">Manage Settings</button>
-      </div>
-    `).join('');
-  }
-
-  async function fetchStats() {
-    try {
-      const res = await fetch(`${BOT_API_URL}/stats`, { cache: "no-store" });
-      if (!res.ok) throw new Error();
+      const res = await fetch(STATS_API, { cache: "no-store" });
+      if (!res.ok) throw new Error("bad response");
       const data = await res.json();
 
-      document.getElementById('stat-cases').innerText = (data.totalCases || 0).toLocaleString();
-      document.getElementById('stat-servers').innerText = (data.liveServers || 0).toLocaleString();
-      document.getElementById('stat-players').innerText = (data.totalPlayers || 0).toLocaleString();
+      document.getElementById('stat-cases').textContent   = fmt(data.totalCases);
+      document.getElementById('stat-servers').textContent = fmt(data.liveServers);
+      document.getElementById('stat-players').textContent = fmt(data.totalPlayers);
+      document.getElementById('stat-bans').textContent         = fmt(data.byType && data.byType.ban);
+      document.getElementById('stat-kicks').textContent        = fmt(data.byType && data.byType.kick);
+      document.getElementById('stat-mutes-active').textContent = fmt(data.activeMutes);
+      document.getElementById('stat-warns').textContent        = fmt(data.byType && data.byType.warn);
+      document.getElementById('stat-servers-2').textContent    = fmt(data.liveServers);
+      document.getElementById('stat-guilds').textContent       = fmt(data.guildCount);
+
+      badge.classList.add('live');
+      status.textContent = "Live — updated just now";
     } catch (err) {
-      console.error("Web console failed to connect to your live backend server endpoint:", err);
+      badge.classList.remove('live');
+      status.textContent = "Stats unavailable right now";
     }
   }
 
-  async function sendConsoleCommand(e) {
-    e.preventDefault();
-    const input = document.getElementById('console-input');
-    const targetSelect = document.getElementById('target-server');
-    const logs = document.getElementById('console-logs');
-
-    const command = input.value.trim();
-    const serverName = targetSelect.options[targetSelect.selectedIndex].text;
-    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-
-    if (!command) return;
-
-    // Output live log directly to panel screen instantly
-    logs.innerHTML += `
-      <div class="log">
-        <span class="log-time">[${time}]</span>
-        <span class="log-user">Panel User to [${serverName}]:</span>
-        <span class="log-msg">"${command}"</span>
-      </div>
-    `;
-    logs.scrollTop = logs.scrollHeight;
-
-    try {
-      const response = await fetch(`${BOT_API_URL}/api/run-command`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command: command, target: targetSelect.value })
-      });
-      const resultData = await response.json();
-
-      if (response.ok) {
-        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-success">Backend: ${resultData.message}</span></div>`;
-      } else {
-        logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Backend Error: ${resultData.error}</span></div>`;
-      }
-    } catch (err) {
-      logs.innerHTML += `<div class="log"><span class="log-time">[${time}]</span> <span class="log-error">Network Error: Failed to hit your live backend api.</span></div>`;
-    }
-
-    input.value = '';
-    logs.scrollTop = logs.scrollHeight;
+  function startPolling(){
+    loadStats();
+    if (statsTimer) clearInterval(statsTimer);
+    statsTimer = setInterval(loadStats, 45000);
   }
 
-  // Run initial URL hash checker on load execution
-  checkAuthResponse();
+  function stopPolling(){
+    if (statsTimer) clearInterval(statsTimer);
+    statsTimer = null;
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) {
+      stopPolling();
+    } else {
+      startPolling();
+    }
+  });
+
+  startPolling();
 </script>
 
 </body>
