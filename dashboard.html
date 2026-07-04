@@ -8,17 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0b0c10;
-    --card: #12141b;
-    --card-hover: #171a22;
-    --border: #23262f;
-    --text: #eef0f5;
-    --text-muted: #9298a8;
-    --accent: #6e7bf2;
-    --accent-2: #9d7bf2;
+    --bg: #0a0f0d;
+    --card: #101715;
+    --card-hover: #151e1b;
+    --border: #22302b;
+    --text: #eef3f0;
+    --text-muted: #8ea198;
+    --accent: #10b981;
+    --accent-2: #34d399;
     --red: #ef6f6f;
     --amber: #f0b25f;
-    --green: #5fcf8e;
+    --green: #34d399;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,13 +34,13 @@
 
   body::before{
     content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
-    background: radial-gradient(ellipse 900px 500px at 10% -10%, rgba(110,123,242,0.10), transparent 60%);
+    background: radial-gradient(ellipse 900px 500px at 10% -10%, rgba(16,185,129,0.10), transparent 60%);
   }
 
   nav {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
-    background: rgba(11,12,16,0.9); backdrop-filter: blur(12px);
+    padding: 12px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
+    background: rgba(10,15,13,0.92); backdrop-filter: blur(12px);
     position: sticky; top: 0; z-index: 100; gap: 10px;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; white-space: nowrap; letter-spacing:-0.01em; }
@@ -48,9 +48,19 @@
     width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; overflow: hidden;
     background: linear-gradient(150deg, var(--accent), var(--accent-2));
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.82rem; color: #fff;
+    font-weight: 700; font-size: 0.82rem; color: #04140e;
   }
   .brand-mark img { width: 100%; height: 100%; object-fit: cover; }
+
+  .nav-guild-pill {
+    display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .nav-guild-pill:hover { background: var(--card-hover); }
+  .nav-guild-pill img, .nav-guild-pill .guild-icon-fallback { width: 22px; height: 22px; border-radius: 50%; }
+  .nav-guild-pill .guild-icon-fallback { display:flex; align-items:center; justify-content:center; background:var(--border); font-size:0.7rem; }
+  .nav-caret { color: var(--text-muted); font-size: 0.7rem; }
 
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
   .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
@@ -65,7 +75,7 @@
   .btn:active { transform: scale(0.98); }
   .btn-login { background: #5865F2; color: #fff; }
   .btn-login:hover { background: #4752C4; }
-  .btn-action { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
+  .btn-action { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #04140e; }
   .btn-action:hover { opacity: 0.9; }
   .btn-nav { background: var(--card); border: 1px solid var(--border); color: var(--text); }
   .btn-nav:hover { background: var(--card-hover); }
@@ -89,35 +99,50 @@
   .hero-note a { color: var(--accent-2); cursor: pointer; }
   .hero-note a:hover { text-decoration: underline; }
 
-  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 61px); }
+  .layout { display: grid; grid-template-columns: 250px 1fr; min-height: calc(100vh - 57px); }
 
-  aside.sidebar { background: #0e1015; border-right: 1px solid var(--border); padding: 18px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
-  .sidebar-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); padding: 12px 10px 6px; }
+  aside.sidebar { background: #0c1210; border-right: 1px solid var(--border); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+  .sidebar-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 16px 10px 6px; font-weight: 700; }
   .tab-btn {
-    padding: 10px 12px; border-radius: 8px; font-size: 0.87rem; font-weight: 600;
+    padding: 9px 12px; border-radius: 8px; font-size: 0.86rem; font-weight: 500;
     color: var(--text-muted); cursor: pointer; transition: all 0.1s;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 10px; justify-content: space-between;
   }
+  .tab-btn .tab-left { display:flex; align-items:center; gap:10px; }
+  .tab-icon { width: 16px; text-align: center; flex-shrink: 0; opacity: 0.85; }
   .tab-btn:hover { color: var(--text); background: var(--card); }
-  .tab-btn.active { color: var(--text); background: var(--card); border: 1px solid var(--border); }
-  .sidebar-guild {
-    display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 12px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  }
-  .sidebar-guild img, .guild-icon-fallback {
-    width: 32px; height: 32px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
-  }
-  .guild-icon-fallback { background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-  .sidebar-guild-name { font-size: 0.84rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sidebar-guild-members { font-size: 0.71rem; color: var(--text-muted); }
-  .switch-server-btn { font-size: 0.71rem; color: var(--accent-2); cursor: pointer; margin-top: 2px; }
-  .switch-server-btn:hover { text-decoration: underline; }
+  .tab-btn.active { color: var(--text); background: var(--card); border: 1px solid var(--border); font-weight: 700; }
+  .tab-badge { background: rgba(239,111,111,0.18); color: var(--red); font-size: 0.68rem; font-weight: 700; padding: 1px 7px; border-radius: 20px; }
+  .tab-badge.beta { background: rgba(52,211,153,0.16); color: var(--accent-2); }
 
-  main { padding: clamp(16px, 4vw, 32px); width: 100%; max-width: 1040px; margin: 0 auto; }
+  main { padding: clamp(16px, 4vw, 32px); width: 100%; max-width: 1060px; margin: 0 auto; }
   .page { display: none; }
   .page.active { display: block; }
   .page-title { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; }
   .page-desc { color: var(--text-muted); font-size: 0.84rem; margin-bottom: 22px; }
+
+  .welcome-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .welcome-title span { color: var(--accent-2); }
+  .welcome-sub { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 26px; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 720px){ .card-grid{ grid-template-columns: 1fr; } }
+  .home-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden;
+  }
+  .home-card-icon { font-size: 1.3rem; }
+  .home-card-title { font-size: 1.02rem; font-weight: 700; display:flex; align-items:center; gap:8px; }
+  .home-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; flex-grow: 1; }
+  .home-card .btn { align-self: flex-start; margin-top: 4px; }
+  .beta-pill { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; background: rgba(52,211,153,0.15); color: var(--accent-2); padding: 3px 9px; border-radius: 20px; }
+  .home-card.highlight { border-color: rgba(16,185,129,0.4); box-shadow: 0 0 0 1px rgba(16,185,129,0.12), 0 20px 50px -30px rgba(16,185,129,0.5); }
+
+  .notice-box {
+    background: #171a10; border: 1px solid #3a3720; color: #e6dfa8;
+    padding: 14px 16px; border-radius: 10px; font-size: 0.83rem; line-height: 1.6; margin-top: 8px;
+  }
+  .notice-box a, .notice-box strong { color: #f2ecc0; }
 
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 26px; }
   .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
@@ -125,7 +150,7 @@
   .stat-num { font-size: 1.6rem; font-weight: 800; }
 
   .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
-  .panel-title { font-size: 0.93rem; font-weight: 700; margin-bottom: 4px; }
+  .panel-title { font-size: 0.93rem; font-weight: 700; margin-bottom: 4px; display:flex; align-items:center; gap:8px; }
   .panel-desc { font-size: 0.79rem; color: var(--text-muted); margin-bottom: 14px; }
 
   .graph-wrap { position: relative; height: 200px; overflow-x: auto; }
@@ -151,29 +176,33 @@
   .case-tag { padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
   .tag-ban { background: rgba(239,111,111,0.15); color: var(--red); }
   .tag-kick { background: rgba(240,178,95,0.15); color: var(--amber); }
-  .tag-mute { background: rgba(110,123,242,0.15); color: #c3c8fb; }
+  .tag-mute { background: rgba(16,185,129,0.15); color: var(--accent-2); }
   .tag-warn { background: rgba(240,178,95,0.15); color: var(--amber); }
-  .tag-note { background: rgba(146,152,168,0.15); color: var(--text-muted); }
-  .tag-unban, .tag-unmute { background: rgba(95,207,142,0.15); color: var(--green); }
+  .tag-note { background: rgba(142,161,152,0.15); color: var(--text-muted); }
+  .tag-unban, .tag-unmute { background: rgba(52,211,153,0.15); color: var(--green); }
   .case-reason { color: var(--text-muted); font-size: 0.79rem; margin-top: 2px; }
   .case-meta { text-align: right; color: var(--text-muted); font-size: 0.73rem; white-space: nowrap; }
 
   .field-group { margin-bottom: 16px; }
   .field-label { font-size: 0.81rem; font-weight: 700; margin-bottom: 6px; display: block; }
   .field-hint { font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px; }
-  .field-input, .field-select {
+  .field-input, .field-select, .field-textarea {
     width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
     padding: 10px 12px; border-radius: 8px; font-family: inherit; font-size: 0.85rem; outline: none;
   }
+  .field-textarea { resize: vertical; min-height: 70px; }
   .field-select { appearance: none; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239298a8'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238ea198'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
   }
-  .field-input:focus, .field-select:focus { border-color: var(--accent); }
-  .field-toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--accent); }
+  .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px){ .field-row-2{ grid-template-columns: 1fr; } }
+
+  .field-toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); }
   .field-toggle-row:last-child{ border-bottom:none; }
-  .field-toggle-name{ font-size:0.85rem; font-weight:600; }
-  .field-toggle-desc{ font-size:0.76rem; color:var(--text-muted); margin-top:2px; }
+  .field-toggle-name{ font-size:0.87rem; font-weight:700; }
+  .field-toggle-desc{ font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
   .switch { position:relative; width:40px; height:22px; flex-shrink:0; }
   .switch input{ opacity:0; width:0; height:0; }
   .switch-track{ position:absolute; inset:0; background:var(--border); border-radius:22px; cursor:pointer; transition:.15s; }
@@ -181,20 +210,39 @@
   .switch input:checked + .switch-track{ background:var(--accent); }
   .switch input:checked + .switch-track::before{ transform:translateX(18px); }
 
-  .commands-panel-title{ background:#0b0c10; border:1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .prefix-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .prefix-chip {
+    display: flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 8px 7px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 0.86rem;
+  }
+  .prefix-chip button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.95rem; line-height: 1; padding: 2px 4px; }
+  .prefix-chip button:hover { color: var(--red); }
+  .prefix-add-row { display: flex; gap: 8px; }
+  .prefix-add-row input { max-width: 140px; }
+
+  .cc-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .cc-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .cc-item-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .cc-trigger { font-family: 'IBM Plex Mono', monospace; color: var(--accent-2); font-weight: 600; font-size: 0.88rem; }
+  .cc-response { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; white-space: pre-wrap; }
+  .cc-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; }
+  .cc-remove:hover { color: var(--red); }
+  .cc-new { background: var(--card); border: 1px dashed var(--border); border-radius: 10px; padding: 16px; }
+
+  .commands-panel-title{ background:#070b09; border:1px solid var(--border); border-radius: 12px; overflow: hidden; }
   .commands-top { background: var(--card); padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.79rem; color: var(--text-muted); }
   .commands-screen { padding: 14px; height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem; }
 
   .log { display: flex; gap: 8px; line-height: 1.4; flex-wrap: wrap; word-break: break-word; }
-  .log-time { color: #4b5568; flex-shrink: 0; }
+  .log-time { color: #445048; flex-shrink: 0; }
   .log-user { color: var(--accent-2); font-weight: 600; }
-  .log-msg { color: #dfe2ea; }
+  .log-msg { color: #dfe9e4; }
   .log-error { color: var(--red); }
   .log-success { color: var(--green); }
 
-  .commands-bar { display: grid; grid-template-columns: 1fr auto; border-top: 1px solid var(--border); background: #0e1015; }
+  .commands-bar { display: grid; grid-template-columns: 1fr auto; border-top: 1px solid var(--border); background: #0c1210; }
   .commands-bar input { background: transparent; border: none; color: var(--text); padding: 12px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; outline: none; width: 100%; min-width: 0; }
-  .commands-bar button { border: none; background: var(--accent); color: #fff; padding: 0 18px; font-weight: 700; font-size: 0.78rem; cursor: pointer; border-radius: 0; }
+  .commands-bar button { border: none; background: var(--accent); color: #04140e; padding: 0 18px; font-weight: 700; font-size: 0.78rem; cursor: pointer; border-radius: 0; }
 
   .profile-badge { display: flex; align-items: center; gap: 8px; }
   .profile-badge img { width: 26px; height: 26px; border-radius: 50%; }
@@ -206,8 +254,8 @@
   #legal-view h1 { font-size: 1.6rem; margin-bottom: 8px; }
   #legal-view .updated { color: var(--text-muted); font-size: 0.83rem; margin-bottom: 28px; }
   #legal-view h2 { font-size: 1.05rem; margin: 24px 0 10px; }
-  #legal-view p { color: #cbd0dc; line-height: 1.7; margin-bottom: 12px; font-size: 0.9rem; }
-  #legal-view ul { color: #cbd0dc; line-height: 1.7; margin: 0 0 12px 20px; font-size: 0.9rem; }
+  #legal-view p { color: #cdd9d3; line-height: 1.7; margin-bottom: 12px; font-size: 0.9rem; }
+  #legal-view ul { color: #cdd9d3; line-height: 1.7; margin: 0 0 12px 20px; font-size: 0.9rem; }
   .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent-2); font-size: 0.84rem; cursor: pointer; }
   .back-link:hover { text-decoration: underline; }
 
@@ -230,7 +278,6 @@
       border-right: none; border-bottom: 1px solid var(--border);
       flex-direction: row; overflow-x: auto; align-items: center; white-space: nowrap;
     }
-    .sidebar-guild { margin-bottom: 0; flex-shrink: 0; }
     .sidebar-label { display: none; }
     .tab-btn { flex-shrink: 0; }
   }
@@ -248,6 +295,7 @@
     <div class="brand-mark"><img src="icon.png" alt="Unknown" onerror="this.parentElement.textContent='U'"></div>
     <span>Unknown</span>
   </div>
+  <div id="nav-guild-slot"></div>
   <div style="display: flex; align-items: center; gap: 12px;">
     <div class="status"><span class="status-dot" id="bot-status-dot"></span><span id="bot-status-text">Checking bot status...</span></div>
     <div id="login-container">
@@ -272,25 +320,267 @@
 <div id="dashboard-view">
   <div class="layout">
     <aside class="sidebar">
-      <div class="sidebar-guild" id="current-guild-card">
-        <div class="guild-icon-fallback" id="current-guild-icon">?</div>
-        <div style="overflow: hidden;">
-          <div class="sidebar-guild-name" id="current-guild-name">Loading...</div>
-          <div class="sidebar-guild-members" id="current-guild-members"></div>
-          <div class="switch-server-btn" id="switch-server-btn">Switch server</div>
-        </div>
-      </div>
+      <div class="tab-btn active" data-pane="home"><span class="tab-left"><span class="tab-icon">⌂</span>Home</span></div>
 
-      <div class="sidebar-label">Dashboard</div>
-      <div class="tab-btn active" data-pane="stats">Overview</div>
-      <div class="tab-btn" data-pane="modlog">Moderation Log</div>
-      <div class="tab-btn" data-pane="servers">Your Servers</div>
-      <div class="tab-btn" data-pane="console">Live Commands</div>
-      <div class="tab-btn" data-pane="settings">Configure Bot</div>
+      <div class="sidebar-label">Configuration</div>
+      <div class="tab-btn" data-pane="settings"><span class="tab-left"><span class="tab-icon">⚙</span>General Settings</span></div>
+      <div class="tab-btn" data-pane="prefixes"><span class="tab-left"><span class="tab-icon">/</span>Prefixes</span></div>
+      <div class="tab-btn" data-pane="customcommands"><span class="tab-left"><span class="tab-icon">✎</span>Custom Commands</span></div>
+
+      <div class="sidebar-label">Modules</div>
+      <div class="tab-btn" data-pane="stats"><span class="tab-left"><span class="tab-icon">▤</span>Overview</span></div>
+      <div class="tab-btn" data-pane="modlog"><span class="tab-left"><span class="tab-icon">☰</span>Moderation Log</span></div>
+      <div class="tab-btn" data-pane="aimod"><span class="tab-left"><span class="tab-icon">✨</span>AI Moderation</span><span class="tab-badge beta">Beta</span></div>
+      <div class="tab-btn" data-pane="console"><span class="tab-left"><span class="tab-icon">▶</span>Live Commands</span></div>
+      <div class="tab-btn" data-pane="servers"><span class="tab-left"><span class="tab-icon">☺</span>Your Servers</span></div>
     </aside>
 
     <main>
-      <div id="pane-stats" class="page active">
+      <div id="pane-home" class="page active">
+        <div class="welcome-title">Welcome <span id="home-username">back</span>,</div>
+        <div class="welcome-sub">find commonly used dashboard pages below.</div>
+
+        <div class="card-grid">
+          <div class="home-card">
+            <div class="home-card-title"><span class="home-card-icon">⚙</span>General Settings</div>
+            <div class="home-card-desc">Set your mod role and log channels in one place. Everything the old /setup command asked for, now configured here instead.</div>
+            <button class="btn btn-nav btn-small" data-goto="settings">Open settings</button>
+          </div>
+          <div class="home-card highlight">
+            <div class="home-card-title"><span class="home-card-icon">✨</span>AI Moderation <span class="beta-pill">Beta</span></div>
+            <div class="home-card-desc">Flags suspicious messages to a review channel for a human to check. It won't take action on its own unless you turn that on.</div>
+            <button class="btn btn-nav btn-small" data-goto="aimod">Configure AI moderation</button>
+          </div>
+          <div class="home-card">
+            <div class="home-card-title"><span class="home-card-icon">/</span>Prefixes</div>
+            <div class="home-card-desc">Add prefixes like <span class="mono">!</span> or <span class="mono">e!</span> so people can type <span class="mono">!ban</span> instead of using the slash command.</div>
+            <button class="btn btn-nav btn-small" data-goto="prefixes">Manage prefixes</button>
+          </div>
+          <div class="home-card">
+            <div class="home-card-title"><span class="home-card-icon">✎</span>Custom Commands</div>
+            <div class="home-card-desc">Create your own commands that reply with whatever text you want, no coding needed.</div>
+            <button class="btn btn-nav btn-small" data-goto="customcommands">Create a command</button>
+          </div>
+          <div class="home-card">
+            <div class="home-card-title"><span class="home-card-icon">☰</span>Moderation Log</div>
+            <div class="home-card-desc">The 25 most recent actions taken in this server, pulled live from the bot.</div>
+            <button class="btn btn-nav btn-small" data-goto="modlog">View log</button>
+          </div>
+          <div class="home-card">
+            <div class="home-card-title"><span class="home-card-icon">▶</span>Live Commands</div>
+            <div class="home-card-desc">Send a command straight into a live Roblox server, the same as typing /ingame in Discord.</div>
+            <button class="btn btn-nav btn-small" data-goto="console">Open live commands</button>
+          </div>
+        </div>
+
+        <div class="notice-box">
+          <strong>Heads up:</strong> AI Moderation and Prefixes are new. They save from this dashboard the same way everything else does, but they only take effect once the bot's own code is updated to read them — ask whoever maintains Unknown's backend to wire these settings in if actions aren't showing up yet.
+        </div>
+      </div>
+
+      <div id="pane-settings" class="page">
+        <div class="page-title">General Settings</div>
+        <div class="page-desc">Everything that used to take several commands to set up now lives on this one page.</div>
+
+        <div class="panel">
+          <div class="panel-title">Moderator Role</div>
+          <div class="panel-desc">Anyone with this role can use moderation commands, alongside anyone with Discord's own Kick/Ban/Timeout permissions.</div>
+          <div class="field-group">
+            <label class="field-label">Mod role</label>
+            <div class="field-hint" id="modrole-hint">Choose the role your moderators use. If your roles haven't loaded, paste a role ID instead.</div>
+            <select class="field-select" id="setting-modrole-select" style="display:none;"></select>
+            <input class="field-input" id="setting-modrole" placeholder="e.g. 1234567890123456">
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Log Channels</div>
+          <div class="panel-desc">Where moderation actions get posted. The summary channel gets a short line, the detailed channel gets the full case card.</div>
+          <div class="field-group">
+            <label class="field-label">Summary log channel</label>
+            <div class="field-hint" id="summarylog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
+            <select class="field-select" id="setting-summarylog-select" style="display:none;"></select>
+            <input class="field-input" id="setting-summarylog" placeholder="e.g. 1234567890123456">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Detailed log channel</label>
+            <div class="field-hint" id="detailedlog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
+            <select class="field-select" id="setting-detailedlog-select" style="display:none;"></select>
+            <input class="field-input" id="setting-detailedlog" placeholder="e.g. 1234567890123456">
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Auto-Escalation</div>
+          <div class="panel-desc">How many warnings before the bot escalates automatically.</div>
+          <div class="field-row-2">
+            <div class="field-group">
+              <label class="field-label">Warnings before a kick</label>
+              <input class="field-input" id="setting-kickthreshold" placeholder="e.g. 3" inputmode="numeric">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Warnings before a ban</label>
+              <input class="field-input" id="setting-banthreshold" placeholder="e.g. 5" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Moderation Behavior</div>
+          <div class="field-toggle-row">
+            <div>
+              <div class="field-toggle-name">DM users when moderated</div>
+              <div class="field-toggle-desc">Send a direct message explaining the action taken and why.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="setting-dmonaction" checked><span class="switch-track"></span></label>
+          </div>
+          <div class="field-toggle-row">
+            <div>
+              <div class="field-toggle-name">Delete message history on ban</div>
+              <div class="field-toggle-desc">Clear the banned user's recent messages automatically.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="setting-purgeonban"><span class="switch-track"></span></label>
+          </div>
+          <div class="field-toggle-row">
+            <div>
+              <div class="field-toggle-name">Require a reason on every action</div>
+              <div class="field-toggle-desc">Moderators must type a reason before a ban, kick, mute, or warn goes through.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="setting-requirereason" checked><span class="switch-track"></span></label>
+          </div>
+        </div>
+
+        <button class="btn btn-action" id="save-settings-btn">Save Changes</button>
+        <span id="settings-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
+      </div>
+
+      <div id="pane-prefixes" class="page">
+        <div class="page-title">Prefixes</div>
+        <div class="page-desc">Each prefix is just a shortcut for the same slash commands &mdash; typing <span class="mono">!ban</span> runs exactly what <span class="mono">/ban</span> does.</div>
+
+        <div class="panel">
+          <div class="panel-title">Active Prefixes</div>
+          <div class="panel-desc">Add as many as you like: <span class="mono">!</span>, <span class="mono">.</span>, <span class="mono">*</span>, <span class="mono">e!</span>, whatever fits your server.</div>
+          <div class="prefix-chip-row" id="prefix-chip-row"></div>
+          <div class="prefix-add-row">
+            <input class="field-input" id="prefix-new-input" placeholder="e.g. e!" maxlength="5">
+            <button class="btn btn-nav btn-small" id="prefix-add-btn">Add prefix</button>
+          </div>
+        </div>
+
+        <div class="field-toggle-row panel" style="align-items:center;">
+          <div>
+            <div class="field-toggle-name">Allow prefix commands</div>
+            <div class="field-toggle-desc">Turn off to require slash commands only, ignoring every prefix above.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="setting-prefixesenabled" checked><span class="switch-track"></span></label>
+        </div>
+
+        <button class="btn btn-action" id="save-prefixes-btn">Save Changes</button>
+        <span id="prefixes-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
+      </div>
+
+      <div id="pane-customcommands" class="page">
+        <div class="page-title">Custom Commands</div>
+        <div class="page-desc">Make your own command that replies with whatever text you set. Works with slash commands and any prefix above.</div>
+
+        <div class="cc-list" id="cc-list"></div>
+
+        <div class="cc-new">
+          <div class="field-group">
+            <label class="field-label">Command name</label>
+            <div class="field-hint">Letters, numbers, and dashes only. No slash or prefix needed here.</div>
+            <input class="field-input" id="cc-new-trigger" placeholder="e.g. discord or rules">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Response</label>
+            <div class="field-hint">What the bot replies with when someone uses this command.</div>
+            <textarea class="field-textarea" id="cc-new-response" placeholder="e.g. Join our community server: discord.gg/example"></textarea>
+          </div>
+          <button class="btn btn-nav btn-small" id="cc-add-btn">Add command</button>
+        </div>
+
+        <div style="height:14px;"></div>
+        <button class="btn btn-action" id="save-customcommands-btn">Save Changes</button>
+        <span id="customcommands-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
+      </div>
+
+      <div id="pane-aimod" class="page">
+        <div class="page-title">AI Moderation <span class="beta-pill">Beta</span></div>
+        <div class="page-desc">Uses AI to flag messages that look like harassment, spam, or rule-breaking, and sends them to a review channel for a moderator to check. It never bans, kicks, mutes, or deletes on its own unless you turn that on below.</div>
+
+        <div class="field-toggle-row panel" style="align-items:center;">
+          <div>
+            <div class="field-toggle-name">Enable AI Moderation</div>
+            <div class="field-toggle-desc">While off, no messages are scanned.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="setting-aimod-enabled"><span class="switch-track"></span></label>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Review Channel</div>
+          <div class="panel-desc">Flagged messages get posted here with context, so a moderator can decide what to do.</div>
+          <div class="field-group">
+            <select class="field-select" id="setting-aimod-channel-select" style="display:none;"></select>
+            <input class="field-input" id="setting-aimod-channel" placeholder="e.g. 1234567890123456">
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Sensitivity</div>
+          <div class="panel-desc">Higher sensitivity flags more messages, including borderline ones.</div>
+          <select class="field-select" id="setting-aimod-sensitivity">
+            <option value="low">Low &mdash; only flag clear violations</option>
+            <option value="medium" selected>Medium &mdash; balanced</option>
+            <option value="high">High &mdash; flag anything borderline</option>
+          </select>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">What to scan for</div>
+          <div class="field-toggle-row">
+            <div><div class="field-toggle-name">Harassment &amp; targeted insults</div></div>
+            <label class="switch"><input type="checkbox" id="setting-aimod-harassment" checked><span class="switch-track"></span></label>
+          </div>
+          <div class="field-toggle-row">
+            <div><div class="field-toggle-name">Spam &amp; scam links</div></div>
+            <label class="switch"><input type="checkbox" id="setting-aimod-spam" checked><span class="switch-track"></span></label>
+          </div>
+          <div class="field-toggle-row">
+            <div><div class="field-toggle-name">NSFW content</div></div>
+            <label class="switch"><input type="checkbox" id="setting-aimod-nsfw" checked><span class="switch-track"></span></label>
+          </div>
+          <div class="field-toggle-row">
+            <div><div class="field-toggle-name">Exploiting / cheating talk</div></div>
+            <label class="switch"><input type="checkbox" id="setting-aimod-exploit"><span class="switch-track"></span></label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Automatic Action</div>
+          <div class="panel-desc">Off by default. Even at high confidence, a flagged message just gets reviewed unless you enable this.</div>
+          <div class="field-toggle-row">
+            <div>
+              <div class="field-toggle-name">Take action automatically on high-confidence flags</div>
+              <div class="field-toggle-desc">Still logs a case either way, so nothing happens without a record.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="setting-aimod-autoaction"><span class="switch-track"></span></label>
+          </div>
+          <div class="field-group" style="margin-top:14px;">
+            <label class="field-label">Action to take</label>
+            <select class="field-select" id="setting-aimod-actiontype">
+              <option value="warn">Warn</option>
+              <option value="mute">Mute (10 minutes)</option>
+              <option value="delete">Delete the message only</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-action" id="save-aimod-btn">Save Changes</button>
+        <span id="aimod-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
+      </div>
+
+      <div id="pane-stats" class="page">
         <div class="page-title">Overview</div>
         <div class="page-desc">Real moderation activity for this server, pulled live from the bot.</div>
 
@@ -347,42 +637,6 @@
           </form>
         </div>
       </div>
-
-      <div id="pane-settings" class="page">
-        <div class="page-title">Configure Bot</div>
-        <div class="page-desc">Changes here update live and affect this server only.</div>
-
-        <div class="panel">
-          <div class="panel-title">Moderator Role</div>
-          <div class="panel-desc">Anyone with this role can use moderation commands, alongside anyone with Discord's own Kick/Ban/Timeout permissions.</div>
-          <div class="field-group">
-            <label class="field-label">Mod role</label>
-            <div class="field-hint" id="modrole-hint">Choose the role your moderators use. If your roles haven't loaded, paste a role ID instead.</div>
-            <select class="field-select" id="setting-modrole-select" style="display:none;"></select>
-            <input class="field-input" id="setting-modrole" placeholder="e.g. 1234567890123456">
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">Log Channels</div>
-          <div class="panel-desc">Where moderation actions get posted. The summary channel gets a short line, the detailed channel gets the full case card.</div>
-          <div class="field-group">
-            <label class="field-label">Summary log channel</label>
-            <div class="field-hint" id="summarylog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
-            <select class="field-select" id="setting-summarylog-select" style="display:none;"></select>
-            <input class="field-input" id="setting-summarylog" placeholder="e.g. 1234567890123456">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Detailed log channel</label>
-            <div class="field-hint" id="detailedlog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
-            <select class="field-select" id="setting-detailedlog-select" style="display:none;"></select>
-            <input class="field-input" id="setting-detailedlog" placeholder="e.g. 1234567890123456">
-          </div>
-        </div>
-
-        <button class="btn btn-action" id="save-settings-btn">Save Changes</button>
-        <span id="settings-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
-      </div>
     </main>
   </div>
 </div>
@@ -403,10 +657,6 @@
 (function () {
   "use strict";
 
-  // ── Config ───────────────────────────────────────────────────────────────
-  // Only the public client ID goes here. A client secret never belongs in a
-  // file the browser can read, so this uses Discord's implicit OAuth flow,
-  // which hands back a usable token without needing a secret at all.
   var BOT_API_URL = "https://unknown-bot-production.up.railway.app";
   var CLIENT_ID   = "1519215093760397413";
 
@@ -414,10 +664,8 @@
   var allGuilds       = [];
   var currentGuild    = null;
   var botStatusTimer  = null;
-
-  // ── Visible error reporting ──────────────────────────────────────────────
-  // Anything that fails shows up on the page itself, not just in a console
-  // nobody's looking at. This is the main fix: silent failures now surface.
+  var currentPrefixes = [];
+  var currentCustomCommands = [];
 
   function showError(message) {
     var banner = document.getElementById('error-banner');
@@ -434,8 +682,6 @@
   window.addEventListener('error', function (e) {
     showError('Page error: ' + e.message);
   });
-
-  // ── OAuth ────────────────────────────────────────────────────────────────
 
   function redirectToDiscord() {
     var redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
@@ -466,10 +712,6 @@
     sessionStorage.removeItem("discord_token");
     window.location.reload();
   }
-
-  // ── Bot online check ─────────────────────────────────────────────────────
-  // Only polls while the tab is visible, to save Railway requests. A timeout
-  // is added so a hung request can't leave the badge stuck on "Checking...".
 
   function fetchWithTimeout(url, options, timeoutMs) {
     options = options || {};
@@ -514,8 +756,6 @@
     else startBotStatusPolling();
   });
 
-  // ── Dashboard load ───────────────────────────────────────────────────────
-
   function loadDashboard() {
     document.getElementById('landing-view').style.display = 'none';
     document.getElementById('dashboard-view').style.display = 'block';
@@ -539,6 +779,7 @@
           '<button class="btn btn-nav btn-small" id="logout-btn">Log out</button>' +
           '</div>';
         document.getElementById('logout-btn').addEventListener('click', logout);
+        document.getElementById('home-username').textContent = me.username || 'back';
 
         return fetchWithTimeout(BOT_API_URL + "/api/my-guilds", {
           headers: { Authorization: "Bearer " + authToken }
@@ -565,6 +806,17 @@
       });
   }
 
+  function renderNavGuildPill(guild) {
+    var slot = document.getElementById('nav-guild-slot');
+    var iconHtml = guild.icon
+      ? '<img src="' + guild.icon + '" alt="">'
+      : '<div class="guild-icon-fallback">' + guild.name.charAt(0).toUpperCase() + '</div>';
+    slot.innerHTML =
+      '<div class="nav-guild-pill" id="nav-guild-pill-btn">' + iconHtml +
+      '<span>' + escapeHtml(guild.name) + '</span><span class="nav-caret">▾</span></div>';
+    document.getElementById('nav-guild-pill-btn').addEventListener('click', showServerPicker);
+  }
+
   function selectGuild(guildId) {
     var guild = null;
     for (var i = 0; i < allGuilds.length; i++) {
@@ -573,27 +825,14 @@
     if (!guild) return;
     currentGuild = guild;
 
-    document.getElementById('current-guild-name').textContent = guild.name;
-    document.getElementById('current-guild-members').textContent = guild.memberCount.toLocaleString() + " members";
-
-    var iconEl = document.getElementById('current-guild-icon');
-    if (guild.icon) {
-      var img = document.createElement('img');
-      img.id = 'current-guild-icon';
-      img.src = guild.icon;
-      iconEl.replaceWith(img);
-    } else {
-      var fresh = document.createElement('div');
-      fresh.id = 'current-guild-icon';
-      fresh.className = 'guild-icon-fallback';
-      fresh.textContent = guild.name.charAt(0).toUpperCase();
-      iconEl.replaceWith(fresh);
-    }
-
+    renderNavGuildPill(guild);
     renderOverview(guild);
     renderModLog(guild);
     renderSettings(guild);
     renderServersList();
+    renderPrefixes(guild);
+    renderCustomCommands(guild);
+    renderAiMod(guild);
   }
 
   function showServerPicker() {
@@ -604,17 +843,20 @@
     if (allGuilds[idx]) selectGuild(allGuilds[idx].id);
   }
 
-  // ── Panes ────────────────────────────────────────────────────────────────
-
-  function switchPane(button) {
+  function switchPaneById(paneId) {
     var buttons = document.querySelectorAll('.tab-btn');
-    for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
-    button.classList.add('active');
-
-    var paneId = button.getAttribute('data-pane');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.toggle('active', buttons[i].getAttribute('data-pane') === paneId);
+    }
     var pages = document.querySelectorAll('.page');
     for (var j = 0; j < pages.length; j++) pages[j].classList.remove('active');
-    document.getElementById('pane-' + paneId).classList.add('active');
+    var target = document.getElementById('pane-' + paneId);
+    if (target) target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function switchPane(button) {
+    switchPaneById(button.getAttribute('data-pane'));
   }
 
   function renderOverview(guild) {
@@ -634,7 +876,7 @@
       var value = types[type];
       var height = Math.max(4, Math.round((value / max) * 160));
       html += '<div class="bar-col">' +
-        '<div style="font-size:0.72rem;color:#cbd0dc;">' + value + '</div>' +
+        '<div style="font-size:0.72rem;color:#cdd9d3;">' + value + '</div>' +
         '<div class="bar" style="height:' + height + 'px;"></div>' +
         '<div class="bar-label">' + escapeHtml(type) + '</div>' +
         '</div>';
@@ -696,10 +938,6 @@
     }
   }
 
-  // ── Settings: dropdowns when the bot API gives us roles/channels,
-  // plain ID inputs otherwise. Same three fields get saved either way,
-  // so nothing about what's sent to the server changes. ────────────────────
-
   function populateSelect(selectEl, items, currentValue, placeholder) {
     var html = '<option value="">' + placeholder + '</option>';
     for (var i = 0; i < items.length; i++) {
@@ -717,21 +955,26 @@
   }
 
   function renderSettings(guild) {
+    var s = guild.settings || {};
     var modRoleInput      = document.getElementById('setting-modrole');
     var summaryLogInput   = document.getElementById('setting-summarylog');
     var detailedLogInput  = document.getElementById('setting-detailedlog');
 
-    modRoleInput.value     = guild.settings.modRoleId || '';
-    summaryLogInput.value  = guild.settings.summaryLogChannelId || '';
-    detailedLogInput.value = guild.settings.detailedLogChannelId || '';
+    modRoleInput.value     = s.modRoleId || '';
+    summaryLogInput.value  = s.summaryLogChannelId || '';
+    detailedLogInput.value = s.detailedLogChannelId || '';
+    document.getElementById('setting-kickthreshold').value = s.kickThreshold || 3;
+    document.getElementById('setting-banthreshold').value  = s.banThreshold || 5;
+    document.getElementById('setting-dmonaction').checked     = s.dmOnAction !== false;
+    document.getElementById('setting-purgeonban').checked     = !!s.purgeOnBan;
+    document.getElementById('setting-requirereason').checked  = s.requireReason !== false;
 
     var roleSelect    = document.getElementById('setting-modrole-select');
     var summarySelect = document.getElementById('setting-summarylog-select');
     var detailSelect  = document.getElementById('setting-detailedlog-select');
+    var aiChannelSelect = document.getElementById('setting-aimod-channel-select');
+    var aiChannelInput  = document.getElementById('setting-aimod-channel');
 
-    // Roles/channels are optional extras some deployments of the bot expose
-    // on the guild object. If they're not there, the plain ID field below
-    // still works exactly as before.
     if (guild.roles && guild.roles.length) {
       populateSelect(roleSelect, guild.roles, modRoleInput.value, 'Choose a role');
       roleSelect.style.display = 'block';
@@ -746,38 +989,53 @@
     if (guild.channels && guild.channels.length) {
       populateSelect(summarySelect, guild.channels, summaryLogInput.value, 'Choose a channel');
       populateSelect(detailSelect, guild.channels, detailedLogInput.value, 'Choose a channel');
+      populateSelect(aiChannelSelect, guild.channels, s.aiModeration && s.aiModeration.reviewChannelId, 'Choose a channel');
       summarySelect.style.display = 'block';
       detailSelect.style.display = 'block';
+      aiChannelSelect.style.display = 'block';
       summaryLogInput.style.display = 'none';
       detailedLogInput.style.display = 'none';
+      aiChannelInput.style.display = 'none';
       document.getElementById('summarylog-hint').textContent = 'Short summary lines are posted here.';
       document.getElementById('detailedlog-hint').textContent = 'Full case cards are posted here.';
       wireSelectToInput(summarySelect, summaryLogInput);
       wireSelectToInput(detailSelect, detailedLogInput);
+      wireSelectToInput(aiChannelSelect, aiChannelInput);
     } else {
       summarySelect.style.display = 'none';
       detailSelect.style.display = 'none';
+      aiChannelSelect.style.display = 'none';
       summaryLogInput.style.display = 'block';
       detailedLogInput.style.display = 'block';
+      aiChannelInput.style.display = 'block';
+      aiChannelInput.value = (s.aiModeration && s.aiModeration.reviewChannelId) || '';
     }
   }
 
-  function saveSettings() {
-    var btn    = document.getElementById('save-settings-btn');
-    var status = document.getElementById('settings-save-status');
+  function collectGeneralSettings() {
+    return {
+      modRoleId:            document.getElementById('setting-modrole').value.trim() || null,
+      summaryLogChannelId:  document.getElementById('setting-summarylog').value.trim() || null,
+      detailedLogChannelId: document.getElementById('setting-detailedlog').value.trim() || null,
+      kickThreshold:        parseInt(document.getElementById('setting-kickthreshold').value, 10) || 3,
+      banThreshold:         parseInt(document.getElementById('setting-banthreshold').value, 10) || 5,
+      dmOnAction:           document.getElementById('setting-dmonaction').checked,
+      purgeOnBan:           document.getElementById('setting-purgeonban').checked,
+      requireReason:        document.getElementById('setting-requirereason').checked,
+    };
+  }
+
+  function saveSettingsPatch(patch, statusElId, btnId) {
+    var btn    = document.getElementById(btnId);
+    var status = document.getElementById(statusElId);
     if (!currentGuild) return;
 
     btn.disabled = true;
     status.textContent = 'Saving...';
 
-    var payload = {
-      guildId: currentGuild.id,
-      settings: {
-        modRoleId:            document.getElementById('setting-modrole').value.trim() || null,
-        summaryLogChannelId:  document.getElementById('setting-summarylog').value.trim() || null,
-        detailedLogChannelId: document.getElementById('setting-detailedlog').value.trim() || null,
-      }
-    };
+    var mergedSettings = Object.assign({}, currentGuild.settings || {}, patch);
+
+    var payload = { guildId: currentGuild.id, settings: mergedSettings };
 
     fetchWithTimeout(BOT_API_URL + "/api/guild-settings", {
       method: 'POST',
@@ -789,7 +1047,7 @@
     }, 10000)
       .then(function (res) {
         if (!res.ok) return res.json().then(function (err) { throw new Error(err.error || 'Save failed'); });
-        currentGuild.settings = payload.settings;
+        currentGuild.settings = mergedSettings;
         status.textContent = 'Saved.';
       })
       .catch(function (err) {
@@ -801,7 +1059,143 @@
       });
   }
 
-  // ── Live commands ────────────────────────────────────────────────────────
+  function saveSettings() {
+    saveSettingsPatch(collectGeneralSettings(), 'settings-save-status', 'save-settings-btn');
+  }
+
+  function renderPrefixChips() {
+    var row = document.getElementById('prefix-chip-row');
+    if (!currentPrefixes.length) {
+      row.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">No prefixes set yet &mdash; add one below.</span>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < currentPrefixes.length; i++) {
+      html += '<div class="prefix-chip"><span>' + escapeHtml(currentPrefixes[i]) + '</span>' +
+        '<button type="button" data-idx="' + i + '" class="prefix-remove-btn">&times;</button></div>';
+    }
+    row.innerHTML = html;
+    var removeButtons = row.querySelectorAll('.prefix-remove-btn');
+    for (var j = 0; j < removeButtons.length; j++) {
+      removeButtons[j].addEventListener('click', function () {
+        currentPrefixes.splice(parseInt(this.getAttribute('data-idx'), 10), 1);
+        renderPrefixChips();
+      });
+    }
+  }
+
+  function renderPrefixes(guild) {
+    var s = guild.settings || {};
+    currentPrefixes = (s.prefixes || ['!']).slice();
+    document.getElementById('setting-prefixesenabled').checked = s.prefixesEnabled !== false;
+    renderPrefixChips();
+  }
+
+  function addPrefix() {
+    var input = document.getElementById('prefix-new-input');
+    var value = input.value.trim();
+    if (!value) return;
+    if (value.length > 5) { value = value.slice(0, 5); }
+    if (currentPrefixes.indexOf(value) === -1) currentPrefixes.push(value);
+    input.value = '';
+    renderPrefixChips();
+  }
+
+  function savePrefixes() {
+    saveSettingsPatch({
+      prefixes: currentPrefixes,
+      prefixesEnabled: document.getElementById('setting-prefixesenabled').checked
+    }, 'prefixes-save-status', 'save-prefixes-btn');
+  }
+
+  function renderCustomCommandsList() {
+    var list = document.getElementById('cc-list');
+    if (!currentCustomCommands.length) {
+      list.innerHTML = '<div class="empty-state">No custom commands yet. Add your first one below.</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < currentCustomCommands.length; i++) {
+      var cmd = currentCustomCommands[i];
+      html += '<div class="cc-item">' +
+        '<div class="cc-item-top"><span class="cc-trigger">' + escapeHtml(cmd.trigger) + '</span>' +
+        '<button type="button" class="cc-remove" data-idx="' + i + '">Remove</button></div>' +
+        '<div class="cc-response">' + escapeHtml(cmd.response) + '</div>' +
+        '</div>';
+    }
+    list.innerHTML = html;
+    var removeButtons = list.querySelectorAll('.cc-remove');
+    for (var j = 0; j < removeButtons.length; j++) {
+      removeButtons[j].addEventListener('click', function () {
+        currentCustomCommands.splice(parseInt(this.getAttribute('data-idx'), 10), 1);
+        renderCustomCommandsList();
+      });
+    }
+  }
+
+  function renderCustomCommands(guild) {
+    var s = guild.settings || {};
+    currentCustomCommands = (s.customCommands || []).slice();
+    renderCustomCommandsList();
+  }
+
+  function addCustomCommand() {
+    var triggerInput  = document.getElementById('cc-new-trigger');
+    var responseInput = document.getElementById('cc-new-response');
+    var trigger  = triggerInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+    var response = responseInput.value.trim();
+    if (!trigger || !response) return;
+
+    for (var i = 0; i < currentCustomCommands.length; i++) {
+      if (currentCustomCommands[i].trigger === trigger) {
+        currentCustomCommands[i].response = response;
+        triggerInput.value = '';
+        responseInput.value = '';
+        renderCustomCommandsList();
+        return;
+      }
+    }
+
+    currentCustomCommands.push({ trigger: trigger, response: response });
+    triggerInput.value = '';
+    responseInput.value = '';
+    renderCustomCommandsList();
+  }
+
+  function saveCustomCommands() {
+    saveSettingsPatch({ customCommands: currentCustomCommands }, 'customcommands-save-status', 'save-customcommands-btn');
+  }
+
+  function renderAiMod(guild) {
+    var ai = (guild.settings && guild.settings.aiModeration) || {};
+    document.getElementById('setting-aimod-enabled').checked    = !!ai.enabled;
+    document.getElementById('setting-aimod-sensitivity').value  = ai.sensitivity || 'medium';
+    document.getElementById('setting-aimod-harassment').checked = ai.scanHarassment !== false;
+    document.getElementById('setting-aimod-spam').checked       = ai.scanSpam !== false;
+    document.getElementById('setting-aimod-nsfw').checked       = ai.scanNsfw !== false;
+    document.getElementById('setting-aimod-exploit').checked    = !!ai.scanExploit;
+    document.getElementById('setting-aimod-autoaction').checked = !!ai.autoAction;
+    document.getElementById('setting-aimod-actiontype').value   = ai.actionType || 'warn';
+    if (!(guild.channels && guild.channels.length)) {
+      document.getElementById('setting-aimod-channel').value = ai.reviewChannelId || '';
+    }
+  }
+
+  function saveAiMod() {
+    saveSettingsPatch({
+      aiModeration: {
+        enabled:        document.getElementById('setting-aimod-enabled').checked,
+        reviewChannelId: document.getElementById('setting-aimod-channel').value.trim() || null,
+        sensitivity:    document.getElementById('setting-aimod-sensitivity').value,
+        scanHarassment: document.getElementById('setting-aimod-harassment').checked,
+        scanSpam:       document.getElementById('setting-aimod-spam').checked,
+        scanNsfw:       document.getElementById('setting-aimod-nsfw').checked,
+        scanExploit:    document.getElementById('setting-aimod-exploit').checked,
+        autoAction:     document.getElementById('setting-aimod-autoaction').checked,
+        actionType:     document.getElementById('setting-aimod-actiontype').value,
+      }
+    }, 'aimod-save-status', 'save-aimod-btn');
+  }
 
   function sendConsoleCommand(e) {
     e.preventDefault();
@@ -843,8 +1237,6 @@
       });
   }
 
-  // ── Legal pages ──────────────────────────────────────────────────────────
-
   var LEGAL_PAGES = {
     privacy: {
       title: "Privacy Policy",
@@ -855,9 +1247,10 @@
         "<h2>What gets stored</h2>" +
         "<ul>" +
         "<li>Moderation cases: who was banned, kicked, muted, warned, or noted, who did it, and why.</li>" +
-        "<li>Server settings you configure, like your mod role and log channels.</li>" +
+        "<li>Server settings you configure, like your mod role, log channels, prefixes, custom commands, and AI Moderation preferences.</li>" +
         "<li>Linked Roblox usernames, if you connect a Discord account to one.</li>" +
-        "<li>Which Roblox servers are currently online, so the in-game commands feature knows where to send them.</li>" +
+        "<li>Which Roblox servers are currently online, so the live commands feature knows where to send them.</li>" +
+        "<li>If AI Moderation is turned on, message content it flags is shared with a review channel you choose, so a moderator can look at it.</li>" +
         "</ul>" +
         "<h2>What does not get stored</h2>" +
         "<p>Your Discord login token is never saved on our servers. It stays in your browser only for the length of your session and is used just to check which servers you can manage.</p>" +
@@ -874,6 +1267,8 @@
         "<p>Unknown is provided as-is for moderating your Discord server and connecting to your Roblox game. There's no guarantee it will always be online or bug-free, though we try to keep it running.</p>" +
         "<h2>Using the dashboard</h2>" +
         "<p>By logging in, you agree that any moderation action you take through this dashboard is your responsibility, the same as if you typed the command in Discord directly.</p>" +
+        "<h2>AI Moderation (beta)</h2>" +
+        "<p>AI Moderation is a beta feature. By default it only flags messages for a human to review, it does not take action on its own unless you turn that on. Automated flags can be wrong, so review flagged messages before relying on them.</p>" +
         "<h2>Fair use</h2>" +
         "<p>Don't use the live commands feature to run commands you wouldn't be allowed to run in-game normally. Server owners are responsible for who they give Manage Server permission to.</p>" +
         "<h2>Changes</h2>" +
@@ -907,8 +1302,6 @@
     }
   }
 
-  // ── Utility ──────────────────────────────────────────────────────────────
-
   function escapeHtml(str) {
     if (str === null || str === undefined) return '';
     return String(str)
@@ -918,9 +1311,6 @@
       .replace(/"/g, '&quot;');
   }
 
-  // ── Wire up all buttons (no inline onclick, so a script error earlier
-  // can't silently prevent handlers from attaching like before) ────────────
-
   function wireEvents() {
     document.getElementById('login-btn').addEventListener('click', redirectToDiscord);
     document.getElementById('hero-login-btn').addEventListener('click', redirectToDiscord);
@@ -928,17 +1318,27 @@
     document.getElementById('link-terms').addEventListener('click', function () { showLegal('terms'); });
     document.getElementById('footer-link-privacy').addEventListener('click', function () { showLegal('privacy'); });
     document.getElementById('footer-link-terms').addEventListener('click', function () { showLegal('terms'); });
-    document.getElementById('switch-server-btn').addEventListener('click', showServerPicker);
     document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+    document.getElementById('save-prefixes-btn').addEventListener('click', savePrefixes);
+    document.getElementById('save-customcommands-btn').addEventListener('click', saveCustomCommands);
+    document.getElementById('save-aimod-btn').addEventListener('click', saveAiMod);
+    document.getElementById('prefix-add-btn').addEventListener('click', addPrefix);
+    document.getElementById('prefix-new-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); addPrefix(); }
+    });
+    document.getElementById('cc-add-btn').addEventListener('click', addCustomCommand);
     document.getElementById('console-form').addEventListener('submit', sendConsoleCommand);
 
     var tabButtons = document.querySelectorAll('.tab-btn');
     for (var i = 0; i < tabButtons.length; i++) {
       tabButtons[i].addEventListener('click', function () { switchPane(this); });
     }
-  }
 
-  // ── Boot ─────────────────────────────────────────────────────────────────
+    var gotoButtons = document.querySelectorAll('[data-goto]');
+    for (var j = 0; j < gotoButtons.length; j++) {
+      gotoButtons[j].addEventListener('click', function () { switchPaneById(this.getAttribute('data-goto')); });
+    }
+  }
 
   document.addEventListener('DOMContentLoaded', function () {
     wireEvents();
