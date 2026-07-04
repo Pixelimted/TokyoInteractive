@@ -45,7 +45,8 @@
   }
 
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+  .status-dot.online { background: var(--green); }
   .status-dot.offline { background: var(--red); }
 
   .btn {
@@ -65,6 +66,7 @@
 
   #landing-view { display: block; }
   #dashboard-view { display: none; }
+  #error-banner { display: none; }
 
   .hero { max-width: 620px; margin: clamp(60px, 12vw, 130px) auto 0; text-align: center; padding: 0 20px; }
   .hero-badge {
@@ -193,6 +195,13 @@
   }
   .footer-links { display: flex; gap: 16px; }
 
+  /* visible error banner so failures never look like silent nothing */
+  #error-banner {
+    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35);
+    color: #fca5a5; padding: 12px 16px; font-size: 0.82rem; margin: 16px clamp(12px,3vw,24px) 0;
+    border-radius: 8px; max-width: 1040px; margin-left: auto; margin-right: auto;
+  }
+
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
     aside.sidebar {
@@ -218,20 +227,22 @@
     <span>Unknown</span>
   </div>
   <div style="display: flex; align-items: center; gap: 12px;">
-    <div class="status"><span class="status-dot" id="bot-status-dot"></span><span id="bot-status-text">Checking...</span></div>
+    <div class="status"><span class="status-dot" id="bot-status-dot"></span><span id="bot-status-text">Checking bot status...</span></div>
     <div id="login-container">
-      <button class="btn btn-login" onclick="redirectToDiscord()">Login with Discord</button>
+      <button class="btn btn-login" id="login-btn">Login with Discord</button>
     </div>
   </div>
 </nav>
+
+<div id="error-banner"></div>
 
 <div id="landing-view">
   <div class="hero">
     <div class="hero-badge">Moderation dashboard for Unknown RNG</div>
     <h1>See what your servers are doing, without opening Discord.</h1>
     <p>Log in with Discord to view every server Unknown protects that you manage — real case counts, active mutes, mod activity, and the ability to run commands straight into your live Roblox servers.</p>
-    <button class="btn btn-action" onclick="redirectToDiscord()">Open Dashboard</button>
-    <div class="hero-note">Only shows servers where you have Manage Server permission. <a onclick="showLegal('privacy')">Privacy Policy</a> · <a onclick="showLegal('terms')">Terms of Service</a></div>
+    <button class="btn btn-action" id="hero-login-btn">Open Dashboard</button>
+    <div class="hero-note">Only shows servers where you have Manage Server permission. <a id="link-privacy">Privacy Policy</a> · <a id="link-terms">Terms of Service</a></div>
   </div>
 </div>
 
@@ -243,16 +254,16 @@
         <div style="overflow: hidden;">
           <div class="sidebar-guild-name" id="current-guild-name">Loading...</div>
           <div class="sidebar-guild-members" id="current-guild-members"></div>
-          <div class="switch-server-btn" onclick="showServerPicker()">Switch server</div>
+          <div class="switch-server-btn" id="switch-server-btn">Switch server</div>
         </div>
       </div>
 
       <div class="sidebar-label">Dashboard</div>
-      <div class="tab-btn active" data-pane="stats" onclick="switchPane(this)">Overview</div>
-      <div class="tab-btn" data-pane="modlog" onclick="switchPane(this)">Moderation Log</div>
-      <div class="tab-btn" data-pane="servers" onclick="switchPane(this)">Your Servers</div>
-      <div class="tab-btn" data-pane="console" onclick="switchPane(this)">Roblox Console</div>
-      <div class="tab-btn" data-pane="settings" onclick="switchPane(this)">Configure Bot</div>
+      <div class="tab-btn active" data-pane="stats">Overview</div>
+      <div class="tab-btn" data-pane="modlog">Moderation Log</div>
+      <div class="tab-btn" data-pane="servers">Your Servers</div>
+      <div class="tab-btn" data-pane="console">Roblox Console</div>
+      <div class="tab-btn" data-pane="settings">Configure Bot</div>
     </aside>
 
     <main>
@@ -305,7 +316,7 @@
           <div class="console-screen" id="console-logs">
             <div class="log"><span class="log-time">[--:--:--]</span> <span class="log-msg">Waiting for a command...</span></div>
           </div>
-          <form id="console-form" onsubmit="sendConsoleCommand(event)">
+          <form id="console-form">
             <div class="console-bar">
               <input type="text" id="console-input" placeholder="Type a command, e.g. announce Event starting soon" autocomplete="off">
               <button type="submit">Run</button>
@@ -341,7 +352,7 @@
           </div>
         </div>
 
-        <button class="btn btn-action" onclick="saveSettings()" id="save-settings-btn">Save Changes</button>
+        <button class="btn btn-action" id="save-settings-btn">Save Changes</button>
         <span id="settings-save-status" style="margin-left: 12px; font-size: 0.82rem; color: var(--text-muted);"></span>
       </div>
     </main>
@@ -355,35 +366,58 @@
 <footer class="site-footer" id="site-footer" style="display:none;">
   <div>Unknown — built for Unknown RNG</div>
   <div class="footer-links">
-    <a onclick="showLegal('privacy')">Privacy Policy</a>
-    <a onclick="showLegal('terms')">Terms of Service</a>
+    <a id="footer-link-privacy">Privacy Policy</a>
+    <a id="footer-link-terms">Terms of Service</a>
   </div>
 </footer>
 
 <script>
-  // ── Config ─────────────────────────────────────────────────────────────────
-  // Only the public client ID goes here. The client secret never belongs in a
+(function () {
+  "use strict";
+
+  // ── Config ───────────────────────────────────────────────────────────────
+  // Only the public client ID goes here. A client secret never belongs in a
   // file the browser can read, so this uses Discord's implicit OAuth flow,
   // which hands back a usable token without needing a secret at all.
-  const BOT_API_URL = "https://unknown-bot-production.up.railway.app";
-  const CLIENT_ID = "1519215093760397413";
+  var BOT_API_URL = "https://unknown-bot-production.up.railway.app";
+  var CLIENT_ID   = "1519215093760397413";
 
-  let authToken    = null;
-  let allGuilds    = [];
-  let currentGuild = null;
-  let botStatusTimer = null;
+  var authToken       = null;
+  var allGuilds       = [];
+  var currentGuild    = null;
+  var botStatusTimer  = null;
 
-  // ── OAuth ──────────────────────────────────────────────────────────────────
+  // ── Visible error reporting ──────────────────────────────────────────────
+  // Anything that fails shows up on the page itself, not just in a console
+  // nobody's looking at. This is the main fix: silent failures now surface.
+
+  function showError(message) {
+    var banner = document.getElementById('error-banner');
+    banner.textContent = message;
+    banner.style.display = 'block';
+  }
+
+  function clearError() {
+    var banner = document.getElementById('error-banner');
+    banner.style.display = 'none';
+    banner.textContent = '';
+  }
+
+  window.addEventListener('error', function (e) {
+    showError('Page error: ' + e.message);
+  });
+
+  // ── OAuth ────────────────────────────────────────────────────────────────
 
   function redirectToDiscord() {
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+    var redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
     window.location.href = "https://discord.com/oauth2/authorize?client_id=" + CLIENT_ID +
       "&response_type=token&redirect_uri=" + redirectUri + "&scope=identify+guilds";
   }
 
   function checkAuthResponse() {
-    const fragments = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = fragments.get("access_token");
+    var fragments = new URLSearchParams(window.location.hash.substring(1));
+    var accessToken = fragments.get("access_token");
 
     if (accessToken) {
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -393,7 +427,7 @@
       return;
     }
 
-    const saved = sessionStorage.getItem("discord_token");
+    var saved = sessionStorage.getItem("discord_token");
     if (saved) {
       authToken = saved;
       loadDashboard();
@@ -405,22 +439,35 @@
     window.location.reload();
   }
 
-  // ── Bot online check ─────────────────────────────────────────────────────────
-  // Only polls while the tab is visible, to avoid wasting Railway requests
-  // on a page nobody is actively looking at.
+  // ── Bot online check ─────────────────────────────────────────────────────
+  // Only polls while the tab is visible, to save Railway requests. A timeout
+  // is added so a hung request can't leave the badge stuck on "Checking...".
 
-  async function checkBotStatus() {
-    const dot  = document.getElementById('bot-status-dot');
-    const text = document.getElementById('bot-status-text');
-    try {
-      const res = await fetch(BOT_API_URL + "/", { cache: "no-store" });
-      if (!res.ok) throw new Error();
-      dot.classList.remove('offline');
-      text.textContent = "Online";
-    } catch (err) {
-      dot.classList.add('offline');
-      text.textContent = "Offline";
-    }
+  function fetchWithTimeout(url, options, timeoutMs) {
+    options = options || {};
+    timeoutMs = timeoutMs || 8000;
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).finally(function () { clearTimeout(timer); });
+  }
+
+  function checkBotStatus() {
+    var dot  = document.getElementById('bot-status-dot');
+    var text = document.getElementById('bot-status-text');
+
+    fetchWithTimeout(BOT_API_URL + "/", { cache: "no-store" }, 8000)
+      .then(function (res) {
+        if (!res.ok) throw new Error("status " + res.status);
+        dot.classList.remove('offline');
+        dot.classList.add('online');
+        text.textContent = "Bot Online";
+      })
+      .catch(function (err) {
+        dot.classList.remove('online');
+        dot.classList.add('offline');
+        text.textContent = "Bot Offline";
+      });
   }
 
   function startBotStatusPolling() {
@@ -439,71 +486,76 @@
     else startBotStatusPolling();
   });
 
-  // ── Dashboard load ───────────────────────────────────────────────────────────
-  // Both the Discord profile and the guild list are fetched exactly once per
-  // login. Switching tabs or servers afterward just re-renders data already
-  // in memory, it never hits the network again until you reload the page.
+  // ── Dashboard load ───────────────────────────────────────────────────────
 
-  async function loadDashboard() {
+  function loadDashboard() {
     document.getElementById('landing-view').style.display = 'none';
     document.getElementById('dashboard-view').style.display = 'block';
     document.getElementById('site-footer').style.display = 'flex';
+    clearError();
 
-    try {
-      const meRes = await fetch("https://discord.com/api/users/@me", {
-        headers: { Authorization: "Bearer " + authToken }
+    fetchWithTimeout("https://discord.com/api/users/@me", {
+      headers: { Authorization: "Bearer " + authToken }
+    }, 8000)
+      .then(function (res) {
+        if (!res.ok) throw new Error("Discord rejected the login token (status " + res.status + ")");
+        return res.json();
+      })
+      .then(function (me) {
+        document.getElementById('login-container').innerHTML =
+          '<div class="profile-badge">' +
+          (me.avatar
+            ? '<img src="https://cdn.discordapp.com/avatars/' + me.id + '/' + me.avatar + '.png" alt="">'
+            : '') +
+          '<span class="profile-name">' + escapeHtml(me.username) + '</span>' +
+          '<button class="btn btn-nav btn-small" id="logout-btn">Log out</button>' +
+          '</div>';
+        document.getElementById('logout-btn').addEventListener('click', logout);
+
+        return fetchWithTimeout(BOT_API_URL + "/api/my-guilds", {
+          headers: { Authorization: "Bearer " + authToken }
+        }, 10000);
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Bot rejected the guild request (status " + res.status + "). Check the bot is online and CORS is enabled on /api/my-guilds.");
+        return res.json();
+      })
+      .then(function (data) {
+        allGuilds = data.guilds || [];
+
+        if (!allGuilds.length) {
+          document.querySelector('main').innerHTML =
+            '<div class="empty-state">Unknown isn\\'t in any server where you have Manage Server permission. Add the bot to a server you manage to see it here.</div>';
+          return;
+        }
+
+        selectGuild(allGuilds[0].id);
+      })
+      .catch(function (err) {
+        showError(err.message || 'Failed to load dashboard data.');
+        console.error(err);
       });
-      if (!meRes.ok) throw new Error("bad token");
-      const me = await meRes.json();
-
-      document.getElementById('login-container').innerHTML =
-        '<div class="profile-badge">' +
-        (me.avatar
-          ? '<img src="https://cdn.discordapp.com/avatars/' + me.id + '/' + me.avatar + '.png" alt="">'
-          : '') +
-        '<span class="profile-name">' + escapeHtml(me.username) + '</span>' +
-        '<button class="btn btn-nav btn-small" onclick="logout()">Log out</button>' +
-        '</div>';
-    } catch (err) {
-      logout();
-      return;
-    }
-
-    try {
-      const res = await fetch(BOT_API_URL + "/api/my-guilds", {
-        headers: { Authorization: "Bearer " + authToken }
-      });
-      if (!res.ok) throw new Error("failed to load guilds");
-      const data = await res.json();
-      allGuilds = data.guilds || [];
-
-      if (!allGuilds.length) {
-        document.querySelector('main').innerHTML =
-          '<div class="empty-state">Unknown isn\\'t in any server where you have Manage Server permission. Add the bot to a server you manage to see it here.</div>';
-        return;
-      }
-
-      selectGuild(allGuilds[0].id);
-    } catch (err) {
-      document.querySelector('main').innerHTML =
-        '<div class="empty-state">Could not load your servers. The bot may be offline, try again in a moment.</div>';
-      console.error(err);
-    }
   }
 
   function selectGuild(guildId) {
-    const guild = allGuilds.find(function (g) { return g.id === guildId; });
+    var guild = null;
+    for (var i = 0; i < allGuilds.length; i++) {
+      if (allGuilds[i].id === guildId) { guild = allGuilds[i]; break; }
+    }
     if (!guild) return;
     currentGuild = guild;
 
     document.getElementById('current-guild-name').textContent = guild.name;
     document.getElementById('current-guild-members').textContent = guild.memberCount.toLocaleString() + " members";
 
-    const iconEl = document.getElementById('current-guild-icon');
+    var iconEl = document.getElementById('current-guild-icon');
     if (guild.icon) {
-      iconEl.outerHTML = '<img id="current-guild-icon" src="' + guild.icon + '" alt="">';
+      var img = document.createElement('img');
+      img.id = 'current-guild-icon';
+      img.src = guild.icon;
+      iconEl.replaceWith(img);
     } else {
-      const fresh = document.createElement('div');
+      var fresh = document.createElement('div');
       fresh.id = 'current-guild-icon';
       fresh.className = 'guild-icon-fallback';
       fresh.textContent = guild.name.charAt(0).toUpperCase();
@@ -518,19 +570,22 @@
 
   function showServerPicker() {
     if (allGuilds.length <= 1) return;
-    const names = allGuilds.map(function (g, i) { return (i + 1) + ". " + g.name; }).join("\\n");
-    const pick = prompt("Type the number of the server to switch to:\\n\\n" + names);
-    const idx = parseInt(pick, 10) - 1;
+    var names = allGuilds.map(function (g, i) { return (i + 1) + ". " + g.name; }).join("\\n");
+    var pick = prompt("Type the number of the server to switch to:\\n\\n" + names);
+    var idx = parseInt(pick, 10) - 1;
     if (allGuilds[idx]) selectGuild(allGuilds[idx].id);
   }
 
-  // ── Panes ────────────────────────────────────────────────────────────────────
+  // ── Panes ────────────────────────────────────────────────────────────────
 
   function switchPane(button) {
-    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    var buttons = document.querySelectorAll('.tab-btn');
+    for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
     button.classList.add('active');
-    const paneId = button.getAttribute('data-pane');
-    document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+
+    var paneId = button.getAttribute('data-pane');
+    var pages = document.querySelectorAll('.page');
+    for (var j = 0; j < pages.length; j++) pages[j].classList.remove('active');
     document.getElementById('pane-' + paneId).classList.add('active');
   }
 
@@ -539,76 +594,95 @@
     document.getElementById('g-active-mutes').textContent = guild.activeMutes.toLocaleString();
     document.getElementById('g-member-count').textContent = guild.memberCount.toLocaleString();
 
-    const types = guild.byType || {};
-    const values = Object.values(types);
-    const max = Math.max(1, values.length ? Math.max.apply(null, values) : 1);
-    const graph = document.getElementById('type-graph');
+    var types = guild.byType || {};
+    var keys = Object.keys(types);
+    var max = 1;
+    for (var i = 0; i < keys.length; i++) max = Math.max(max, types[keys[i]]);
 
-    graph.innerHTML = Object.keys(types).map(function (type) {
-      const value  = types[type];
-      const height = Math.max(4, Math.round((value / max) * 160));
-      return '<div class="bar-col">' +
+    var graph = document.getElementById('type-graph');
+    var html = '';
+    for (var k = 0; k < keys.length; k++) {
+      var type = keys[k];
+      var value = types[type];
+      var height = Math.max(4, Math.round((value / max) * 160));
+      html += '<div class="bar-col">' +
         '<div style="font-size:0.72rem;color:#cbd5e1;">' + value + '</div>' +
         '<div class="bar" style="height:' + height + 'px;"></div>' +
-        '<div class="bar-label">' + type + '</div>' +
+        '<div class="bar-label">' + escapeHtml(type) + '</div>' +
         '</div>';
-    }).join('');
+    }
+    graph.innerHTML = html;
   }
 
   function renderModLog(guild) {
-    const list = document.getElementById('modlog-list');
-    const cases = guild.recentCases || [];
+    var list = document.getElementById('modlog-list');
+    var cases = guild.recentCases || [];
 
     if (!cases.length) {
       list.innerHTML = '<div class="empty-state">No moderation actions logged in this server yet.</div>';
       return;
     }
 
-    list.innerHTML = cases.map(function (c) {
-      const tagClass = 'tag-' + c.type;
-      const when = new Date(c.createdAt).toLocaleString();
-      return '<div class="case-row">' +
+    var html = '';
+    for (var i = 0; i < cases.length; i++) {
+      var c = cases[i];
+      var when = new Date(c.createdAt).toLocaleString();
+      html += '<div class="case-row">' +
         '<div>' +
-        '<span class="case-tag ' + tagClass + '">' + c.type + '</span>' +
+        '<span class="case-tag tag-' + c.type + '">' + escapeHtml(c.type) + '</span>' +
         ' <strong>' + escapeHtml(c.targetTag || c.targetId) + '</strong>' +
         '<div class="case-reason">' + escapeHtml(c.reason || 'No reason provided') + '</div>' +
         '</div>' +
         '<div class="case-meta">by ' + escapeHtml(c.modTag || 'Unknown') + '<br>' + when + '</div>' +
         '</div>';
-    }).join('');
+    }
+    list.innerHTML = html;
   }
 
   function renderServersList() {
-    const box = document.getElementById('guilds-list');
-    box.innerHTML = allGuilds.map(function (g) {
-      const iconHtml = g.icon
+    var box = document.getElementById('guilds-list');
+    var html = '';
+
+    for (var i = 0; i < allGuilds.length; i++) {
+      var g = allGuilds[i];
+      var iconHtml = g.icon
         ? '<img src="' + g.icon + '" style="width:36px;height:36px;border-radius:8px;">'
         : '<div class="guild-icon-fallback">' + g.name.charAt(0).toUpperCase() + '</div>';
 
-      return '<div class="server-card">' +
+      html += '<div class="server-card">' +
         '<div class="server-left">' + iconHtml +
         '<div>' +
         '<div style="font-weight:600;font-size:0.94rem;margin-bottom:2px;">' + escapeHtml(g.name) + '</div>' +
         '<div style="color:var(--text-muted);font-size:0.79rem;">' + g.memberCount.toLocaleString() + ' members · ' + g.totalCases + ' cases logged</div>' +
         '</div></div>' +
-        '<button class="btn btn-nav btn-small" onclick="selectGuild(\\'' + g.id + '\\')">View</button>' +
+        '<button class="btn btn-nav btn-small" data-guild-id="' + g.id + '">View</button>' +
         '</div>';
-    }).join('');
+    }
+    box.innerHTML = html;
+
+    var viewButtons = box.querySelectorAll('button[data-guild-id]');
+    for (var j = 0; j < viewButtons.length; j++) {
+      viewButtons[j].addEventListener('click', function () {
+        selectGuild(this.getAttribute('data-guild-id'));
+      });
+    }
   }
 
   function renderSettings(guild) {
-    document.getElementById('setting-modrole').value      = guild.settings.modRoleId || '';
-    document.getElementById('setting-summarylog').value   = guild.settings.summaryLogChannelId || '';
-    document.getElementById('setting-detailedlog').value  = guild.settings.detailedLogChannelId || '';
+    document.getElementById('setting-modrole').value     = guild.settings.modRoleId || '';
+    document.getElementById('setting-summarylog').value  = guild.settings.summaryLogChannelId || '';
+    document.getElementById('setting-detailedlog').value = guild.settings.detailedLogChannelId || '';
   }
 
-  async function saveSettings() {
-    const btn    = document.getElementById('save-settings-btn');
-    const status = document.getElementById('settings-save-status');
+  function saveSettings() {
+    var btn    = document.getElementById('save-settings-btn');
+    var status = document.getElementById('settings-save-status');
+    if (!currentGuild) return;
+
     btn.disabled = true;
     status.textContent = 'Saving...';
 
-    const payload = {
+    var payload = {
       guildId: currentGuild.id,
       settings: {
         modRoleId:            document.getElementById('setting-modrole').value.trim() || null,
@@ -617,39 +691,36 @@
       }
     };
 
-    try {
-      const res = await fetch(BOT_API_URL + "/api/guild-settings", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + authToken,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        status.textContent = 'Failed to save: ' + (err.error || 'unknown error');
-      } else {
-        status.textContent = 'Saved.';
+    fetchWithTimeout(BOT_API_URL + "/api/guild-settings", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + authToken,
+      },
+      body: JSON.stringify(payload),
+    }, 10000)
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (err) { throw new Error(err.error || 'Save failed'); });
         currentGuild.settings = payload.settings;
-      }
-    } catch (err) {
-      status.textContent = 'Network error, could not reach the bot.';
-    }
-
-    btn.disabled = false;
-    setTimeout(function () { status.textContent = ''; }, 4000);
+        status.textContent = 'Saved.';
+      })
+      .catch(function (err) {
+        status.textContent = err.message || 'Network error, could not reach the bot.';
+      })
+      .finally(function () {
+        btn.disabled = false;
+        setTimeout(function () { status.textContent = ''; }, 4000);
+      });
   }
 
-  // ── Console ──────────────────────────────────────────────────────────────────
+  // ── Console ──────────────────────────────────────────────────────────────
 
-  async function sendConsoleCommand(e) {
+  function sendConsoleCommand(e) {
     e.preventDefault();
-    const input  = document.getElementById('console-input');
-    const logs   = document.getElementById('console-logs');
-    const command = input.value.trim();
-    const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+    var input   = document.getElementById('console-input');
+    var logs    = document.getElementById('console-logs');
+    var command = input.value.trim();
+    var time    = new Date().toLocaleTimeString('en-US', { hour12: false });
 
     if (!command || !currentGuild) return;
 
@@ -658,32 +729,35 @@
     logs.scrollTop = logs.scrollHeight;
     input.value = '';
 
-    try {
-      const res = await fetch(BOT_API_URL + "/api/run-command", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + authToken,
-        },
-        body: JSON.stringify({ command: command, guildId: currentGuild.id }),
+    fetchWithTimeout(BOT_API_URL + "/api/run-command", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + authToken,
+      },
+      body: JSON.stringify({ command: command, guildId: currentGuild.id }),
+    }, 35000)
+      .then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+      })
+      .then(function (result) {
+        if (result.ok) {
+          logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-success">' + escapeHtml(result.data.result || 'Done') + '</span></div>';
+        } else {
+          logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-error">' + escapeHtml(result.data.error || 'Command failed') + '</span></div>';
+        }
+      })
+      .catch(function () {
+        logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-error">Could not reach the bot right now.</span></div>';
+      })
+      .finally(function () {
+        logs.scrollTop = logs.scrollHeight;
       });
-      const data = await res.json();
-
-      if (res.ok) {
-        logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-success">' + escapeHtml(data.result || 'Done') + '</span></div>';
-      } else {
-        logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-error">' + escapeHtml(data.error || 'Command failed') + '</span></div>';
-      }
-    } catch (err) {
-      logs.innerHTML += '<div class="log"><span class="log-time">[' + time + ']</span><span class="log-error">Could not reach the bot right now.</span></div>';
-    }
-
-    logs.scrollTop = logs.scrollHeight;
   }
 
-  // ── Legal pages ──────────────────────────────────────────────────────────────
+  // ── Legal pages ──────────────────────────────────────────────────────────
 
-  const LEGAL_PAGES = {
+  var LEGAL_PAGES = {
     privacy: {
       title: "Privacy Policy",
       updated: "Last updated July 2026",
@@ -725,12 +799,14 @@
     document.getElementById('legal-view').style.display = 'block';
     document.getElementById('site-footer').style.display = 'flex';
 
-    const data = LEGAL_PAGES[page];
+    var data = LEGAL_PAGES[page];
     document.getElementById('legal-content').innerHTML =
-      '<div class="back-link" onclick="hideLegal()">&larr; Back</div>' +
+      '<div class="back-link" id="legal-back-btn">&larr; Back</div>' +
       '<h1>' + data.title + '</h1>' +
       '<div class="updated">' + data.updated + '</div>' +
       data.body;
+
+    document.getElementById('legal-back-btn').addEventListener('click', hideLegal);
   }
 
   function hideLegal() {
@@ -743,7 +819,7 @@
     }
   }
 
-  // ── Utility ──────────────────────────────────────────────────────────────────
+  // ── Utility ──────────────────────────────────────────────────────────────
 
   function escapeHtml(str) {
     if (str === null || str === undefined) return '';
@@ -754,10 +830,34 @@
       .replace(/"/g, '&quot;');
   }
 
-  // ── Boot ─────────────────────────────────────────────────────────────────────
+  // ── Wire up all buttons (no inline onclick, so a script error earlier
+  // can't silently prevent handlers from attaching like before) ────────────
 
-  startBotStatusPolling();
-  checkAuthResponse();
+  function wireEvents() {
+    document.getElementById('login-btn').addEventListener('click', redirectToDiscord);
+    document.getElementById('hero-login-btn').addEventListener('click', redirectToDiscord);
+    document.getElementById('link-privacy').addEventListener('click', function () { showLegal('privacy'); });
+    document.getElementById('link-terms').addEventListener('click', function () { showLegal('terms'); });
+    document.getElementById('footer-link-privacy').addEventListener('click', function () { showLegal('privacy'); });
+    document.getElementById('footer-link-terms').addEventListener('click', function () { showLegal('terms'); });
+    document.getElementById('switch-server-btn').addEventListener('click', showServerPicker);
+    document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+    document.getElementById('console-form').addEventListener('submit', sendConsoleCommand);
+
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    for (var i = 0; i < tabButtons.length; i++) {
+      tabButtons[i].addEventListener('click', function () { switchPane(this); });
+    }
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────────────────
+
+  document.addEventListener('DOMContentLoaded', function () {
+    wireEvents();
+    startBotStatusPolling();
+    checkAuthResponse();
+  });
+})();
 </script>
 
 </body>
