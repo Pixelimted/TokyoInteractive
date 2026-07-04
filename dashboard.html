@@ -4,45 +4,53 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unknown — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1115;
-    --card: #181b22;
-    --card-hover: #1f232b;
-    --border: #2d323f;
-    --text: #ffffff;
-    --text-muted: #94a3b8;
-    --accent: #7c3aed;
-    --accent-2: #00d9ff;
-    --red: #ef4444;
-    --amber: #f59e0b;
-    --green: #22c55e;
+    --bg: #0b0c10;
+    --card: #12141b;
+    --card-hover: #171a22;
+    --border: #23262f;
+    --text: #eef0f5;
+    --text-muted: #9298a8;
+    --accent: #6e7bf2;
+    --accent-2: #9d7bf2;
+    --red: #ef6f6f;
+    --amber: #f0b25f;
+    --green: #5fcf8e;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--bg); color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Manrope', sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
   a { color: inherit; text-decoration: none; }
-  .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  .mono { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
   img { max-width: 100%; }
+
+  body::before{
+    content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background: radial-gradient(ellipse 900px 500px at 10% -10%, rgba(110,123,242,0.10), transparent 60%);
+  }
 
   nav {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
-    background: #14171e; position: sticky; top: 0; z-index: 100; gap: 10px;
+    background: rgba(11,12,16,0.9); backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 100; gap: 10px;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; white-space: nowrap; letter-spacing:-0.01em; }
   .brand-mark {
-    width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(150deg, var(--accent), var(--accent-2));
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.8rem; color: #04040a;
+    font-weight: 700; font-size: 0.82rem; color: #fff;
   }
+  .brand-mark img { width: 100%; height: 100%; object-fit: cover; }
 
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
   .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
@@ -50,14 +58,14 @@
   .status-dot.offline { background: var(--red); }
 
   .btn {
-    padding: 10px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+    padding: 10px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700;
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
-    transition: background 0.15s, transform 0.1s; font-family: inherit; white-space: nowrap;
+    transition: background 0.15s, transform 0.1s, opacity .15s; font-family: inherit; white-space: nowrap;
   }
   .btn:active { transform: scale(0.98); }
   .btn-login { background: #5865F2; color: #fff; }
   .btn-login:hover { background: #4752C4; }
-  .btn-action { background: var(--text); color: var(--bg); }
+  .btn-action { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
   .btn-action:hover { opacity: 0.9; }
   .btn-nav { background: var(--card); border: 1px solid var(--border); color: var(--text); }
   .btn-nav:hover { background: var(--card-hover); }
@@ -68,7 +76,8 @@
   #dashboard-view { display: none; }
   #error-banner { display: none; }
 
-  .hero { max-width: 620px; margin: clamp(60px, 12vw, 130px) auto 0; text-align: center; padding: 0 20px; }
+  .hero { max-width: 640px; margin: clamp(50px, 10vw, 100px) auto 0; text-align: center; padding: 0 20px; }
+  .hero-banner { width: 100%; max-width: 520px; margin: 0 auto 32px; border-radius: 14px; border: 1px solid var(--border); display: block; }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
     border: 1px solid var(--border); border-radius: 20px; background: var(--card);
@@ -82,24 +91,24 @@
 
   .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 61px); }
 
-  aside.sidebar { background: #14171e; border-right: 1px solid var(--border); padding: 18px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+  aside.sidebar { background: #0e1015; border-right: 1px solid var(--border); padding: 18px 10px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
   .sidebar-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); padding: 12px 10px 6px; }
   .tab-btn {
-    padding: 10px 12px; border-radius: 6px; font-size: 0.87rem; font-weight: 500;
+    padding: 10px 12px; border-radius: 8px; font-size: 0.87rem; font-weight: 600;
     color: var(--text-muted); cursor: pointer; transition: all 0.1s;
     display: flex; align-items: center; gap: 8px;
   }
   .tab-btn:hover { color: var(--text); background: var(--card); }
-  .tab-btn.active { color: var(--text); background: var(--card); font-weight: 600; border: 1px solid var(--border); }
+  .tab-btn.active { color: var(--text); background: var(--card); border: 1px solid var(--border); }
   .sidebar-guild {
     display: flex; align-items: center; gap: 10px; padding: 10px; margin-bottom: 12px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
   }
   .sidebar-guild img, .guild-icon-fallback {
     width: 32px; height: 32px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
   }
   .guild-icon-fallback { background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-  .sidebar-guild-name { font-size: 0.84rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidebar-guild-name { font-size: 0.84rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sidebar-guild-members { font-size: 0.71rem; color: var(--text-muted); }
   .switch-server-btn { font-size: 0.71rem; color: var(--accent-2); cursor: pointer; margin-top: 2px; }
   .switch-server-btn:hover { text-decoration: underline; }
@@ -107,15 +116,15 @@
   main { padding: clamp(16px, 4vw, 32px); width: 100%; max-width: 1040px; margin: 0 auto; }
   .page { display: none; }
   .page.active { display: block; }
-  .page-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+  .page-title { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 4px; }
   .page-desc { color: var(--text-muted); font-size: 0.84rem; margin-bottom: 22px; }
 
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 26px; }
-  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
   .stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
-  .stat-num { font-size: 1.6rem; font-weight: 700; }
+  .stat-num { font-size: 1.6rem; font-weight: 800; }
 
-  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px; margin-bottom: 18px; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
   .panel-title { font-size: 0.93rem; font-weight: 700; margin-bottom: 4px; }
   .panel-desc { font-size: 0.79rem; color: var(--text-muted); margin-bottom: 14px; }
 
@@ -128,7 +137,7 @@
   .server-box { display: flex; flex-direction: column; gap: 10px; }
   .server-card {
     display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
-    padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
   }
   .server-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
   .server-left > div:last-child { min-width: 0; }
@@ -139,39 +148,53 @@
     padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.84rem;
   }
   .case-row:last-child { border-bottom: none; }
-  .case-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-  .tag-ban { background: rgba(239,68,68,0.15); color: var(--red); }
-  .tag-kick { background: rgba(245,158,11,0.15); color: var(--amber); }
-  .tag-mute { background: rgba(124,58,237,0.15); color: #c4b5fd; }
-  .tag-warn { background: rgba(245,158,11,0.15); color: var(--amber); }
-  .tag-note { background: rgba(148,163,184,0.15); color: var(--text-muted); }
-  .tag-unban, .tag-unmute { background: rgba(34,197,94,0.15); color: var(--green); }
+  .case-tag { padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+  .tag-ban { background: rgba(239,111,111,0.15); color: var(--red); }
+  .tag-kick { background: rgba(240,178,95,0.15); color: var(--amber); }
+  .tag-mute { background: rgba(110,123,242,0.15); color: #c3c8fb; }
+  .tag-warn { background: rgba(240,178,95,0.15); color: var(--amber); }
+  .tag-note { background: rgba(146,152,168,0.15); color: var(--text-muted); }
+  .tag-unban, .tag-unmute { background: rgba(95,207,142,0.15); color: var(--green); }
   .case-reason { color: var(--text-muted); font-size: 0.79rem; margin-top: 2px; }
   .case-meta { text-align: right; color: var(--text-muted); font-size: 0.73rem; white-space: nowrap; }
 
   .field-group { margin-bottom: 16px; }
-  .field-label { font-size: 0.81rem; font-weight: 600; margin-bottom: 6px; display: block; }
+  .field-label { font-size: 0.81rem; font-weight: 700; margin-bottom: 6px; display: block; }
   .field-hint { font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px; }
-  .field-input {
+  .field-input, .field-select {
     width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-    padding: 10px 12px; border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;
+    padding: 10px 12px; border-radius: 8px; font-family: inherit; font-size: 0.85rem; outline: none;
   }
-  .field-input:focus { border-color: var(--accent-2); }
+  .field-select { appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239298a8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
+  }
+  .field-input:focus, .field-select:focus { border-color: var(--accent); }
+  .field-toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .field-toggle-row:last-child{ border-bottom:none; }
+  .field-toggle-name{ font-size:0.85rem; font-weight:600; }
+  .field-toggle-desc{ font-size:0.76rem; color:var(--text-muted); margin-top:2px; }
+  .switch { position:relative; width:40px; height:22px; flex-shrink:0; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch-track{ position:absolute; inset:0; background:var(--border); border-radius:22px; cursor:pointer; transition:.15s; }
+  .switch-track::before{ content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.15s; }
+  .switch input:checked + .switch-track{ background:var(--accent); }
+  .switch input:checked + .switch-track::before{ transform:translateX(18px); }
 
-  .console { background: #0b0c10; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .console-top { background: var(--card); padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.79rem; color: var(--text-muted); }
-  .console-screen { padding: 14px; height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem; }
+  .commands-panel-title{ background:#0b0c10; border:1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .commands-top { background: var(--card); padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 0.79rem; color: var(--text-muted); }
+  .commands-screen { padding: 14px; height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem; }
 
   .log { display: flex; gap: 8px; line-height: 1.4; flex-wrap: wrap; word-break: break-word; }
-  .log-time { color: #4b5563; flex-shrink: 0; }
-  .log-user { color: #a78bfa; font-weight: 600; }
-  .log-msg { color: #e2e8f0; }
+  .log-time { color: #4b5568; flex-shrink: 0; }
+  .log-user { color: var(--accent-2); font-weight: 600; }
+  .log-msg { color: #dfe2ea; }
   .log-error { color: var(--red); }
   .log-success { color: var(--green); }
 
-  .console-bar { display: grid; grid-template-columns: 1fr auto; border-top: 1px solid var(--border); background: #14171e; }
-  .console-bar input { background: transparent; border: none; color: var(--text); padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; outline: none; width: 100%; min-width: 0; }
-  .console-bar button { border: none; background: var(--accent); color: #fff; padding: 0 18px; font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+  .commands-bar { display: grid; grid-template-columns: 1fr auto; border-top: 1px solid var(--border); background: #0e1015; }
+  .commands-bar input { background: transparent; border: none; color: var(--text); padding: 12px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; outline: none; width: 100%; min-width: 0; }
+  .commands-bar button { border: none; background: var(--accent); color: #fff; padding: 0 18px; font-weight: 700; font-size: 0.78rem; cursor: pointer; border-radius: 0; }
 
   .profile-badge { display: flex; align-items: center; gap: 8px; }
   .profile-badge img { width: 26px; height: 26px; border-radius: 50%; }
@@ -183,8 +206,8 @@
   #legal-view h1 { font-size: 1.6rem; margin-bottom: 8px; }
   #legal-view .updated { color: var(--text-muted); font-size: 0.83rem; margin-bottom: 28px; }
   #legal-view h2 { font-size: 1.05rem; margin: 24px 0 10px; }
-  #legal-view p { color: #cbd5e1; line-height: 1.7; margin-bottom: 12px; font-size: 0.9rem; }
-  #legal-view ul { color: #cbd5e1; line-height: 1.7; margin: 0 0 12px 20px; font-size: 0.9rem; }
+  #legal-view p { color: #cbd0dc; line-height: 1.7; margin-bottom: 12px; font-size: 0.9rem; }
+  #legal-view ul { color: #cbd0dc; line-height: 1.7; margin: 0 0 12px 20px; font-size: 0.9rem; }
   .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent-2); font-size: 0.84rem; cursor: pointer; }
   .back-link:hover { text-decoration: underline; }
 
@@ -195,11 +218,10 @@
   }
   .footer-links { display: flex; gap: 16px; }
 
-  /* visible error banner so failures never look like silent nothing */
   #error-banner {
-    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35);
-    color: #fca5a5; padding: 12px 16px; font-size: 0.82rem; margin: 16px clamp(12px,3vw,24px) 0;
-    border-radius: 8px; max-width: 1040px; margin-left: auto; margin-right: auto;
+    background: rgba(239,111,111,0.12); border: 1px solid rgba(239,111,111,0.35);
+    color: #f5b5b5; padding: 12px 16px; font-size: 0.82rem; margin: 16px clamp(12px,3vw,24px) 0;
+    border-radius: 10px; max-width: 1040px; margin-left: auto; margin-right: auto;
   }
 
   @media (max-width: 860px) {
@@ -223,7 +245,7 @@
 
 <nav>
   <div class="brand">
-    <div class="brand-mark">U</div>
+    <div class="brand-mark"><img src="icon.png" alt="Unknown" onerror="this.parentElement.textContent='U'"></div>
     <span>Unknown</span>
   </div>
   <div style="display: flex; align-items: center; gap: 12px;">
@@ -238,6 +260,7 @@
 
 <div id="landing-view">
   <div class="hero">
+    <img class="hero-banner" src="banner.png" alt="Unknown RNG" onerror="this.style.display='none'">
     <div class="hero-badge">Moderation dashboard for Unknown RNG</div>
     <h1>See what your servers are doing, without opening Discord.</h1>
     <p>Log in with Discord to view every server Unknown protects that you manage — real case counts, active mutes, mod activity, and the ability to run commands straight into your live Roblox servers.</p>
@@ -262,7 +285,7 @@
       <div class="tab-btn active" data-pane="stats">Overview</div>
       <div class="tab-btn" data-pane="modlog">Moderation Log</div>
       <div class="tab-btn" data-pane="servers">Your Servers</div>
-      <div class="tab-btn" data-pane="console">Roblox Console</div>
+      <div class="tab-btn" data-pane="console">Live Commands</div>
       <div class="tab-btn" data-pane="settings">Configure Bot</div>
     </aside>
 
@@ -308,16 +331,16 @@
       </div>
 
       <div id="pane-console" class="page">
-        <div class="page-title">Roblox Console</div>
+        <div class="page-title">Live Commands</div>
         <div class="page-desc">Sends commands into your live Roblox servers the same way /ingame does in Discord.</div>
 
-        <div class="console mono">
-          <div class="console-top"><span>Live Server Command Line</span></div>
-          <div class="console-screen" id="console-logs">
+        <div class="commands-panel-title mono">
+          <div class="commands-top"><span>Live Server Command Line</span></div>
+          <div class="commands-screen" id="console-logs">
             <div class="log"><span class="log-time">[--:--:--]</span> <span class="log-msg">Waiting for a command...</span></div>
           </div>
           <form id="console-form">
-            <div class="console-bar">
+            <div class="commands-bar">
               <input type="text" id="console-input" placeholder="Type a command, e.g. announce Event starting soon" autocomplete="off">
               <button type="submit">Run</button>
             </div>
@@ -333,8 +356,9 @@
           <div class="panel-title">Moderator Role</div>
           <div class="panel-desc">Anyone with this role can use moderation commands, alongside anyone with Discord's own Kick/Ban/Timeout permissions.</div>
           <div class="field-group">
-            <label class="field-label">Mod role ID</label>
-            <div class="field-hint">Right-click a role in Discord with Developer Mode on to copy its ID.</div>
+            <label class="field-label">Mod role</label>
+            <div class="field-hint" id="modrole-hint">Choose the role your moderators use. If your roles haven't loaded, paste a role ID instead.</div>
+            <select class="field-select" id="setting-modrole-select" style="display:none;"></select>
             <input class="field-input" id="setting-modrole" placeholder="e.g. 1234567890123456">
           </div>
         </div>
@@ -343,11 +367,15 @@
           <div class="panel-title">Log Channels</div>
           <div class="panel-desc">Where moderation actions get posted. The summary channel gets a short line, the detailed channel gets the full case card.</div>
           <div class="field-group">
-            <label class="field-label">Summary log channel ID</label>
+            <label class="field-label">Summary log channel</label>
+            <div class="field-hint" id="summarylog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
+            <select class="field-select" id="setting-summarylog-select" style="display:none;"></select>
             <input class="field-input" id="setting-summarylog" placeholder="e.g. 1234567890123456">
           </div>
           <div class="field-group">
-            <label class="field-label">Detailed log channel ID</label>
+            <label class="field-label">Detailed log channel</label>
+            <div class="field-hint" id="detailedlog-hint">Pick a text channel. If channels haven't loaded, paste a channel ID instead.</div>
+            <select class="field-select" id="setting-detailedlog-select" style="display:none;"></select>
             <input class="field-input" id="setting-detailedlog" placeholder="e.g. 1234567890123456">
           </div>
         </div>
@@ -606,7 +634,7 @@
       var value = types[type];
       var height = Math.max(4, Math.round((value / max) * 160));
       html += '<div class="bar-col">' +
-        '<div style="font-size:0.72rem;color:#cbd5e1;">' + value + '</div>' +
+        '<div style="font-size:0.72rem;color:#cbd0dc;">' + value + '</div>' +
         '<div class="bar" style="height:' + height + 'px;"></div>' +
         '<div class="bar-label">' + escapeHtml(type) + '</div>' +
         '</div>';
@@ -668,10 +696,70 @@
     }
   }
 
+  // ── Settings: dropdowns when the bot API gives us roles/channels,
+  // plain ID inputs otherwise. Same three fields get saved either way,
+  // so nothing about what's sent to the server changes. ────────────────────
+
+  function populateSelect(selectEl, items, currentValue, placeholder) {
+    var html = '<option value="">' + placeholder + '</option>';
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var selected = (item.id === currentValue) ? ' selected' : '';
+      html += '<option value="' + item.id + '"' + selected + '>' + escapeHtml(item.name) + '</option>';
+    }
+    selectEl.innerHTML = html;
+  }
+
+  function wireSelectToInput(selectEl, inputEl) {
+    selectEl.addEventListener('change', function () {
+      inputEl.value = selectEl.value;
+    });
+  }
+
   function renderSettings(guild) {
-    document.getElementById('setting-modrole').value     = guild.settings.modRoleId || '';
-    document.getElementById('setting-summarylog').value  = guild.settings.summaryLogChannelId || '';
-    document.getElementById('setting-detailedlog').value = guild.settings.detailedLogChannelId || '';
+    var modRoleInput      = document.getElementById('setting-modrole');
+    var summaryLogInput   = document.getElementById('setting-summarylog');
+    var detailedLogInput  = document.getElementById('setting-detailedlog');
+
+    modRoleInput.value     = guild.settings.modRoleId || '';
+    summaryLogInput.value  = guild.settings.summaryLogChannelId || '';
+    detailedLogInput.value = guild.settings.detailedLogChannelId || '';
+
+    var roleSelect    = document.getElementById('setting-modrole-select');
+    var summarySelect = document.getElementById('setting-summarylog-select');
+    var detailSelect  = document.getElementById('setting-detailedlog-select');
+
+    // Roles/channels are optional extras some deployments of the bot expose
+    // on the guild object. If they're not there, the plain ID field below
+    // still works exactly as before.
+    if (guild.roles && guild.roles.length) {
+      populateSelect(roleSelect, guild.roles, modRoleInput.value, 'Choose a role');
+      roleSelect.style.display = 'block';
+      modRoleInput.style.display = 'none';
+      document.getElementById('modrole-hint').textContent = 'Anyone with this role can use moderation commands.';
+      wireSelectToInput(roleSelect, modRoleInput);
+    } else {
+      roleSelect.style.display = 'none';
+      modRoleInput.style.display = 'block';
+    }
+
+    if (guild.channels && guild.channels.length) {
+      populateSelect(summarySelect, guild.channels, summaryLogInput.value, 'Choose a channel');
+      populateSelect(detailSelect, guild.channels, detailedLogInput.value, 'Choose a channel');
+      summarySelect.style.display = 'block';
+      detailSelect.style.display = 'block';
+      summaryLogInput.style.display = 'none';
+      detailedLogInput.style.display = 'none';
+      document.getElementById('summarylog-hint').textContent = 'Short summary lines are posted here.';
+      document.getElementById('detailedlog-hint').textContent = 'Full case cards are posted here.';
+      wireSelectToInput(summarySelect, summaryLogInput);
+      wireSelectToInput(detailSelect, detailedLogInput);
+    } else {
+      summarySelect.style.display = 'none';
+      detailSelect.style.display = 'none';
+      summaryLogInput.style.display = 'block';
+      detailedLogInput.style.display = 'block';
+    }
   }
 
   function saveSettings() {
@@ -713,7 +801,7 @@
       });
   }
 
-  // ── Console ──────────────────────────────────────────────────────────────
+  // ── Live commands ────────────────────────────────────────────────────────
 
   function sendConsoleCommand(e) {
     e.preventDefault();
@@ -769,7 +857,7 @@
         "<li>Moderation cases: who was banned, kicked, muted, warned, or noted, who did it, and why.</li>" +
         "<li>Server settings you configure, like your mod role and log channels.</li>" +
         "<li>Linked Roblox usernames, if you connect a Discord account to one.</li>" +
-        "<li>Which Roblox servers are currently online, so the console feature knows where to send commands.</li>" +
+        "<li>Which Roblox servers are currently online, so the in-game commands feature knows where to send them.</li>" +
         "</ul>" +
         "<h2>What does not get stored</h2>" +
         "<p>Your Discord login token is never saved on our servers. It stays in your browser only for the length of your session and is used just to check which servers you can manage.</p>" +
@@ -787,7 +875,7 @@
         "<h2>Using the dashboard</h2>" +
         "<p>By logging in, you agree that any moderation action you take through this dashboard is your responsibility, the same as if you typed the command in Discord directly.</p>" +
         "<h2>Fair use</h2>" +
-        "<p>Don't use the console feature to run commands you wouldn't be allowed to run in-game normally. Server owners are responsible for who they give Manage Server permission to.</p>" +
+        "<p>Don't use the live commands feature to run commands you wouldn't be allowed to run in-game normally. Server owners are responsible for who they give Manage Server permission to.</p>" +
         "<h2>Changes</h2>" +
         "<p>These terms may be updated as the bot changes. Continuing to use the bot after changes means you accept the update.</p>"
     }
