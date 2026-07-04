@@ -20,9 +20,9 @@
     --text: #eef0f5;
     --text-dim: #9298a8;
     --text-faint: #5d6272;
-    --indigo: #6e7bf2;
-    --indigo-soft: #4c56b8;
-    --violet: #9d7bf2;
+    --indigo: #10b981;
+    --indigo-soft: #0e9e6f;
+    --violet: #34d399;
     --red: #ef6f6f;
     --green: #5fcf8e;
   }
@@ -43,8 +43,8 @@
   body::before{
     content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(110,123,242,0.14), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(157,123,242,0.08), transparent 60%);
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(16,185,129,0.14), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(52,211,153,0.08), transparent 60%);
   }
 
   nav{
@@ -121,7 +121,7 @@
     white-space:nowrap;
   }
   .btn:active{ transform:translateY(1px); }
-  .btn-primary{ background:linear-gradient(135deg, var(--indigo), var(--violet)); color:#fff; box-shadow:0 8px 24px -8px rgba(110,123,242,0.55); }
+  .btn-primary{ background:linear-gradient(135deg, var(--indigo), var(--violet)); color:#fff; box-shadow:0 8px 24px -8px rgba(16,185,129,0.45); }
   .btn-primary:hover{ opacity:0.92; }
   .btn-secondary{
     background:var(--panel); border:1px solid var(--line); color:var(--text);
