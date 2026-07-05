@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unknown.gg | Dashboard</title>
+<title>Unknown.gg — Dashboard</title>
+<meta name="description" content="Manage Unknown across every server you moderate. Live stats, moderation logs, and Roblox console access.">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -24,6 +25,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     background: var(--bg); color: var(--text);
     font-family: 'Nunito', sans-serif;
@@ -34,10 +36,11 @@
   .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
   img { max-width: 100%; }
 
-  nav {
+  /* ── Shared site nav ─────────────────────────────────────────── */
+  .site-nav {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
-    background: var(--panel-2); position: sticky; top: 0; z-index: 100; gap: 10px;
+    background: var(--panel-2); position: sticky; top: 0; z-index: 100; gap: 16px;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; white-space: nowrap; }
   .brand-mark {
@@ -47,6 +50,10 @@
     font-weight: 900; font-size: 0.8rem; color: #04140d;
     box-shadow: 0 0 16px var(--emerald-glow);
   }
+  .site-nav-links { display: flex; gap: 22px; font-size: 0.86rem; font-weight: 700; color: var(--text-dim); flex: 1; }
+  .site-nav-links a:hover { color: var(--text); }
+  .site-nav-links a.current { color: var(--emerald); }
+  @media (max-width: 780px) { .site-nav-links { display: none; } }
 
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.76rem; color: var(--text-faint); font-weight: 600; white-space: nowrap; font-family: 'JetBrains Mono'; }
   .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
@@ -59,8 +66,8 @@
     transition: filter 0.15s, transform 0.1s; font-family: inherit; white-space: nowrap;
   }
   .btn:active { transform: translateY(1px); }
-  .btn-login { background: #5865F2; color: #fff; border-radius: 8px; }
-  .btn-login:hover { filter: brightness(1.1); }
+  .btn-login { background: #5865F2; color: #fff; border-radius: 10px; padding: 11px 20px; }
+  .btn-login:hover { filter: brightness(1.1); transform: translateY(-1px); }
   .btn-action { background: var(--emerald); color: #04140d; box-shadow: 0 0 20px var(--emerald-glow); }
   .btn-action:hover { filter: brightness(1.08); }
   .btn-nav { background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 8px; }
@@ -74,19 +81,58 @@
   #dashboard-view { display: none; }
   #error-banner { display: none; }
 
-  .hero { max-width: 620px; margin: clamp(60px, 12vw, 130px) auto 0; text-align: center; padding: 0 20px; }
+  /* ── Landing / login screen ───────────────────────────────────── */
+
+  .hero-wrap { position: relative; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.28; pointer-events: none; z-index: 0; }
+
+  .hero {
+    position: relative; z-index: 1;
+    max-width: 640px; margin: clamp(50px, 10vw, 100px) auto 0; text-align: center; padding: 0 20px clamp(50px, 8vw, 90px);
+  }
   .hero-icon {
-    width: 60px; height: 60px; border-radius: 14px; margin: 0 auto 22px;
+    width: 68px; height: 68px; border-radius: 16px; margin: 0 auto 26px;
     background: linear-gradient(160deg, var(--emerald), var(--emerald-dim));
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 1.6rem; color: #04140d;
-    box-shadow: 0 0 30px var(--emerald-glow);
+    font-weight: 900; font-size: 1.8rem; color: #04140d;
+    box-shadow: 0 0 40px var(--emerald-glow);
   }
-  .hero h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1.16; margin-bottom: 16px; }
-  .hero p { color: var(--text-dim); font-size: 0.98rem; line-height: 1.6; max-width: 460px; margin: 0 auto 28px; font-weight: 600; }
-  .hero-note { margin-top: 20px; font-size: 0.8rem; color: var(--text-faint); font-weight: 600; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.78rem; color: var(--text-faint); font-weight: 700;
+    padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px;
+    background: var(--panel); margin-bottom: 20px;
+  }
+  .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 6px var(--emerald); }
+  .hero h1 { font-size: clamp(1.9rem, 5vw, 2.7rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
+  .hero p { color: var(--text-dim); font-size: 1rem; line-height: 1.65; max-width: 480px; margin: 0 auto 30px; font-weight: 600; }
+
+  .login-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+    padding: 32px clamp(20px, 5vw, 36px); max-width: 420px; margin: 0 auto;
+  }
+  .login-card .btn-login { width: 100%; justify-content: center; padding: 14px; font-size: 0.95rem; }
+  .login-perms { text-align: left; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .login-perms-title { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); font-weight: 800; margin-bottom: 12px; }
+  .login-perm-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; font-size: 0.86rem; color: var(--text-dim); font-weight: 500; line-height: 1.5; }
+  .login-perm-item:last-child { margin-bottom: 0; }
+  .login-perm-icon { width: 18px; height: 18px; border-radius: 5px; background: rgba(34,201,138,0.15); color: var(--emerald); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; margin-top: 1px; }
+
+  .hero-note { margin-top: 22px; font-size: 0.8rem; color: var(--text-faint); font-weight: 600; }
   .hero-note a { color: var(--emerald); cursor: pointer; }
   .hero-note a:hover { text-decoration: underline; }
+
+  /* small feature strip under login, reinforces trust */
+  .trust-strip {
+    max-width: 800px; margin: 0 auto; padding: 0 20px clamp(50px, 8vw, 80px);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; position: relative; z-index: 1;
+  }
+  .trust-item { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center; }
+  .trust-item .num { font-family: 'JetBrains Mono'; font-size: 1.3rem; font-weight: 800; color: var(--emerald); }
+  .trust-item .label { font-size: 0.74rem; color: var(--text-faint); margin-top: 4px; font-weight: 700; }
+  @media (max-width: 640px) { .trust-strip { grid-template-columns: 1fr; } }
+
+  /* ── Dashboard app (unchanged layout, different page ids) ─────── */
 
   .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 61px); }
 
@@ -224,27 +270,18 @@
 
   .empty-state { color: var(--text-faint); font-size: 0.86rem; padding: 26px; text-align: center; font-weight: 600; }
 
-  #legal-view { display: none; max-width: 720px; margin: 40px auto; padding: 0 20px 80px; }
-  #legal-view h1 { font-size: 1.6rem; margin-bottom: 8px; font-weight: 900; }
-  #legal-view .updated { color: var(--text-faint); font-size: 0.83rem; margin-bottom: 28px; font-family: 'JetBrains Mono'; }
-  #legal-view h2 { font-size: 1.05rem; margin: 24px 0 10px; font-weight: 800; }
-  #legal-view p { color: var(--text-dim); line-height: 1.7; margin-bottom: 12px; font-size: 0.9rem; font-weight: 500; }
-  #legal-view ul { color: var(--text-dim); line-height: 1.7; margin: 0 0 12px 20px; font-size: 0.9rem; font-weight: 500; }
-  .back-link { display: inline-block; margin-bottom: 20px; color: var(--emerald); font-size: 0.84rem; cursor: pointer; font-weight: 700; }
-  .back-link:hover { text-decoration: underline; }
-
-  footer.site-footer {
-    border-top: 1px solid var(--border); padding: 18px clamp(12px, 3vw, 24px); display: flex;
-    justify-content: space-between; align-items: center; font-size: 0.77rem; color: var(--text-faint);
-    flex-wrap: wrap; gap: 10px; font-weight: 600;
-  }
-  .footer-links { display: flex; gap: 16px; }
-
   #error-banner {
     background: rgba(239,90,90,0.1); border: 1px solid rgba(239,90,90,0.35);
     color: #f5b8b8; padding: 12px 16px; font-size: 0.81rem; margin: 16px clamp(12px,3vw,24px) 0;
     border-radius: 10px; max-width: 1040px; margin-left: auto; margin-right: auto; font-family: 'JetBrains Mono';
   }
+
+  footer.site-footer {
+    border-top: 1px solid var(--border); padding: 22px clamp(12px, 3vw, 24px); display: flex;
+    justify-content: space-between; align-items: center; font-size: 0.77rem; color: var(--text-faint);
+    flex-wrap: wrap; gap: 10px; font-weight: 600;
+  }
+  .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
 
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
@@ -259,16 +296,22 @@
   @media (max-width: 560px) {
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .case-meta { text-align: left; }
-    nav .status span:last-child { display: none; }
+    .site-nav .status span:last-child { display: none; }
   }
 </style>
 </head>
 <body>
 
-<nav>
+<nav class="site-nav">
   <div class="brand">
     <div class="brand-mark">U</div>
     <span>Unknown</span>
+  </div>
+  <div class="site-nav-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html" class="current">Dashboard</a>
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
   </div>
   <div style="display: flex; align-items: center; gap: 12px;">
     <div class="status"><span class="status-dot" id="bot-status-dot"></span><span id="bot-status-text">Checking bot status...</span></div>
@@ -281,12 +324,38 @@
 <div id="error-banner"></div>
 
 <div id="landing-view">
-  <div class="hero">
-    <div class="hero-icon">U</div>
-    <h1>See what your servers are doing, without opening Discord.</h1>
-    <p>Log in with Discord to view every server Unknown protects that you manage — real case counts, active mutes, mod activity, and the ability to run commands straight into your live Roblox servers.</p>
-    <button class="btn btn-action" id="hero-login-btn">Open Dashboard</button>
-    <div class="hero-note">Only shows servers where you have Manage Server permission. <a id="link-privacy">Privacy Policy</a> · <a id="link-terms">Terms of Service</a></div>
+  <div class="hero-wrap">
+    <div class="blob" style="width:380px;height:380px;background:var(--emerald);top:-100px;left:12%;"></div>
+    <div class="blob" style="width:300px;height:300px;background:var(--purple);top:40px;right:8%;"></div>
+
+    <div class="hero">
+      <div class="hero-icon">U</div>
+      <div class="hero-eyebrow"><span class="dot"></span> Dashboard access</div>
+      <h1>Sign in to manage your servers.</h1>
+      <p>See real case counts, active mutes, and moderation activity for every server Unknown protects that you manage — plus a console for running commands straight into your live Roblox servers.</p>
+
+      <div class="login-card">
+        <button class="btn btn-login" id="hero-login-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+          Continue with Discord
+        </button>
+
+        <div class="login-perms">
+          <div class="login-perms-title">What this gives Unknown</div>
+          <div class="login-perm-item"><span class="login-perm-icon">✓</span>Read your username and avatar, just to show who's logged in.</div>
+          <div class="login-perm-item"><span class="login-perm-icon">✓</span>See which servers you have Manage Server permission in.</div>
+          <div class="login-perm-item"><span class="login-perm-icon">✓</span>Nothing else. No message history, no DMs, no ability to act as you.</div>
+        </div>
+      </div>
+
+      <div class="hero-note">Only shows servers where you have Manage Server permission. <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a></div>
+    </div>
+
+    <div class="trust-strip">
+      <div class="trust-item"><div class="num mono" id="trust-cases">&mdash;</div><div class="label">Total Cases</div></div>
+      <div class="trust-item"><div class="num mono" id="trust-servers">&mdash;</div><div class="label">Live Servers</div></div>
+      <div class="trust-item"><div class="num mono" id="trust-guilds">&mdash;</div><div class="label">Servers Protected</div></div>
+    </div>
   </div>
 </div>
 
@@ -490,15 +559,14 @@
   </div>
 </div>
 
-<div id="legal-view">
-  <div id="legal-content"></div>
-</div>
-
-<footer class="site-footer" id="site-footer" style="display:none;">
+<footer class="site-footer">
   <div>Unknown — built for Unknown RNG</div>
   <div class="footer-links">
-    <a id="footer-link-privacy">Privacy Policy</a>
-    <a id="footer-link-terms">Terms of Service</a>
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="legal.html">Legal</a>
   </div>
 </footer>
 
@@ -552,6 +620,8 @@
     if (saved) {
       authToken = saved;
       loadDashboard();
+    } else {
+      loadTrustStats();
     }
   }
 
@@ -603,10 +673,22 @@
     else startBotStatusPolling();
   });
 
+  // Shows a few real numbers on the login screen itself, before anyone signs in
+  function loadTrustStats() {
+    fetchWithTimeout(BOT_API_URL + "/stats", { cache: "no-store" }, 8000)
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        document.getElementById('trust-cases').textContent   = (data.totalCases || 0).toLocaleString();
+        document.getElementById('trust-servers').textContent = (data.liveServers || 0).toLocaleString();
+        document.getElementById('trust-guilds').textContent  = (data.guildCount || 0).toLocaleString();
+      })
+      .catch(function () {});
+  }
+
   function loadDashboard() {
     document.getElementById('landing-view').style.display = 'none';
     document.getElementById('dashboard-view').style.display = 'block';
-    document.getElementById('site-footer').style.display = 'flex';
     clearError();
 
     fetchWithTimeout("https://discord.com/api/users/@me", {
@@ -685,8 +767,8 @@
 
   function showServerPicker() {
     if (allGuilds.length <= 1) return;
-    var names = allGuilds.map(function (g, i) { return (i + 1) + ". " + g.name; }).join("\\n");
-    var pick = prompt("Type the number of the server to switch to:\\n\\n" + names);
+    var names = allGuilds.map(function (g, i) { return (i + 1) + ". " + g.name; }).join("\n");
+    var pick = prompt("Type the number of the server to switch to:\n\n" + names);
     var idx = parseInt(pick, 10) - 1;
     if (allGuilds[idx]) selectGuild(allGuilds[idx].id);
   }
@@ -909,71 +991,6 @@
       });
   }
 
-  var LEGAL_PAGES = {
-    privacy: {
-      title: "Privacy Policy",
-      updated: "Last updated July 2026",
-      body:
-        "<h2>What this page covers</h2>" +
-        "<p>This explains what Unknown stores when you use it in your Discord server or log into this dashboard.</p>" +
-        "<h2>What gets stored</h2>" +
-        "<ul>" +
-        "<li>Moderation cases: who was banned, kicked, muted, warned, or noted, who did it, and why.</li>" +
-        "<li>Server settings you configure, like your mod role, log channels, prefix, and AI Moderation status.</li>" +
-        "<li>Linked Roblox usernames, if you connect a Discord account to one.</li>" +
-        "<li>Which Roblox servers are currently online, so the console feature knows where to send commands.</li>" +
-        "<li>If AI Moderation is turned on, the text of messages that get flagged for review, so a moderator can see what triggered the flag.</li>" +
-        "</ul>" +
-        "<h2>What does not get stored</h2>" +
-        "<p>Your Discord login token is never saved on our servers. It stays in your browser only for the length of your session and is used just to check which servers you can manage.</p>" +
-        "<h2>Who can see this data</h2>" +
-        "<p>Only people with Manage Server permission in a given server can view that server's cases and settings through this dashboard. Nobody can see data for a server they don't have permission in.</p>" +
-        "<h2>Questions</h2>" +
-        "<p>If you want data about your server removed, reach out through the Discord server where you found this bot.</p>"
-    },
-    terms: {
-      title: "Terms of Service",
-      updated: "Last updated July 2026",
-      body:
-        "<h2>Using the bot</h2>" +
-        "<p>Unknown is provided as-is for moderating your Discord server and connecting to your Roblox game. There's no guarantee it will always be online or bug-free, though we try to keep it running.</p>" +
-        "<h2>AI Moderation is a beta feature</h2>" +
-        "<p>AI Moderation flags messages using pattern matching, not a full understanding of context. It will miss things and occasionally flag something harmless. It never takes action on its own — a human moderator reviews every flag.</p>" +
-        "<h2>Using the dashboard</h2>" +
-        "<p>By logging in, you agree that any moderation action or setting change you make through this dashboard is your responsibility, the same as if you typed the command in Discord directly.</p>" +
-        "<h2>Fair use</h2>" +
-        "<p>Don't use the console feature to run commands you wouldn't be allowed to run in-game normally. Server owners are responsible for who they give Manage Server permission to.</p>" +
-        "<h2>Changes</h2>" +
-        "<p>These terms may be updated as the bot changes. Continuing to use the bot after changes means you accept the update.</p>"
-    }
-  };
-
-  function showLegal(page) {
-    document.getElementById('landing-view').style.display = 'none';
-    document.getElementById('dashboard-view').style.display = 'none';
-    document.getElementById('legal-view').style.display = 'block';
-    document.getElementById('site-footer').style.display = 'flex';
-
-    var data = LEGAL_PAGES[page];
-    document.getElementById('legal-content').innerHTML =
-      '<div class="back-link" id="legal-back-btn">&larr; Back</div>' +
-      '<h1>' + data.title + '</h1>' +
-      '<div class="updated">' + data.updated + '</div>' +
-      data.body;
-
-    document.getElementById('legal-back-btn').addEventListener('click', hideLegal);
-  }
-
-  function hideLegal() {
-    document.getElementById('legal-view').style.display = 'none';
-    if (authToken) {
-      document.getElementById('dashboard-view').style.display = 'block';
-    } else {
-      document.getElementById('landing-view').style.display = 'block';
-      document.getElementById('site-footer').style.display = 'none';
-    }
-  }
-
   function escapeHtml(str) {
     if (str === null || str === undefined) return '';
     return String(str)
@@ -986,10 +1003,6 @@
   function wireEvents() {
     document.getElementById('login-btn').addEventListener('click', redirectToDiscord);
     document.getElementById('hero-login-btn').addEventListener('click', redirectToDiscord);
-    document.getElementById('link-privacy').addEventListener('click', function () { showLegal('privacy'); });
-    document.getElementById('link-terms').addEventListener('click', function () { showLegal('terms'); });
-    document.getElementById('footer-link-privacy').addEventListener('click', function () { showLegal('privacy'); });
-    document.getElementById('footer-link-terms').addEventListener('click', function () { showLegal('terms'); });
     document.getElementById('switch-server-btn').addEventListener('click', showServerPicker);
     document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
     document.getElementById('reset-settings-btn').addEventListener('click', resetSettings);
