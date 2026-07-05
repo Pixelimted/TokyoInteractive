@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unknown.gg — Docs</title>
+<meta name="description" content="Setup guide and command reference for Unknown, the moderation bot for Unknown RNG.">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c1016; --panel: #151b25; --panel-2: #1a212c; --border: #232b38;
+    --text: #ffffff; --text-dim: #9aa5b8; --text-faint: #626e82;
+    --emerald: #22c98a; --emerald-dim: #1a9c6b; --emerald-glow: rgba(34,201,138,0.3);
+    --red: #ef5a5a; --amber: #f5b942; --purple: #8b7bf0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .site-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
+    background: var(--panel-2); position: sticky; top: 0; z-index: 100; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; white-space: nowrap; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background: linear-gradient(160deg, var(--emerald), var(--emerald-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.8rem; color: #04140d; box-shadow: 0 0 16px var(--emerald-glow);
+  }
+  .site-nav-links { display: flex; gap: 22px; font-size: 0.86rem; font-weight: 700; color: var(--text-dim); flex: 1; }
+  .site-nav-links a:hover { color: var(--text); }
+  .site-nav-links a.current { color: var(--emerald); }
+  @media (max-width: 780px) { .site-nav-links { display: none; } }
+  .btn {
+    padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 800;
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;
+    transition: filter 0.15s, transform 0.1s; font-family: inherit; white-space: nowrap;
+  }
+  .btn-action { background: var(--emerald); color: #04140d; box-shadow: 0 0 20px var(--emerald-glow); }
+  .btn-action:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  .page-wrap { max-width: 1080px; margin: 0 auto; padding: clamp(36px, 6vw, 60px) clamp(16px, 4vw, 32px) 80px; display: grid; grid-template-columns: 220px 1fr; gap: 40px; }
+  @media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } }
+
+  .toc { position: sticky; top: 80px; align-self: start; }
+  .toc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); font-weight: 800; margin-bottom: 12px; }
+  .toc a { display: block; padding: 7px 10px; border-radius: 8px; font-size: 0.86rem; color: var(--text-dim); font-weight: 600; margin-bottom: 2px; }
+  .toc a:hover { color: var(--text); background: var(--panel); }
+  @media (max-width: 860px) { .toc { position: static; display: flex; flex-wrap: wrap; gap: 6px; } .toc a { padding: 6px 10px; } }
+
+  .content h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .content > p.lead { color: var(--text-dim); font-size: 1rem; font-weight: 600; margin-bottom: 40px; max-width: 60ch; line-height: 1.6; }
+  .content h2 { font-size: 1.3rem; font-weight: 800; margin: 44px 0 14px; scroll-margin-top: 80px; }
+  .content h2:first-of-type { margin-top: 0; }
+  .content p { color: var(--text-dim); line-height: 1.7; margin-bottom: 14px; font-size: 0.95rem; font-weight: 500; }
+  .content ul, .content ol { color: var(--text-dim); line-height: 1.8; margin: 0 0 16px 22px; font-size: 0.95rem; font-weight: 500; }
+  .content li { margin-bottom: 4px; }
+  .content code { font-family: 'JetBrains Mono'; background: var(--panel); border: 1px solid var(--border); padding: 2px 7px; border-radius: 5px; font-size: 0.86em; color: var(--emerald); }
+
+  .step-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; display: flex; gap: 16px; }
+  .step-num { width: 30px; height: 30px; border-radius: 9px; background: rgba(34,201,138,0.15); color: var(--emerald); display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'JetBrains Mono'; flex-shrink: 0; }
+  .step-card h4 { font-size: 0.96rem; font-weight: 800; margin-bottom: 5px; }
+  .step-card p { margin-bottom: 0; font-size: 0.88rem; }
+
+  .cmd-table { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--panel); margin-bottom: 16px; }
+  .cmd-row { display: grid; grid-template-columns: 170px 1fr; gap: 20px; padding: 13px 18px; border-bottom: 1px solid var(--border); align-items: center; }
+  .cmd-row:last-child { border-bottom: none; }
+  .cmd-name { font-family: 'JetBrains Mono'; font-size: 0.83rem; color: var(--emerald); font-weight: 600; }
+  .cmd-desc { font-size: 0.86rem; color: var(--text-dim); font-weight: 500; }
+  @media (max-width: 600px) { .cmd-row { grid-template-columns: 1fr; gap: 4px; } }
+
+  .note-box { border-left: 3px solid var(--purple); background: rgba(139,123,240,0.06); padding: 14px 18px; border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+  .note-box p { margin-bottom: 0; color: var(--text-dim); font-size: 0.88rem; }
+  .note-box strong { color: var(--text); }
+
+  footer.site-footer {
+    border-top: 1px solid var(--border); padding: 22px clamp(12px, 3vw, 24px); display: flex;
+    justify-content: space-between; align-items: center; font-size: 0.77rem; color: var(--text-faint);
+    flex-wrap: wrap; gap: 10px; font-weight: 600;
+  }
+  .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand"><div class="brand-mark">U</div><span>Unknown</span></div>
+  <div class="site-nav-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="docs.html" class="current">Docs</a>
+    <a href="help.html">Help</a>
+  </div>
+  <a href="dashboard.html" class="btn btn-action">Open Dashboard</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="toc">
+    <div class="toc-label">On this page</div>
+    <a href="#getting-started">Getting Started</a>
+    <a href="#setup">The /setup command</a>
+    <a href="#moderation">Moderation commands</a>
+    <a href="#prefix">Prefix commands</a>
+    <a href="#aimod">AI Moderation (beta)</a>
+    <a href="#ingame">Roblox console</a>
+    <a href="#dashboard">Using the dashboard</a>
+  </div>
+
+  <div class="content">
+    <h1>Documentation</h1>
+    <p class="lead">Everything you need to set up and run Unknown in your server, from the mod role to the Roblox console.</p>
+
+    <h2 id="getting-started">Getting Started</h2>
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div><h4>Add Unknown to your server</h4><p>You'll need Manage Server permission on the server you're adding it to.</p></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div><h4>Run <code>/setup</code></h4><p>Set your mod role and log channels. Every option in this command is optional, so you can run it multiple times to change one thing at a time.</p></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div><h4>Log into the dashboard</h4><p>For a visual view of cases, live stats, and settings, sign in at the <a href="dashboard.html" style="color:var(--emerald); font-weight:700;">dashboard</a> with Discord.</p></div>
+    </div>
+
+    <h2 id="setup">The /setup command</h2>
+    <p>Unknown uses one <code>/setup</code> command for all configuration, rather than a separate subcommand for every setting. Run it with no options to see your current configuration, or fill in only the fields you want to change.</p>
+    <div class="cmd-table">
+      <div class="cmd-row"><div class="cmd-name">modrole</div><div class="cmd-desc">Role that can use moderation commands</div></div>
+      <div class="cmd-row"><div class="cmd-name">summarylog</div><div class="cmd-desc">Channel for short one-line case summaries</div></div>
+      <div class="cmd-row"><div class="cmd-name">detailedlog</div><div class="cmd-desc">Channel for full case cards</div></div>
+      <div class="cmd-row"><div class="cmd-name">warnkickat</div><div class="cmd-desc">Auto-kick after this many warnings (1-20)</div></div>
+      <div class="cmd-row"><div class="cmd-name">warnbanat</div><div class="cmd-desc">Auto-ban after this many warnings (1-20)</div></div>
+      <div class="cmd-row"><div class="cmd-name">dmonaction</div><div class="cmd-desc">Whether users get DMed when actioned</div></div>
+      <div class="cmd-row"><div class="cmd-name">logleaves</div><div class="cmd-desc">Whether member departures get logged</div></div>
+      <div class="cmd-row"><div class="cmd-name">prefix</div><div class="cmd-desc">Text command prefix, e.g. <code>!</code> or <code>.</code></div></div>
+      <div class="cmd-row"><div class="cmd-name">aimoderation</div><div class="cmd-desc">Turn AI Moderation on or off (beta)</div></div>
+      <div class="cmd-row"><div class="cmd-name">aimodchannel</div><div class="cmd-desc">Review channel for AI Moderation flags</div></div>
+    </div>
+
+    <h2 id="moderation">Moderation commands</h2>
+    <div class="cmd-table">
+      <div class="cmd-row"><div class="cmd-name">/ban</div><div class="cmd-desc">Ban a user, permanently or for a set duration</div></div>
+      <div class="cmd-row"><div class="cmd-name">/unban</div><div class="cmd-desc">Lift a ban using a user ID</div></div>
+      <div class="cmd-row"><div class="cmd-name">/kick</div><div class="cmd-desc">Remove a user from the server</div></div>
+      <div class="cmd-row"><div class="cmd-name">/mute</div><div class="cmd-desc">Timeout a user for a given duration</div></div>
+      <div class="cmd-row"><div class="cmd-name">/unmute</div><div class="cmd-desc">Lift an active timeout early</div></div>
+      <div class="cmd-row"><div class="cmd-name">/warn</div><div class="cmd-desc">Log a warning, counts toward auto-escalation</div></div>
+      <div class="cmd-row"><div class="cmd-name">/unwarn</div><div class="cmd-desc">Remove a warning by case ID</div></div>
+      <div class="cmd-row"><div class="cmd-name">/note</div><div class="cmd-desc">Attach a private mod-only note to a user</div></div>
+      <div class="cmd-row"><div class="cmd-name">/cases</div><div class="cmd-desc">View a user's full moderation history</div></div>
+      <div class="cmd-row"><div class="cmd-name">/case</div><div class="cmd-desc">Look up one case by its ID</div></div>
+      <div class="cmd-row"><div class="cmd-name">/viewlog</div><div class="cmd-desc">See recent moderation activity server-wide</div></div>
+      <div class="cmd-row"><div class="cmd-name">/reason</div><div class="cmd-desc">Edit the reason on an existing case</div></div>
+      <div class="cmd-row"><div class="cmd-name">/roblox</div><div class="cmd-desc">Link, view, or remove a Roblox username</div></div>
+      <div class="cmd-row"><div class="cmd-name">/purge</div><div class="cmd-desc">Bulk delete messages, optionally by user</div></div>
+      <div class="cmd-row"><div class="cmd-name">/slowmode</div><div class="cmd-desc">Set a channel's slowmode delay</div></div>
+      <div class="cmd-row"><div class="cmd-name">/lock, /unlock</div><div class="cmd-desc">Restrict or restore send permissions in a channel</div></div>
+      <div class="cmd-row"><div class="cmd-name">/userinfo</div><div class="cmd-desc">Pull account age, roles, and case count</div></div>
+    </div>
+    <p>Every command checks both your mod role <strong>and</strong> your Discord permissions. Having the mod role isn't enough on its own if Discord's own permission system would also block the action &mdash; both need to allow it.</p>
+
+    <h2 id="prefix">Prefix commands</h2>
+    <p>If your moderators prefer typing over slash commands, set a prefix in <code>/setup</code> or from the dashboard. Once set, commands like this work the same as their slash equivalents:</p>
+    <div class="cmd-table">
+      <div class="cmd-row"><div class="cmd-name">!ban @user reason</div><div class="cmd-desc">Same as /ban</div></div>
+      <div class="cmd-row"><div class="cmd-name">!warn @user reason</div><div class="cmd-desc">Same as /warn</div></div>
+      <div class="cmd-row"><div class="cmd-name">!cases @user</div><div class="cmd-desc">Same as /cases</div></div>
+    </div>
+    <div class="note-box"><p><strong>Note:</strong> prefix commands are aliases only. They call the exact same underlying logic as the slash commands, so there is never a difference in what actually happens.</p></div>
+
+    <h2 id="aimod">AI Moderation (beta)</h2>
+    <p>When enabled, Unknown scans messages for patterns commonly associated with problem behavior: known scam and phishing link formats, slur variants, and mass-mention spam. Anything that matches gets posted to a review channel of your choice.</p>
+    <div class="note-box"><p><strong>Important:</strong> this is pattern matching, not a model that understands context or intent. It will miss things, and it will occasionally flag something harmless. It <strong>never</strong> takes action on its own &mdash; a human moderator reviews every flag and decides what to do.</p></div>
+
+    <h2 id="ingame">Roblox console</h2>
+    <p>Unknown can run Cmdr commands directly inside your live Roblox servers. In Discord, use <code>/ingame</code> to pick a server from a list of everything currently online, public or private, then type your command. From the dashboard, the Roblox Console tab does the same thing, targeting whichever live server has the most players.</p>
+
+    <h2 id="dashboard">Using the dashboard</h2>
+    <p>The dashboard shows real data pulled live from the bot: case counts, active mutes, a breakdown by action type, and the 25 most recent moderation actions. Only servers where you have Manage Server permission and where Unknown is actually present will show up.</p>
+    <p>Settings you change on the dashboard take effect immediately, the same as running <code>/setup</code> in Discord.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div>Unknown &mdash; built for Unknown RNG</div>
+  <div class="footer-links">
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="legal.html">Legal</a>
+  </div>
+</footer>
+
+</body>
+</html>
