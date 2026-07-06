@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unknown — Privacy Policy</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c1016; --panel: #151b25; --panel-2: #1a212c; --border: #232b38;
+    --text: #ffffff; --text-dim: #9aa5b8; --text-faint: #626e82;
+    --emerald: #22c98a; --emerald-dim: #1a9c6b; --emerald-glow: rgba(34,201,138,0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .site-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--border);
+    background: var(--panel-2); position: sticky; top: 0; z-index: 100; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; white-space: nowrap; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    background: linear-gradient(160deg, var(--emerald), var(--emerald-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.8rem; color: #04140d; box-shadow: 0 0 16px var(--emerald-glow);
+  }
+  .site-nav-links { display: flex; gap: 22px; font-size: 0.86rem; font-weight: 700; color: var(--text-dim); flex: 1; }
+  .site-nav-links a:hover { color: var(--text); }
+  @media (max-width: 780px) { .site-nav-links { display: none; } }
+  .btn { padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; transition: filter 0.15s, transform 0.1s; font-family: inherit; white-space: nowrap; }
+  .btn-action { background: var(--emerald); color: #04140d; box-shadow: 0 0 20px var(--emerald-glow); }
+  .btn-action:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  .page-wrap { max-width: 720px; margin: 0 auto; padding: clamp(36px, 6vw, 60px) clamp(16px, 4vw, 32px) 80px; }
+  .page-wrap h1 { font-size: clamp(1.7rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .updated { color: var(--text-faint); font-size: 0.83rem; margin-bottom: 32px; font-family: 'JetBrains Mono'; }
+  .page-wrap h2 { font-size: 1.08rem; font-weight: 800; margin: 30px 0 10px; }
+  .page-wrap p { color: var(--text-dim); line-height: 1.75; margin-bottom: 13px; font-size: 0.93rem; font-weight: 500; }
+  .page-wrap ul { color: var(--text-dim); line-height: 1.8; margin: 0 0 13px 22px; font-size: 0.93rem; font-weight: 500; }
+  .page-wrap li { margin-bottom: 5px; }
+
+  footer.site-footer {
+    border-top: 1px solid var(--border); padding: 22px clamp(12px, 3vw, 24px); display: flex;
+    justify-content: space-between; align-items: center; font-size: 0.77rem; color: var(--text-faint);
+    flex-wrap: wrap; gap: 10px; font-weight: 600;
+  }
+  .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand"><div class="brand-mark">U</div><span>Unknown</span></div>
+  <div class="site-nav-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
+  </div>
+  <a href="dashboard.html" class="btn btn-action">Open Dashboard</a>
+</nav>
+
+<div class="page-wrap">
+  <h1>Privacy Policy</h1>
+  <div class="updated">Last updated July 2026</div>
+
+  <h2>What this page covers</h2>
+  <p>This explains what Unknown stores when you use it in your Discord server or log into the dashboard.</p>
+
+  <h2>What gets stored</h2>
+  <ul>
+    <li>Moderation cases: who was banned, kicked, muted, warned, or noted, who did it, and why.</li>
+    <li>Server settings you configure, like your mod role, log channels, prefix, and AI Moderation status.</li>
+    <li>Linked Roblox usernames, if you connect a Discord account to one.</li>
+    <li>Which Roblox servers are currently online, so the console feature knows where to send commands.</li>
+    <li>If AI Moderation is turned on, the text of messages that get flagged for review, so a moderator can see what triggered the flag.</li>
+    <li>If a prefix is set, the text of messages that start with that prefix, so the command can be parsed.</li>
+  </ul>
+
+  <h2>What does not get stored</h2>
+  <p>Your Discord login token is never saved on our servers. It stays in your browser only for the length of your session and is used just to check which servers you can manage. Regular messages that aren't prefix commands and don't get flagged by AI Moderation are never stored or logged.</p>
+
+  <h2>Who can see this data</h2>
+  <p>Only people with Manage Server permission in a given server can view that server's cases and settings through the dashboard. Nobody can see data for a server they don't have permission in.</p>
+
+  <h2>Questions</h2>
+  <p>If you want data about your server removed, reach out through the Discord server where you found this bot.</p>
+</div>
+
+<footer class="site-footer">
+  <div>Unknown &mdash; built for Unknown RNG</div>
+  <div class="footer-links">
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="legal.html">Legal</a>
+  </div>
+</footer>
+
+</body>
+</html>
