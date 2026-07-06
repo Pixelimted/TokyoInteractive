@@ -3,445 +3,340 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unknown.gg | Main Page</title>
+<title>Unknown.gg — Main Page</title>
 <meta name="description" content="Multi-purpose moderation bot for Unknown RNG. Fully configurable. Reaches into your Roblox servers.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #12151a;
-    --bg-2: #181d24;
-    --panel: #1b2129;
-    --panel-2: #232b36;
-    --border: #2c3643;
+  :root{
+    --bg: #0c1016;
+    --bg-2: #10151d;
+    --panel: #151b25;
+    --panel-2: #1a212c;
+    --border: #232b38;
     --text: #ffffff;
-    --text-dim: #a1aebf;
-    --text-faint: #6e7a8c;
+    --text-dim: #9aa5b8;
+    --text-faint: #626e82;
     --emerald: #22c98a;
     --emerald-dim: #1a9c6b;
-    --emerald-glow: rgba(34,201,138,0.25);
+    --emerald-glow: rgba(34,201,138,0.35);
     --red: #ef5a5a;
     --amber: #f5b942;
     --purple: #8b7bf0;
   }
 
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body {
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
     background:var(--bg); color:var(--text);
     font-family:'Nunito', sans-serif;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  .mono { font-family:'JetBrains Mono', monospace; }
-  a { color:inherit; text-decoration:none; }
-  ::selection { background:var(--emerald); color:#04140d; }
-  img { max-width:100%; display:block; }
-  
-  h1, h2, h3 { text-wrap: balance; }
-  .underline { text-decoration:underline; text-decoration-color:var(--emerald); text-underline-offset:6px; text-decoration-thickness:3px; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--emerald); color:#04140d; }
+  img{ max-width:100%; }
+  .underline{ text-decoration:underline; text-decoration-color:var(--emerald); text-underline-offset:4px; text-decoration-thickness:2px; }
 
-  /* ── Animations ───────────────────────────────────────────────── */
-  @keyframes float {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(5deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-  }
-  
-  @keyframes float-reverse {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(15px) rotate(-5deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-  }
+  /* soft floating glow blobs, like Sapphire's hero */
+  .blob{ position:absolute; border-radius:50%; filter:blur(50px); opacity:0.35; pointer-events:none; z-index:0; }
 
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  /* Fade in on scroll */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Soft glowing background blobs */
-  .blob { position:absolute; border-radius:50%; filter:blur(70px); opacity:0.25; pointer-events:none; z-index:0; }
-
-  /* ── Navigation ───────────────────────────────────────────────── */
-  nav {
+  nav{
     position:sticky; top:0; z-index:50;
     display:flex; align-items:center; justify-content:space-between;
-    padding:16px clamp(20px, 5vw, 60px);
-    background:rgba(18, 21, 26, 0.85);
+    padding:16px clamp(20px, 5vw, 48px);
+    background:rgba(12,16,22,0.85);
     backdrop-filter:blur(12px);
     border-bottom:1px solid var(--border);
   }
-  .brand { display:flex; align-items:center; gap:12px; font-weight:800; font-size:1.2rem; }
-  .brand img { width:32px; height:32px; border-radius:8px; box-shadow:0 0 15px var(--emerald-glow); }
-  .nav-links { display:flex; gap:32px; font-size:0.95rem; color:var(--text-dim); font-weight:700; }
-  .nav-links a { transition: color 0.2s ease; }
-  .nav-links a:hover { color:var(--text); }
-  .nav-cta {
-    padding:10px 22px; border-radius:24px;
-    background:var(--panel-2); color:var(--text); border:1px solid var(--border);
-    font-size:0.9rem; font-weight:800; white-space:nowrap;
-    transition:all .2s ease;
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.1rem; }
+  .brand-mark{
+    width:32px; height:32px; border-radius:9px; flex-shrink:0;
+    background:linear-gradient(160deg, var(--emerald), var(--emerald-dim));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:0.9rem; color:#04140d;
+    box-shadow:0 0 20px var(--emerald-glow);
   }
-  .nav-cta:hover { background:var(--emerald); color:#04140d; border-color:var(--emerald); box-shadow:0 0 20px var(--emerald-glow); }
+  .nav-links{ display:flex; gap:30px; font-size:0.92rem; color:var(--text-dim); font-weight:600; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{
+    padding:10px 20px; border-radius:24px;
+    background:var(--emerald); color:#04140d;
+    font-size:0.88rem; font-weight:800; white-space:nowrap;
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .nav-cta:hover{ filter:brightness(1.1); transform:translateY(-1px); }
 
   @media (max-width: 860px){ .nav-links{ display:none; } }
 
   /* ── Hero ─────────────────────────────────────────────────────── */
-  .hero {
-    position:relative; overflow:hidden;
-    padding:clamp(80px, 12vw, 140px) clamp(20px, 5vw, 48px) clamp(60px, 8vw, 100px);
-  }
-  .hero-inner {
-    max-width:1200px; margin:0 auto; position:relative; z-index:1;
-    display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px, 5vw, 48px); align-items:center;
-  }
-  .hero-content { display:flex; flex-direction:column; align-items:flex-start; }
-  .hero-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
-  .hero-header img { width:64px; height:64px; border-radius:16px; box-shadow:0 0 30px var(--emerald-glow); }
-  .hero-header h1 { font-size:clamp(2.5rem, 5vw, 4rem); font-weight:900; letter-spacing:-0.03em; line-height:1; }
-  
-  .hero p {
-    font-size:clamp(1.05rem, 1.8vw, 1.2rem); color:var(--text-dim); line-height:1.6;
-    max-width:50ch; margin-bottom:36px; font-weight:600;
-  }
-  .hero-ctas { display:flex; gap:16px; flex-wrap:wrap; }
-  .btn {
-    padding:14px 28px; border-radius:30px; font-weight:800; font-size:1rem;
-    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
-    transition:all .2s ease; white-space:nowrap; border:none;
-  }
-  .btn-primary { background:var(--emerald); color:#04140d; box-shadow:0 0 30px var(--emerald-glow); }
-  .btn-primary:hover { filter:brightness(1.15); transform:translateY(-2px); box-shadow:0 0 40px var(--emerald-glow); }
-  .btn-secondary { background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--border); backdrop-filter:blur(10px); }
-  .btn-secondary:hover { background:rgba(255,255,255,0.1); transform:translateY(-2px); }
 
-  /* Floating Hexagons matching Sapphire style */
-  .hero-visuals { position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center; }
-  .hex { 
-    position:absolute; width:clamp(60px, 8vw, 100px); opacity:0.8; 
-    filter:drop-shadow(0 0 25px var(--emerald-glow)); 
+  .hero{
+    position:relative; overflow:hidden;
+    padding:clamp(70px, 10vw, 120px) clamp(20px, 5vw, 48px) clamp(70px, 9vw, 110px);
   }
-  .hex svg { width:100%; height:100%; fill:var(--emerald); }
-  .hex-1 { top:10%; right:15%; animation:float 6s ease-in-out infinite; }
-  .hex-2 { bottom:20%; right:30%; width:clamp(40px, 6vw, 70px); animation:float-reverse 8s ease-in-out infinite; opacity:0.5; fill:var(--emerald-dim); filter:drop-shadow(0 0 15px rgba(26, 156, 107, 0.4));}
-  .hex-3 { top:40%; left:10%; width:clamp(30px, 5vw, 60px); animation:float 7s ease-in-out infinite 1s; opacity:0.6; fill:var(--purple); filter:drop-shadow(0 0 20px rgba(139, 123, 240, 0.4));}
-  .hex-4 { bottom:10%; right:5%; animation:float-reverse 9s ease-in-out infinite 2s; }
+  .hero-inner{
+    max-width:1180px; margin:0 auto; position:relative; z-index:1;
+    display:grid; grid-template-columns:1fr auto; gap:clamp(24px, 5vw, 48px); align-items:center;
+  }
+  .hero-icon{
+    width:76px; height:76px; border-radius:18px; flex-shrink:0; margin-bottom:24px;
+    background:linear-gradient(160deg, var(--emerald), var(--emerald-dim));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:2rem; color:#04140d;
+    box-shadow:0 0 40px var(--emerald-glow);
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 5.4vw, 3.6rem); line-height:1.06; letter-spacing:-0.02em;
+    font-weight:900; margin-bottom:18px;
+  }
+  .hero p{
+    font-size:clamp(0.98rem, 1.7vw, 1.1rem); color:var(--text-dim); line-height:1.6;
+    max-width:52ch; margin-bottom:30px; font-weight:600;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    padding:13px 26px; border-radius:26px; font-weight:800; font-size:0.94rem;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:filter .15s ease, transform .15s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{ background:var(--emerald); color:#04140d; box-shadow:0 0 30px var(--emerald-glow); }
+  .btn-primary:hover{ filter:brightness(1.08); transform:translateY(-2px); }
+  .btn-secondary{ background:var(--panel-2); border:1px solid var(--border); color:var(--text); }
+  .btn-secondary:hover{ border-color:var(--text-faint); transform:translateY(-2px); }
+
+  .hero-decor{ display:flex; flex-direction:column; gap:14px; }
+  .hero-hex{
+    width:64px; height:64px; position:relative;
+  }
+  .hero-hex svg{ width:100%; height:100%; filter:drop-shadow(0 0 18px var(--emerald-glow)); }
 
   @media (max-width: 900px){
-    .hero-inner { grid-template-columns:1fr; text-align:center; }
-    .hero-content { align-items:center; }
-    .hero-header { justify-content:center; }
-    .hero-visuals { display:none; }
+    .hero-inner{ grid-template-columns:1fr; }
+    .hero-decor{ display:none; }
   }
 
-  /* ── Trusted By Marquee & Stats ─────────────────────────────────── */
-  .trusted-section { padding:clamp(50px, 8vw, 90px) 0; position:relative; z-index:2; border-bottom:1px solid var(--border); background:linear-gradient(to bottom, transparent, rgba(34, 201, 138, 0.02)); }
-  .trusted-header { text-align:center; padding:0 clamp(20px, 5vw, 48px); margin-bottom:40px; }
-  .trusted-header h2 { font-size:clamp(1.8rem, 3.5vw, 2.5rem); font-weight:900; margin-bottom:12px; }
-  .trusted-header p { font-size:1.05rem; color:var(--text-dim); font-weight:600; }
+  /* ── Stats strip ──────────────────────────────────────────────── */
 
-  /* Smooth Marquee */
-  .marquee-wrapper { width:100%; overflow:hidden; display:flex; padding:10px 0; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
-  .marquee-track { display:flex; width:max-content; animation:marquee 30s linear infinite; }
-  .marquee-track:hover { animation-play-state: paused; }
-  
-  .guild-card {
-    display:flex; align-items:center; gap:16px;
+  .stats-strip{
+    max-width:1180px; margin:0 auto; padding:0 clamp(20px, 5vw, 48px) clamp(50px, 7vw, 80px);
+    text-align:center;
+  }
+  .stats-strip h2{ font-size:clamp(1.2rem, 2.4vw, 1.5rem); font-weight:800; margin-bottom:6px; }
+  .stats-strip .sub{ color:var(--text-dim); font-size:0.94rem; margin-bottom:32px; font-weight:600; }
+  .stats-row{ display:flex; justify-content:center; gap:clamp(16px, 3vw, 28px); flex-wrap:wrap; }
+  .stat-pill{
     background:var(--panel); border:1px solid var(--border); border-radius:14px;
-    padding:12px 24px; margin-right:20px;
-    transition:transform 0.2s ease, border-color 0.2s ease;
+    padding:16px 22px; min-width:150px;
   }
-  .guild-card:hover { transform:translateY(-2px); border-color:var(--emerald-dim); }
-  .guild-icon { width:40px; height:40px; border-radius:10px; background:var(--bg-2); display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--emerald); }
-  .guild-info h4 { font-size:1rem; font-weight:800; display:flex; align-items:center; gap:6px; margin-bottom:2px; }
-  .verified-badge { width:14px; height:14px; fill:var(--emerald); }
-  .guild-info p { font-size:0.85rem; color:var(--text-dim); font-family:'JetBrains Mono'; }
-
-  /* Existing Live Stats adapted */
-  .stats-row { display:flex; justify-content:center; gap:clamp(16px, 3vw, 28px); flex-wrap:wrap; margin-top:50px; padding:0 clamp(20px, 5vw, 48px); }
-  .stat-pill { background:transparent; text-align:center; padding:16px 22px; min-width:150px; }
-  .stat-pill .num { font-family:'JetBrains Mono'; font-size:1.8rem; font-weight:800; color:var(--emerald); filter:drop-shadow(0 0 10px var(--emerald-glow)); }
-  .stat-pill .label { font-size:0.85rem; color:var(--text-faint); margin-top:6px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
-  
-  .live-note { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:20px; font-size:0.85rem; color:var(--text-faint); font-family:'JetBrains Mono'; }
-  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--text-faint); transition:all 0.3s ease; }
-  .live-note.live .live-dot { background:var(--emerald); box-shadow:0 0 10px var(--emerald); }
-
-  /* ── Sections (Features & Commands) ───────────────────────────── */
-  section { max-width:1200px; margin:0 auto; padding:clamp(80px, 10vw, 120px) clamp(20px, 5vw, 48px); position:relative; }
-  .section-head { text-align:center; max-width:650px; margin:0 auto clamp(40px, 7vw, 60px); }
-  .section-head h2 { font-size:clamp(1.8rem, 3.5vw, 2.5rem); font-weight:900; margin-bottom:16px; }
-  .section-head p { color:var(--text-dim); font-size:1.1rem; line-height:1.6; font-weight:600; }
-
-  /* Bot Banner Showcase Image */
-  .banner-showcase { width:100%; max-width:900px; margin:0 auto 60px; display:block; border-radius:20px; border:1px solid var(--border); box-shadow:0 20px 50px rgba(0,0,0,0.5); }
-
-  /* Feature Grid matching Sapphire styling */
-  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; }
-  .feature-card {
-    background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:32px;
-    transition:all .2s ease; position:relative; overflow:hidden;
+  .stat-pill .num{ font-family:'JetBrains Mono'; font-size:1.4rem; font-weight:700; color:var(--emerald); }
+  .stat-pill .label{ font-size:0.76rem; color:var(--text-faint); margin-top:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+  .live-note{
+    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:18px;
+    font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono';
   }
-  .feature-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, var(--emerald), transparent); opacity:0; transition:opacity .3s ease; }
-  .feature-card:hover { border-color:var(--border); transform:translateY(-5px); box-shadow:0 20px 40px rgba(0,0,0,0.2); background:var(--panel-2); }
-  .feature-card:hover::before { opacity:1; }
-  
-  .feature-card .icn {
-    width:48px; height:48px; border-radius:12px; margin-bottom:20px;
-    display:flex; align-items:center; justify-content:center; font-size:1.5rem;
-    background:linear-gradient(135deg, rgba(34,201,138,0.15), rgba(34,201,138,0.05)); border:1px solid rgba(34,201,138,0.3);
-    color:var(--emerald); box-shadow:0 0 15px var(--emerald-glow);
-  }
-  .feature-card h3 { font-size:1.2rem; font-weight:800; margin-bottom:10px; }
-  .feature-card p { font-size:0.95rem; color:var(--text-dim); line-height:1.6; font-weight:600; }
+  .live-dot{ width:6px; height:6px; border-radius:50%; background:var(--text-faint); }
+  .live-note.live .live-dot{ background:var(--emerald); box-shadow:0 0 6px var(--emerald); }
 
-  /* ── Beta Banner ──────────────────────────────────────────────── */
-  .beta-banner {
-    background:linear-gradient(120deg, rgba(139,123,240,0.1), rgba(34,201,138,0.05));
-    border:1px solid rgba(139,123,240,0.3); border-radius:20px; padding:32px clamp(24px,5vw,40px);
-    display:flex; align-items:flex-start; gap:24px; flex-wrap:wrap; position:relative; overflow:hidden;
-  }
-  .beta-banner::after { content:''; position:absolute; right:-50px; bottom:-50px; width:150px; height:150px; background:var(--purple); filter:blur(80px); opacity:0.3; pointer-events:none; }
-  .beta-tag {
-    background:var(--purple); color:#fff; font-size:0.75rem; font-weight:900;
-    padding:6px 14px; border-radius:12px; text-transform:uppercase; letter-spacing:0.05em; flex-shrink:0;
-    box-shadow:0 0 15px rgba(139,123,240,0.4);
-  }
-  .beta-banner h3 { font-size:1.2rem; font-weight:800; margin-bottom:8px; }
-  .beta-banner p { font-size:1rem; color:var(--text-dim); font-weight:600; line-height:1.6; max-width:800px; }
+  /* ── Sections ─────────────────────────────────────────────────── */
 
-  /* ── Command Reference ────────────────────────────────────────── */
-  .cmd-table { border:1px solid var(--border); border-radius:20px; overflow:hidden; background:var(--panel); box-shadow:0 10px 30px rgba(0,0,0,0.2); }
-  .cmd-row {
-    display:grid; grid-template-columns:220px 1fr; gap:24px;
-    padding:18px 28px; border-bottom:1px solid var(--border);
-    align-items:center; transition:background 0.2s;
-  }
-  .cmd-row:hover { background:var(--panel-2); }
-  .cmd-row:last-child { border-bottom:none; }
-  .cmd-name { font-family:'JetBrains Mono'; font-size:0.95rem; color:var(--emerald); font-weight:700; }
-  .cmd-desc { font-size:0.95rem; color:var(--text-dim); font-weight:600; }
+  section{ max-width:1180px; margin:0 auto; padding:clamp(50px, 7vw, 90px) clamp(20px, 5vw, 48px); }
+  .section-head{ text-align:center; max-width:600px; margin:0 auto clamp(36px, 6vw, 56px); }
+  .section-head h2{ font-size:clamp(1.6rem, 3.4vw, 2.2rem); font-weight:900; margin-bottom:12px; letter-spacing:-0.01em; }
+  .section-head p{ color:var(--text-dim); font-size:1rem; line-height:1.6; font-weight:600; }
 
-  @media (max-width: 640px){ .cmd-row{ grid-template-columns:1fr; gap:8px; } }
+  /* ── Feature cards, rounded like Sapphire ─────────────────────── */
 
-  /* ── Ingame Callout ───────────────────────────────────────────── */
-  .callout {
-    display:grid; grid-template-columns:1.2fr 1fr; gap:clamp(40px, 8vw, 80px); align-items:center;
-    background:linear-gradient(145deg, var(--panel), var(--bg)); border:1px solid var(--border); border-radius:24px; padding:clamp(40px, 8vw, 60px);
-    position:relative; overflow:hidden;
+  .feature-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
+  .feature-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:26px;
+    transition:border-color .15s ease, transform .15s ease;
   }
-  .callout::before { content:''; position:absolute; top:-30%; left:-10%; width:50%; height:80%; background:var(--emerald); filter:blur(100px); opacity:0.1; pointer-events:none; }
-  
-  .server-list { border:1px solid var(--border); border-radius:16px; background:var(--bg-2); font-family:'JetBrains Mono'; font-size:0.9rem; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.3); }
-  .server-row { display:flex; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--border); gap:12px; transition:background 0.2s; }
-  .server-row:hover { background:var(--panel); }
-  .server-row:last-child { border-bottom:none; }
-  .server-name { display:flex; align-items:center; gap:12px; color:var(--text); font-weight:600; }
-  .server-count { color:var(--text-faint); white-space:nowrap; }
-  .live-dot-inline { width:8px; height:8px; border-radius:50%; background:var(--emerald); box-shadow:0 0 10px var(--emerald); flex-shrink:0; }
+  .feature-card:hover{ border-color:var(--emerald-dim); transform:translateY(-2px); }
+  .feature-card .icn{
+    width:36px; height:36px; border-radius:9px; margin-bottom:16px;
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+    background:rgba(34,201,138,0.12); border:1px solid rgba(34,201,138,0.25);
+  }
+  .feature-card h3{ font-size:1.02rem; font-weight:800; margin-bottom:6px; }
+  .feature-card p{ font-size:0.88rem; color:var(--text-dim); line-height:1.55; margin-bottom:14px; font-weight:500; }
+  .feature-card .cta{ font-size:0.82rem; font-weight:700; color:var(--emerald); }
+  .feature-card .cta:hover{ text-decoration:underline; }
+
+  @media (max-width: 720px){ .feature-grid{ grid-template-columns:1fr; } }
+
+  /* ── Beta banner ──────────────────────────────────────────────── */
+
+  .beta-banner{
+    background:linear-gradient(120deg, rgba(139,123,240,0.1), rgba(34,201,138,0.06));
+    border:1px solid rgba(139,123,240,0.3); border-radius:16px; padding:28px clamp(20px,4vw,32px);
+    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .beta-tag{
+    background:var(--purple); color:#fff; font-size:0.72rem; font-weight:800;
+    padding:4px 10px; border-radius:12px; text-transform:uppercase; letter-spacing:0.03em; flex-shrink:0;
+  }
+  .beta-banner h3{ font-size:1.05rem; font-weight:800; margin-bottom:4px; }
+  .beta-banner p{ font-size:0.88rem; color:var(--text-dim); font-weight:500; }
+
+  /* ── Command reference ────────────────────────────────────────── */
+
+  .cmd-table{ border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--panel); }
+  .cmd-row{
+    display:grid; grid-template-columns:190px 1fr; gap:24px;
+    padding:15px 22px; border-bottom:1px solid var(--border);
+    align-items:center;
+  }
+  .cmd-row:last-child{ border-bottom:none; }
+  .cmd-name{ font-family:'JetBrains Mono'; font-size:0.85rem; color:var(--emerald); font-weight:600; }
+  .cmd-desc{ font-size:0.88rem; color:var(--text-dim); font-weight:500; }
+
+  @media (max-width: 640px){ .cmd-row{ grid-template-columns:1fr; gap:5px; } }
+
+  /* ── Ingame callout ───────────────────────────────────────────── */
+
+  .callout{
+    display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px, 6vw, 56px); align-items:center;
+    background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:clamp(28px, 6vw, 52px);
+  }
+  .server-list{ border:1px solid var(--border); border-radius:14px; background:var(--bg-2); font-family:'JetBrains Mono'; font-size:0.82rem; overflow:hidden; }
+  .server-row{ display:flex; justify-content:space-between; padding:13px 18px; border-bottom:1px solid var(--border); gap:12px; }
+  .server-row:last-child{ border-bottom:none; }
+  .server-name{ display:flex; align-items:center; gap:9px; color:var(--text); font-weight:500; }
+  .server-count{ color:var(--text-faint); white-space:nowrap; }
+  .live-dot-inline{ width:6px; height:6px; border-radius:50%; background:var(--emerald); box-shadow:0 0 6px var(--emerald); flex-shrink:0; }
 
   @media (max-width: 900px){ .callout{ grid-template-columns:1fr; } }
 
-  /* ── Final CTA (Wave effect style) ────────────────────────────── */
-  .final-cta {
-    position:relative; text-align:center; padding:clamp(100px, 12vw, 150px) clamp(20px, 5vw, 48px);
-    background:var(--panel); overflow:hidden; border-top:1px solid var(--border);
-  }
-  /* Decorative SVG Wave to match Sapphire footer feel */
-  .wave-divider { position:absolute; top:0; left:0; width:100%; overflow:hidden; line-height:0; }
-  .wave-divider svg { display:block; width:calc(100% + 1.3px); height:70px; fill:var(--bg); }
-  
-  .final-cta h2 { font-size:clamp(2rem, 4vw, 3rem); font-weight:900; margin-bottom:20px; position:relative; z-index:1; }
-  .final-cta p { color:var(--text-dim); margin-bottom:40px; font-weight:600; font-size:1.1rem; position:relative; z-index:1; }
-  .final-cta .btn-primary { padding:16px 36px; font-size:1.1rem; box-shadow:0 0 40px var(--emerald-glow); }
+  /* ── Final CTA ────────────────────────────────────────────────── */
 
-  footer {
-    background:var(--bg-2); border-top:1px solid var(--border);
-    padding:40px clamp(20px, 5vw, 60px); display:flex; justify-content:space-between; align-items:center;
-    font-size:0.9rem; color:var(--text-faint); flex-wrap:wrap; gap:20px; font-weight:600;
+  .final-cta{
+    position:relative; text-align:center; padding:clamp(70px, 9vw, 110px) clamp(20px, 5vw, 48px);
+    border-top:1px solid var(--border); overflow:hidden;
   }
-  footer a { transition:color 0.2s; }
-  footer a:hover { color:var(--text); }
-  .footer-links { display:flex; gap:30px; }
-  .footer-brand { display:flex; align-items:center; gap:10px; color:var(--text-dim); font-weight:800;}
-  .footer-brand img { width:24px; border-radius:6px;}
+  .final-cta h2{ font-size:clamp(1.7rem, 3.6vw, 2.4rem); font-weight:900; margin-bottom:16px; letter-spacing:-0.015em; position:relative; z-index:1; }
+  .final-cta p{ color:var(--text-dim); margin-bottom:32px; font-weight:600; position:relative; z-index:1; }
+  .final-cta .btn{ position:relative; z-index:1; }
 
+  footer{
+    border-top:1px solid var(--border);
+    padding:28px clamp(20px, 5vw, 48px); display:flex; justify-content:space-between; align-items:center;
+    font-size:0.82rem; color:var(--text-faint); flex-wrap:wrap; gap:12px; font-weight:600;
+  }
+  footer a:hover{ color:var(--text-dim); }
+  .footer-links{ display:flex; gap:22px; }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="brand">
-    <img src="icon.png" alt="Unknown Bot Icon">
+    <div class="brand-mark">U</div>
     Unknown
   </div>
   <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#commands">Commands</a>
-    <a href="#ingame">In-Game</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
   </div>
   <a href="dashboard.html" class="nav-cta">Open dashboard</a>
 </nav>
 
 <div class="hero">
-  <div class="blob" style="width:500px;height:500px;background:var(--emerald);top:-150px;left:5%;"></div>
-  <div class="blob" style="width:400px;height:400px;background:var(--purple);bottom:-100px;right:0%;"></div>
+  <div class="blob" style="width:420px;height:420px;background:var(--emerald);top:-120px;left:10%;"></div>
+  <div class="blob" style="width:340px;height:340px;background:var(--purple);top:60px;right:5%;"></div>
 
   <div class="hero-inner">
-    <div class="hero-content fade-in">
-      <div class="hero-header">
-        <img src="icon.png" alt="Unknown Icon">
-        <h1>Unknown.</h1>
-      </div>
-      <p>Multi-purpose moderation bot. Fully configurable. Unknown handles bans, mutes, and warnings like any good bot &mdash; then goes further, running commands directly inside your live Roblox servers.</p>
+    <div>
+      <div class="hero-icon">U</div>
+      <h1>Multi-purpose moderation bot.<br>Fully configurable.</h1>
+      <p>Unknown handles bans, mutes, and warnings like any good moderation bot &mdash; then goes further, running commands directly inside your live Roblox servers, right from Discord.</p>
       <div class="hero-ctas">
-        <a href="dashboard.html" class="btn btn-primary">Add to Discord</a>
+        <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
         <a href="#features" class="btn btn-secondary">Explore Features</a>
       </div>
     </div>
 
-    <div class="hero-visuals fade-in">
-      <div class="hex hex-1">
-        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
-      </div>
-      <div class="hex hex-2">
-        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
-      </div>
-      <div class="hex hex-3">
-        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
-      </div>
-      <div class="hex hex-4">
-        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
-      </div>
+    <div class="hero-decor">
+      <div class="hero-hex"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#22c98a"/></svg></div>
+      <div class="hero-hex" style="margin-left:30px;"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#1a9c6b"/></svg></div>
+      <div class="hero-hex"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#8b7bf0"/></svg></div>
     </div>
   </div>
 </div>
 
-<section class="trusted-section">
-  <div class="trusted-header fade-in">
-    <h2><span class="underline">Trusted</span> by your favorite servers.</h2>
-    <p>Unknown is in <span id="stat-guilds-hero" class="mono" style="color:var(--emerald);font-weight:800;">---</span> servers, protecting communities every day.</p>
+<div class="stats-strip">
+  <h2>Trusted by <span class="underline">Unknown RNG</span>.</h2>
+  <div class="sub">Live numbers, pulled straight from the bot.</div>
+  <div class="stats-row">
+    <div class="stat-pill"><div class="num mono" id="stat-cases">&mdash;</div><div class="label">Total Cases</div></div>
+    <div class="stat-pill"><div class="num mono" id="stat-servers">&mdash;</div><div class="label">Live Servers</div></div>
+    <div class="stat-pill"><div class="num mono" id="stat-players">&mdash;</div><div class="label">Players Online</div></div>
+    <div class="stat-pill"><div class="num mono" id="stat-guilds">&mdash;</div><div class="label">Servers Protected</div></div>
   </div>
-  
-  <div class="marquee-wrapper fade-in">
-    <div class="marquee-track" id="marquee-track">
-      <div class="guild-card">
-        <div class="guild-icon">UR</div>
-        <div class="guild-info">
-          <h4>Unknown RNG <svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h4>
-          <p>• 10.5k+</p>
-        </div>
-      </div>
-      <div class="guild-card">
-        <div class="guild-icon">TS</div>
-        <div class="guild-info">
-          <h4>PlaceHolder <svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h4>
-          <p>• 52,190</p>
-        </div>
-      </div>
-      <div class="guild-card">
-        <div class="guild-icon">DS</div>
-        <div class="guild-info">
-          <h4>PlaceHolder <svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h4>
-          <p>• 18,340</p>
-        </div>
-      </div>
-      <div class="guild-card">
-        <div class="guild-icon">EG</div>
-        <div class="guild-info">
-          <h4>Placeholder <svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h4>
-          <p>• 88,102</p>
-        </div>
-      </div>
-      <div class="guild-card">
-        <div class="guild-icon">RH</div>
-        <div class="guild-info">
-          <h4>PlaceHolder <svg class="verified-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h4>
-          <p>• 25,600</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="stats-row fade-in">
-    <div class="stat-pill"><div class="num" id="stat-cases">&mdash;</div><div class="label">Total Cases</div></div>
-    <div class="stat-pill"><div class="num" id="stat-servers">&mdash;</div><div class="label">Live Servers</div></div>
-    <div class="stat-pill"><div class="num" id="stat-players">&mdash;</div><div class="label">Players Online</div></div>
-    <div class="stat-pill" style="display:none;"><div class="num" id="stat-guilds">&mdash;</div></div> </div>
-  <div class="live-note fade-in" id="live-note"><span class="live-dot"></span><span id="live-status">Connecting to live stats&hellip;</span></div>
-</section>
+  <div class="live-note" id="live-note"><span class="live-dot"></span><span id="live-status">Connecting to live stats&hellip;</span></div>
+</div>
 
 <section id="features">
-  <div class="section-head fade-in">
-    <h2><span class="underline">Highly customizable</span> features.</h2>
-    <p>Everything a moderation bot should have, designed to be as seamless and configurable as possible.</p>
+  <div class="section-head">
+    <h2>Everything a moderation bot should have.</h2>
+    <p>Bans, mutes, warnings, and case logs, plus things most bots don't do at all.</p>
   </div>
 
-  <img src="banner.png" alt="Unknown Dashboard Showcase" class="banner-showcase fade-in" onerror="this.style.display='none'">
-
   <div class="feature-grid">
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">⛔</div>
       <h3>Bans &amp; Timed Bans</h3>
-      <p>Permanent or scheduled, with optional message history cleanup and a custom DM notice sent directly to the user.</p>
+      <p>Permanent or scheduled, with optional message history cleanup and a DM notice to the user.</p>
     </div>
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">🛡️</div>
-      <h3>Auto-Escalation</h3>
-      <p>Set your own thresholds. Automatically kick or ban users after a configurable amount of recorded warnings.</p>
+      <h3>Warnings with Auto-Escalation</h3>
+      <p>Set your own thresholds &mdash; auto-kick and auto-ban after a configurable number of warnings.</p>
     </div>
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">🗂️</div>
       <h3>Full Case History</h3>
-      <p>Every action becomes a persistent case with an ID, reason, and moderator attached. Absolutely nothing gets lost.</p>
+      <p>Every action becomes a case with an ID, reason, and moderator attached. Nothing gets lost.</p>
     </div>
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">🔗</div>
       <h3>Roblox Account Linking</h3>
-      <p>Attach a Roblox username to any Discord account so every mod case perfectly reflects their in-game identity.</p>
+      <p>Attach a Roblox username to any Discord account so every case carries their in-game identity.</p>
     </div>
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">⌨️</div>
-      <h3>Custom Prefixes</h3>
-      <p>Prefer typing <span class="mono" style="color:var(--emerald);">!ban</span> over slash commands? Set any custom prefix you like instantly from the web dashboard.</p>
+      <h3>Custom Prefix Commands</h3>
+      <p>Prefer typing <span class="mono">!ban</span> over slash commands? Set any prefix you like from the dashboard.</p>
     </div>
-    <div class="feature-card fade-in">
+    <div class="feature-card">
       <div class="icn">🎮</div>
       <h3>Reaches Into Roblox</h3>
-      <p>Run Cmdr commands directly inside your live Roblox servers, public or private, right from a Discord command.</p>
+      <p>Run Cmdr commands directly inside your live Roblox servers, public or private, from a single Discord command.</p>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="beta-banner fade-in">
+  <div class="beta-banner">
     <span class="beta-tag">Beta</span>
     <div>
       <h3>AI Moderation</h3>
-      <p>Unknown quietly scans messages for scam links, slurs, and mass-mention spam, cleanly flagging anything suspicious to a private review channel. It never takes automated action on its own &mdash; ensuring a human always makes the final call.</p>
+      <p>Unknown can quietly scan messages for scam links, slurs, and mass-mention spam, then flag anything suspicious to a review channel. It never takes action on its own &mdash; a human always makes the final call.</p>
     </div>
   </div>
 </section>
 
 <section id="commands">
-  <div class="section-head fade-in">
-    <h2>Complete Control.</h2>
-    <p>Every command naturally respects both your custom mod role and native Discord permissions seamlessly.</p>
+  <div class="section-head">
+    <h2>Commands</h2>
+    <p>Every command respects your mod role and Discord permissions together &mdash; both need to check out.</p>
   </div>
 
-  <div class="cmd-table fade-in">
+  <div class="cmd-table">
     <div class="cmd-row"><div class="cmd-name">/ban</div><div class="cmd-desc">Ban a user, permanently or for a set duration</div></div>
     <div class="cmd-row"><div class="cmd-name">/unban</div><div class="cmd-desc">Lift a ban using a user ID</div></div>
     <div class="cmd-row"><div class="cmd-name">/kick</div><div class="cmd-desc">Remove a user from the server</div></div>
@@ -451,25 +346,25 @@
     <div class="cmd-row"><div class="cmd-name">/unwarn</div><div class="cmd-desc">Remove a warning by case ID</div></div>
     <div class="cmd-row"><div class="cmd-name">/note</div><div class="cmd-desc">Attach a private mod-only note to a user</div></div>
     <div class="cmd-row"><div class="cmd-name">/cases</div><div class="cmd-desc">View a user's full moderation history</div></div>
-    <div class="cmd-row"><div class="cmd-name">/case</div><div class="cmd-desc">Look up one specific case by its ID</div></div>
+    <div class="cmd-row"><div class="cmd-name">/case</div><div class="cmd-desc">Look up one case by its ID</div></div>
     <div class="cmd-row"><div class="cmd-name">/viewlog</div><div class="cmd-desc">See recent moderation activity server-wide</div></div>
     <div class="cmd-row"><div class="cmd-name">/reason</div><div class="cmd-desc">Edit the reason on an existing case</div></div>
     <div class="cmd-row"><div class="cmd-name">/roblox</div><div class="cmd-desc">Link, view, or remove a Roblox username</div></div>
-    <div class="cmd-row"><div class="cmd-name">/purge</div><div class="cmd-desc">Bulk delete messages, optionally by specific user</div></div>
-    <div class="cmd-row"><div class="cmd-name">/slowmode</div><div class="cmd-desc">Set a channel's slowmode delay instantly</div></div>
+    <div class="cmd-row"><div class="cmd-name">/purge</div><div class="cmd-desc">Bulk delete messages, optionally by user</div></div>
+    <div class="cmd-row"><div class="cmd-name">/slowmode</div><div class="cmd-desc">Set a channel's slowmode delay</div></div>
     <div class="cmd-row"><div class="cmd-name">/lock &amp; /unlock</div><div class="cmd-desc">Restrict or restore send permissions in a channel</div></div>
-    <div class="cmd-row"><div class="cmd-name">/userinfo</div><div class="cmd-desc">Pull account age, roles, and case count metrics</div></div>
+    <div class="cmd-row"><div class="cmd-name">/userinfo</div><div class="cmd-desc">Pull account age, roles, and case count</div></div>
     <div class="cmd-row"><div class="cmd-name">/ingame</div><div class="cmd-desc">Pick a live server and run a command inside it</div></div>
-    <div class="cmd-row"><div class="cmd-name">/setup</div><div class="cmd-desc">Configure everything &mdash; one simple command</div></div>
+    <div class="cmd-row"><div class="cmd-name">/setup</div><div class="cmd-desc">Configure everything &mdash; one command, every option optional</div></div>
   </div>
 </section>
 
 <section id="ingame">
-  <div class="callout fade-in">
+  <div class="callout">
     <div>
-      <h2 style="font-size:clamp(1.8rem, 3.5vw, 2.5rem); margin-bottom:16px; font-weight:900; letter-spacing:-0.02em;">Run commands where the game actually lives.</h2>
-      <p style="color:var(--text-dim); line-height:1.6; margin-bottom:30px; font-size:1.05rem; font-weight:600;">
-        <span class="mono" style="color:var(--emerald);">/ingame</span> shows every live Roblox server tied to your game, public and private, with real player counts pulled straight from the servers. Pick one, type a command, and it runs through Cmdr in that exact server.
+      <h2 style="font-size:clamp(1.3rem, 2.8vw, 1.8rem); margin-bottom:14px; font-weight:900;">Run commands where the game actually lives.</h2>
+      <p style="color:var(--text-dim); line-height:1.6; margin-bottom:24px; font-size:0.95rem; font-weight:600;">
+        <span class="mono" style="color:var(--emerald);">/ingame</span> shows every live Roblox server tied to your game, public and private, with real player counts pulled straight from the servers themselves. Pick one, type a command, and it runs through Cmdr in that exact server.
       </p>
       <a href="dashboard.html" class="btn btn-secondary">Try it from the dashboard</a>
     </div>
@@ -483,56 +378,24 @@
 </section>
 
 <div class="final-cta">
-  <div class="wave-divider">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-    </svg>
-  </div>
-  <div class="blob" style="width:450px;height:450px;background:var(--emerald);top:-150px;left:50%;transform:translateX(-50%); opacity:0.15;"></div>
-  
-  <h2 class="fade-in">Ready to upgrade your server?</h2>
-  <p class="fade-in">Add Unknown, configure your mod roles, and you're fully covered.</p>
-  <a href="dashboard.html" class="btn btn-primary fade-in">Add to Discord</a>
+  <div class="blob" style="width:400px;height:400px;background:var(--emerald);top:-100px;left:50%;transform:translateX(-50%);"></div>
+  <h2>Ready to upgrade your server?</h2>
+  <p>Add Unknown, set your mod role and log channels, and you're covered.</p>
+  <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
 </div>
 
 <footer>
-  <div class="footer-brand">
-    <img src="icon.png" alt="Unknown Icon"> 
-    A Discord Bot &mdash; Done Right
-  </div>
+  <div>Unknown &mdash; built for Unknown RNG</div>
   <div class="footer-links">
-    <a href="#features">Features</a>
-    <a href="#commands">Commands</a>
-    <a href="#ingame">In-Game</a>
-    <a href="dashboard.html">Dashboard</a>
-  </div>
-  <div style="width:100%; text-align:center; margin-top:20px; font-size:0.8rem; color:var(--border);">
-    &copy; 2026 Unknown Bot. Not affiliated with Discord Inc. or Roblox Corp.
+    <a href="docs.html">Docs</a>
+    <a href="help.html">Help</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="legal.html">Legal</a>
   </div>
 </footer>
 
 <script>
-  // ── Animation Observers ────────────────────────────────────────
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-  // ── Marquee Duplication for seamless loop ──────────────────────
-  const track = document.getElementById('marquee-track');
-  if(track) {
-    // Clone items a few times to ensure the marquee never runs out of content
-    const content = track.innerHTML;
-    track.innerHTML = content + content + content; 
-  }
-
-  // ── Stats Logic (Untouched existing logic, just bound extra ID) ─
   const STATS_API = "https://unknown-bot-production.up.railway.app/stats";
   let statsTimer = null;
 
@@ -550,11 +413,7 @@
       document.getElementById('stat-cases').textContent   = fmt(data.totalCases);
       document.getElementById('stat-servers').textContent = fmt(data.liveServers);
       document.getElementById('stat-players').textContent = fmt(data.totalPlayers);
-      
-      // Update both hidden and visual guild elements
       document.getElementById('stat-guilds').textContent  = fmt(data.guildCount);
-      const heroGuilds = document.getElementById('stat-guilds-hero');
-      if(heroGuilds) heroGuilds.textContent = fmt(data.guildCount);
 
       note.classList.add('live');
       status.textContent = "Live \u2014 updated just now";
