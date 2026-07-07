@@ -4,26 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unknown.gg — Main Page</title>
-<meta name="description" content="Multi-purpose moderation bot for Unknown RNG. Fully configurable. Reaches into your Roblox servers.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="description" content="Multi-purpose moderation bot for Unknown RNG. Fully configurable, with a live Roblox console built in.">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0c1016;
-    --bg-2: #10151d;
-    --panel: #151b25;
-    --panel-2: #1a212c;
-    --border: #232b38;
+    --bg: #0b0f16;
+    --bg-2: #0f1420;
+    --panel: #141a25;
+    --panel-2: #19212e;
+    --border: #232c3a;
     --text: #ffffff;
-    --text-dim: #9aa5b8;
-    --text-faint: #626e82;
-    --emerald: #22c98a;
+    --text-dim: #97a3b8;
+    --text-faint: #5d697d;
+    --emerald: #27d494;
     --emerald-dim: #1a9c6b;
-    --emerald-glow: rgba(34,201,138,0.35);
+    --emerald-bright: #4fe9b0;
+    --emerald-glow: rgba(39,212,148,0.35);
+    --purple: #8b7bf0;
     --red: #ef5a5a;
     --amber: #f5b942;
-    --purple: #8b7bf0;
   }
 
   *{ margin:0; padding:0; box-sizing:border-box; }
@@ -38,65 +37,55 @@
   a{ color:inherit; text-decoration:none; }
   ::selection{ background:var(--emerald); color:#04140d; }
   img{ max-width:100%; }
-  .underline{ text-decoration:underline; text-decoration-color:var(--emerald); text-underline-offset:4px; text-decoration-thickness:2px; }
+  .underline{ text-decoration:underline; text-decoration-color:var(--emerald); text-underline-offset:4px; text-decoration-thickness:3px; }
 
-  /* soft floating glow blobs, like Sapphire's hero */
-  .blob{ position:absolute; border-radius:50%; filter:blur(50px); opacity:0.35; pointer-events:none; z-index:0; }
-
+  /* ── Nav ──────────────────────────────────────────────────────── */
   nav{
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:100;
     display:flex; align-items:center; justify-content:space-between;
     padding:16px clamp(20px, 5vw, 48px);
-    background:rgba(12,16,22,0.85);
+    background:rgba(11,15,22,0.85);
     backdrop-filter:blur(12px);
     border-bottom:1px solid var(--border);
   }
   .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.1rem; }
   .brand-mark{
     width:32px; height:32px; border-radius:9px; flex-shrink:0;
-    background:linear-gradient(160deg, var(--emerald), var(--emerald-dim));
+    background:linear-gradient(155deg, var(--emerald-bright), var(--emerald-dim));
     display:flex; align-items:center; justify-content:center;
     font-weight:900; font-size:0.9rem; color:#04140d;
     box-shadow:0 0 20px var(--emerald-glow);
   }
-  .nav-links{ display:flex; gap:30px; font-size:0.92rem; color:var(--text-dim); font-weight:600; }
+  .nav-links{ display:flex; gap:30px; font-size:0.92rem; color:var(--text-dim); font-weight:700; }
   .nav-links a:hover{ color:var(--text); }
   .nav-cta{
-    padding:10px 20px; border-radius:24px;
+    padding:10px 22px; border-radius:24px;
     background:var(--emerald); color:#04140d;
     font-size:0.88rem; font-weight:800; white-space:nowrap;
     transition:filter .15s ease, transform .15s ease;
+    box-shadow:0 0 24px var(--emerald-glow);
   }
-  .nav-cta:hover{ filter:brightness(1.1); transform:translateY(-1px); }
-
+  .nav-cta:hover{ filter:brightness(1.08); transform:translateY(-1px); }
   @media (max-width: 860px){ .nav-links{ display:none; } }
 
   /* ── Hero ─────────────────────────────────────────────────────── */
+  .hero{ position:relative; overflow:hidden; padding:clamp(64px, 9vw, 110px) clamp(20px, 5vw, 48px) clamp(50px, 7vw, 80px); }
+  .glow-blob{ position:absolute; border-radius:50%; filter:blur(70px); opacity:0.3; pointer-events:none; z-index:0; }
+  .dot-glow{ position:absolute; border-radius:50%; filter:blur(4px); pointer-events:none; z-index:0; }
 
-  .hero{
-    position:relative; overflow:hidden;
-    padding:clamp(70px, 10vw, 120px) clamp(20px, 5vw, 48px) clamp(70px, 9vw, 110px);
-  }
-  .hero-inner{
-    max-width:1180px; margin:0 auto; position:relative; z-index:1;
-    display:grid; grid-template-columns:1fr auto; gap:clamp(24px, 5vw, 48px); align-items:center;
-  }
-  .hero-icon{
-    width:76px; height:76px; border-radius:18px; flex-shrink:0; margin-bottom:24px;
-    background:linear-gradient(160deg, var(--emerald), var(--emerald-dim));
-    display:flex; align-items:center; justify-content:center;
-    font-weight:900; font-size:2rem; color:#04140d;
-    box-shadow:0 0 40px var(--emerald-glow);
-  }
+  .hex-float{ position:absolute; z-index:0; pointer-events:none; filter:drop-shadow(0 0 18px var(--emerald-glow)); }
+
+  .hero-inner{ position:relative; z-index:2; max-width:760px; margin:0 auto; text-align:center; }
+  .hero-mascot{ width:96px; height:96px; margin:0 auto 28px; }
   .hero h1{
-    font-size:clamp(2.2rem, 5.4vw, 3.6rem); line-height:1.06; letter-spacing:-0.02em;
-    font-weight:900; margin-bottom:18px;
+    font-size:clamp(2.1rem, 5.2vw, 3.4rem); line-height:1.08; letter-spacing:-0.02em;
+    font-weight:900; margin-bottom:20px;
   }
   .hero p{
-    font-size:clamp(0.98rem, 1.7vw, 1.1rem); color:var(--text-dim); line-height:1.6;
-    max-width:52ch; margin-bottom:30px; font-weight:600;
+    font-size:clamp(0.98rem, 1.8vw, 1.12rem); color:var(--text-dim); line-height:1.65;
+    max-width:56ch; margin:0 auto 32px; font-weight:600;
   }
-  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .hero-ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
   .btn{
     padding:13px 26px; border-radius:26px; font-weight:800; font-size:0.94rem;
     display:inline-flex; align-items:center; gap:8px;
@@ -108,100 +97,69 @@
   .btn-secondary{ background:var(--panel-2); border:1px solid var(--border); color:var(--text); }
   .btn-secondary:hover{ border-color:var(--text-faint); transform:translateY(-2px); }
 
-  .hero-decor{ display:flex; flex-direction:column; gap:14px; }
-  .hero-hex{
-    width:64px; height:64px; position:relative;
-  }
-  .hero-hex svg{ width:100%; height:100%; filter:drop-shadow(0 0 18px var(--emerald-glow)); }
+  /* ── Wave divider ─────────────────────────────────────────────── */
+  .wave{ display:block; width:100%; position:relative; z-index:1; margin-top:-2px; }
 
-  @media (max-width: 900px){
-    .hero-inner{ grid-template-columns:1fr; }
-    .hero-decor{ display:none; }
-  }
-
-  /* ── Stats strip ──────────────────────────────────────────────── */
-
-  .stats-strip{
-    max-width:1180px; margin:0 auto; padding:0 clamp(20px, 5vw, 48px) clamp(50px, 7vw, 80px);
-    text-align:center;
-  }
-  .stats-strip h2{ font-size:clamp(1.2rem, 2.4vw, 1.5rem); font-weight:800; margin-bottom:6px; }
-  .stats-strip .sub{ color:var(--text-dim); font-size:0.94rem; margin-bottom:32px; font-weight:600; }
-  .stats-row{ display:flex; justify-content:center; gap:clamp(16px, 3vw, 28px); flex-wrap:wrap; }
-  .stat-pill{
-    background:var(--panel); border:1px solid var(--border); border-radius:14px;
-    padding:16px 22px; min-width:150px;
-  }
-  .stat-pill .num{ font-family:'JetBrains Mono'; font-size:1.4rem; font-weight:700; color:var(--emerald); }
-  .stat-pill .label{ font-size:0.76rem; color:var(--text-faint); margin-top:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
-  .live-note{
-    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:18px;
-    font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono';
-  }
+  /* ── Live stats (real data only) ──────────────────────────────── */
+  .stats-section{ background:var(--bg-2); padding:clamp(50px, 7vw, 80px) clamp(20px, 5vw, 48px); position:relative; }
+  .stats-inner{ max-width:1000px; margin:0 auto; text-align:center; }
+  .stats-inner h2{ font-size:clamp(1.3rem, 2.6vw, 1.7rem); font-weight:900; margin-bottom:8px; }
+  .stats-inner .sub{ color:var(--text-dim); font-size:0.94rem; margin-bottom:36px; font-weight:600; }
+  .stats-row{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
+  @media (max-width:760px){ .stats-row{ grid-template-columns:repeat(2, 1fr); } }
+  .stat-pill{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:22px 14px; }
+  .stat-pill .num{ font-family:'JetBrains Mono'; font-size:1.6rem; font-weight:800; color:var(--emerald); }
+  .stat-pill .label{ font-size:0.74rem; color:var(--text-faint); margin-top:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; }
+  .live-note{ display:flex; align-items:center; justify-content:center; gap:8px; margin-top:22px; font-size:0.78rem; color:var(--text-faint); font-family:'JetBrains Mono'; }
   .live-dot{ width:6px; height:6px; border-radius:50%; background:var(--text-faint); }
   .live-note.live .live-dot{ background:var(--emerald); box-shadow:0 0 6px var(--emerald); }
 
   /* ── Sections ─────────────────────────────────────────────────── */
-
-  section{ max-width:1180px; margin:0 auto; padding:clamp(50px, 7vw, 90px) clamp(20px, 5vw, 48px); }
-  .section-head{ text-align:center; max-width:600px; margin:0 auto clamp(36px, 6vw, 56px); }
+  section{ max-width:1160px; margin:0 auto; padding:clamp(56px, 7vw, 96px) clamp(20px, 5vw, 48px); position:relative; }
+  .section-head{ text-align:center; max-width:620px; margin:0 auto clamp(36px, 6vw, 56px); }
+  .section-eyebrow{ font-size:0.78rem; color:var(--emerald); font-weight:800; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:12px; }
   .section-head h2{ font-size:clamp(1.6rem, 3.4vw, 2.2rem); font-weight:900; margin-bottom:12px; letter-spacing:-0.01em; }
   .section-head p{ color:var(--text-dim); font-size:1rem; line-height:1.6; font-weight:600; }
 
-  /* ── Feature cards, rounded like Sapphire ─────────────────────── */
-
+  /* ── Feature card grid ────────────────────────────────────────── */
   .feature-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
-  .feature-card{
-    background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:26px;
-    transition:border-color .15s ease, transform .15s ease;
-  }
+  @media (max-width:720px){ .feature-grid{ grid-template-columns:1fr; } }
+  .feature-card{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:26px; transition:border-color .15s ease, transform .15s ease; }
   .feature-card:hover{ border-color:var(--emerald-dim); transform:translateY(-2px); }
-  .feature-card .icn{
-    width:36px; height:36px; border-radius:9px; margin-bottom:16px;
-    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
-    background:rgba(34,201,138,0.12); border:1px solid rgba(34,201,138,0.25);
-  }
-  .feature-card h3{ font-size:1.02rem; font-weight:800; margin-bottom:6px; }
-  .feature-card p{ font-size:0.88rem; color:var(--text-dim); line-height:1.55; margin-bottom:14px; font-weight:500; }
-  .feature-card .cta{ font-size:0.82rem; font-weight:700; color:var(--emerald); }
-  .feature-card .cta:hover{ text-decoration:underline; }
+  .feature-card .icn{ width:38px; height:38px; border-radius:10px; margin-bottom:16px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; background:rgba(39,212,148,0.12); border:1px solid rgba(39,212,148,0.25); }
+  .feature-card h3{ font-size:1.02rem; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .feature-card p{ font-size:0.88rem; color:var(--text-dim); line-height:1.55; font-weight:500; }
+  .beta-tag{ background:var(--purple); color:#fff; font-size:0.64rem; font-weight:800; padding:2px 8px; border-radius:9px; text-transform:uppercase; letter-spacing:0.03em; }
 
-  @media (max-width: 720px){ .feature-grid{ grid-template-columns:1fr; } }
-
-  /* ── Beta banner ──────────────────────────────────────────────── */
-
-  .beta-banner{
-    background:linear-gradient(120deg, rgba(139,123,240,0.1), rgba(34,201,138,0.06));
-    border:1px solid rgba(139,123,240,0.3); border-radius:16px; padding:28px clamp(20px,4vw,32px);
-    display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  /* ── Logging-style highlight (module deep-dive) ───────────────── */
+  .highlight{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px, 6vw, 60px); align-items:center; }
+  @media (max-width:900px){ .highlight{ grid-template-columns:1fr; } }
+  .highlight-list{ list-style:none; margin-top:18px; }
+  .highlight-list li{ display:flex; align-items:center; gap:10px; font-size:0.95rem; color:var(--text-dim); font-weight:700; margin-bottom:12px; }
+  .highlight-list .chev{ color:var(--emerald); }
+  .preview-stack{ position:relative; height:280px; }
+  .preview-card{
+    position:absolute; width:78%; background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.5); font-size:0.8rem;
   }
-  .beta-tag{
-    background:var(--purple); color:#fff; font-size:0.72rem; font-weight:800;
-    padding:4px 10px; border-radius:12px; text-transform:uppercase; letter-spacing:0.03em; flex-shrink:0;
-  }
-  .beta-banner h3{ font-size:1.05rem; font-weight:800; margin-bottom:4px; }
-  .beta-banner p{ font-size:0.88rem; color:var(--text-dim); font-weight:500; }
+  .preview-card .ptop{ font-family:'JetBrains Mono'; font-size:0.68rem; color:var(--text-faint); margin-bottom:6px; }
+  .preview-card .pbody{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .preview-sq{ width:28px; height:28px; border-radius:6px; flex-shrink:0; }
+  .preview-card.p1{ top:0; left:0; transform:rotate(-3deg); z-index:3; }
+  .preview-card.p2{ top:80px; left:14%; transform:rotate(2deg); z-index:2; }
+  .preview-card.p3{ top:160px; left:4%; transform:rotate(-1.5deg); z-index:1; }
 
   /* ── Command reference ────────────────────────────────────────── */
-
   .cmd-table{ border:1px solid var(--border); border-radius:16px; overflow:hidden; background:var(--panel); }
-  .cmd-row{
-    display:grid; grid-template-columns:190px 1fr; gap:24px;
-    padding:15px 22px; border-bottom:1px solid var(--border);
-    align-items:center;
-  }
+  .cmd-row{ display:grid; grid-template-columns:190px 1fr; gap:24px; padding:15px 22px; border-bottom:1px solid var(--border); align-items:center; }
   .cmd-row:last-child{ border-bottom:none; }
   .cmd-name{ font-family:'JetBrains Mono'; font-size:0.85rem; color:var(--emerald); font-weight:600; }
   .cmd-desc{ font-size:0.88rem; color:var(--text-dim); font-weight:500; }
-
-  @media (max-width: 640px){ .cmd-row{ grid-template-columns:1fr; gap:5px; } }
+  @media (max-width:640px){ .cmd-row{ grid-template-columns:1fr; gap:5px; } }
 
   /* ── Ingame callout ───────────────────────────────────────────── */
-
-  .callout{
-    display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px, 6vw, 56px); align-items:center;
-    background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:clamp(28px, 6vw, 52px);
-  }
+  .callout{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px, 6vw, 56px); align-items:center; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:clamp(28px, 6vw, 52px); }
+  @media (max-width:900px){ .callout{ grid-template-columns:1fr; } }
   .server-list{ border:1px solid var(--border); border-radius:14px; background:var(--bg-2); font-family:'JetBrains Mono'; font-size:0.82rem; overflow:hidden; }
   .server-row{ display:flex; justify-content:space-between; padding:13px 18px; border-bottom:1px solid var(--border); gap:12px; }
   .server-row:last-child{ border-bottom:none; }
@@ -209,25 +167,16 @@
   .server-count{ color:var(--text-faint); white-space:nowrap; }
   .live-dot-inline{ width:6px; height:6px; border-radius:50%; background:var(--emerald); box-shadow:0 0 6px var(--emerald); flex-shrink:0; }
 
-  @media (max-width: 900px){ .callout{ grid-template-columns:1fr; } }
-
   /* ── Final CTA ────────────────────────────────────────────────── */
-
-  .final-cta{
-    position:relative; text-align:center; padding:clamp(70px, 9vw, 110px) clamp(20px, 5vw, 48px);
-    border-top:1px solid var(--border); overflow:hidden;
-  }
+  .final-cta{ position:relative; text-align:center; padding:clamp(70px, 9vw, 110px) clamp(20px, 5vw, 48px); overflow:hidden; }
   .final-cta h2{ font-size:clamp(1.7rem, 3.6vw, 2.4rem); font-weight:900; margin-bottom:16px; letter-spacing:-0.015em; position:relative; z-index:1; }
   .final-cta p{ color:var(--text-dim); margin-bottom:32px; font-weight:600; position:relative; z-index:1; }
   .final-cta .btn{ position:relative; z-index:1; }
 
-  footer{
-    border-top:1px solid var(--border);
-    padding:28px clamp(20px, 5vw, 48px); display:flex; justify-content:space-between; align-items:center;
-    font-size:0.82rem; color:var(--text-faint); flex-wrap:wrap; gap:12px; font-weight:600;
-  }
+  footer{ border-top:1px solid var(--border); padding:28px clamp(20px, 5vw, 48px); display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; color:var(--text-faint); flex-wrap:wrap; gap:12px; font-weight:600; background:var(--bg-2); }
+  .footer-brand{ display:flex; align-items:center; gap:9px; }
+  .footer-links{ display:flex; gap:22px; flex-wrap:wrap; }
   footer a:hover{ color:var(--text-dim); }
-  .footer-links{ display:flex; gap:22px; }
 </style>
 </head>
 <body>
@@ -235,55 +184,90 @@
 <nav>
   <div class="brand">
     <div class="brand-mark">U</div>
-    Unknown
+    Unknown.gg
   </div>
   <div class="nav-links">
     <a href="dashboard.html">Dashboard</a>
     <a href="docs.html">Docs</a>
     <a href="help.html">Help</a>
   </div>
-  <a href="dashboard.html" class="nav-cta">Open dashboard</a>
+  <a href="dashboard.html" class="nav-cta">Open Dashboard</a>
 </nav>
 
 <div class="hero">
-  <div class="blob" style="width:420px;height:420px;background:var(--emerald);top:-120px;left:10%;"></div>
-  <div class="blob" style="width:340px;height:340px;background:var(--purple);top:60px;right:5%;"></div>
+  <div class="glow-blob" style="width:420px;height:420px;background:var(--emerald);top:-140px;left:8%;"></div>
+  <div class="glow-blob" style="width:320px;height:320px;background:var(--purple);top:20px;right:5%;"></div>
+  <div class="dot-glow" style="width:14px;height:14px;background:var(--emerald);top:120px;left:16%;opacity:0.5;"></div>
+  <div class="dot-glow" style="width:10px;height:10px;background:var(--emerald-bright);top:280px;right:20%;opacity:0.4;"></div>
+  <div class="dot-glow" style="width:8px;height:8px;background:var(--purple);top:60px;right:30%;opacity:0.5;"></div>
+
+  <div class="hex-float" style="width:56px;height:56px;top:40px;left:6%;transform:rotate(-8deg);opacity:0.85;">
+    <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#27d494"/></svg>
+  </div>
+  <div class="hex-float" style="width:34px;height:34px;top:180px;left:2%;transform:rotate(14deg);opacity:0.6;">
+    <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#4fe9b0"/></svg>
+  </div>
+  <div class="hex-float" style="width:64px;height:64px;top:60px;right:8%;transform:rotate(10deg);opacity:0.85;">
+    <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#8b7bf0"/></svg>
+  </div>
+  <div class="hex-float" style="width:30px;height:30px;top:230px;right:14%;transform:rotate(-16deg);opacity:0.55;">
+    <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#1a9c6b"/></svg>
+  </div>
+  <div class="hex-float" style="width:42px;height:42px;top:340px;left:14%;transform:rotate(6deg);opacity:0.5;">
+    <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#27d494"/></svg>
+  </div>
 
   <div class="hero-inner">
-    <div>
-      <div class="hero-icon">U</div>
-      <h1>Multi-purpose moderation bot.<br>Fully configurable.</h1>
-      <p>Unknown handles bans, mutes, and warnings like any good moderation bot &mdash; then goes further, running commands directly inside your live Roblox servers, right from Discord.</p>
-      <div class="hero-ctas">
-        <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
-        <a href="#features" class="btn btn-secondary">Explore Features</a>
-      </div>
+    <div class="hero-mascot">
+      <svg viewBox="0 0 120 120" width="100%" height="100%">
+        <defs>
+          <linearGradient id="mascotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4fe9b0"/>
+            <stop offset="100%" stop-color="#1a9c6b"/>
+          </linearGradient>
+        </defs>
+        <polygon points="60,4 111,32 111,88 60,116 9,88 9,32" fill="url(#mascotGrad)"/>
+        <circle cx="43" cy="54" r="7.5" fill="#062d1d"/>
+        <circle cx="77" cy="54" r="7.5" fill="#062d1d"/>
+        <path d="M40,74 Q60,90 80,74" stroke="#062d1d" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
     </div>
-
-    <div class="hero-decor">
-      <div class="hero-hex"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#22c98a"/></svg></div>
-      <div class="hero-hex" style="margin-left:30px;"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#1a9c6b"/></svg></div>
-      <div class="hero-hex"><svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" fill="#8b7bf0"/></svg></div>
+    <h1>Multi-purpose moderation bot.<br>Fully configurable.</h1>
+    <p>Unknown handles bans, mutes, and warnings like any good moderation bot &mdash; then goes further, running commands directly inside your live Roblox servers, right from Discord.</p>
+    <div class="hero-ctas">
+      <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
+      <a href="#features" class="btn btn-secondary">Explore Features</a>
     </div>
   </div>
 </div>
 
-<div class="stats-strip">
-  <h2>Trusted by <span class="underline">Unknown RNG</span>.</h2>
-  <div class="sub">Live numbers, pulled straight from the bot.</div>
-  <div class="stats-row">
-    <div class="stat-pill"><div class="num mono" id="stat-cases">&mdash;</div><div class="label">Total Cases</div></div>
-    <div class="stat-pill"><div class="num mono" id="stat-servers">&mdash;</div><div class="label">Live Servers</div></div>
-    <div class="stat-pill"><div class="num mono" id="stat-players">&mdash;</div><div class="label">Players Online</div></div>
-    <div class="stat-pill"><div class="num mono" id="stat-guilds">&mdash;</div><div class="label">Servers Protected</div></div>
+<svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" style="height:70px;">
+  <path d="M0,45 C320,90 1120,0 1440,45 L1440,90 L0,90 Z" fill="#0f1420"/>
+</svg>
+
+<div class="stats-section">
+  <div class="stats-inner">
+    <h2>Live from <span class="underline">Unknown</span>.</h2>
+    <div class="sub">Real numbers, pulled straight from the bot. Nothing here is made up.</div>
+    <div class="stats-row">
+      <div class="stat-pill"><div class="num mono" id="stat-cases">&mdash;</div><div class="label">Total Cases</div></div>
+      <div class="stat-pill"><div class="num mono" id="stat-servers">&mdash;</div><div class="label">Live Servers</div></div>
+      <div class="stat-pill"><div class="num mono" id="stat-players">&mdash;</div><div class="label">Players Online</div></div>
+      <div class="stat-pill"><div class="num mono" id="stat-guilds">&mdash;</div><div class="label">Servers Protected</div></div>
+    </div>
+    <div class="live-note" id="live-note"><span class="live-dot"></span><span id="live-status">Connecting to live stats&hellip;</span></div>
   </div>
-  <div class="live-note" id="live-note"><span class="live-dot"></span><span id="live-status">Connecting to live stats&hellip;</span></div>
 </div>
+
+<svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" style="height:70px; transform:scaleY(-1);">
+  <path d="M0,45 C320,90 1120,0 1440,45 L1440,90 L0,90 Z" fill="#0f1420"/>
+</svg>
 
 <section id="features">
   <div class="section-head">
-    <h2>Everything a moderation bot should have.</h2>
-    <p>Bans, mutes, warnings, and case logs, plus things most bots don't do at all.</p>
+    <div class="section-eyebrow">Everything Built In</div>
+    <h2>Highly configurable features.</h2>
+    <p>Every setting is adjustable from the dashboard or a single Discord command.</p>
   </div>
 
   <div class="feature-grid">
@@ -294,7 +278,7 @@
     </div>
     <div class="feature-card">
       <div class="icn">🛡️</div>
-      <h3>Warnings with Auto-Escalation</h3>
+      <h3>Auto-Escalation</h3>
       <p>Set your own thresholds &mdash; auto-kick and auto-ban after a configurable number of warnings.</p>
     </div>
     <div class="feature-card">
@@ -309,29 +293,49 @@
     </div>
     <div class="feature-card">
       <div class="icn">⌨️</div>
-      <h3>Custom Prefix Commands</h3>
+      <h3>Prefix Commands</h3>
       <p>Prefer typing <span class="mono">!ban</span> over slash commands? Set any prefix you like from the dashboard.</p>
     </div>
     <div class="feature-card">
-      <div class="icn">🎮</div>
-      <h3>Reaches Into Roblox</h3>
-      <p>Run Cmdr commands directly inside your live Roblox servers, public or private, from a single Discord command.</p>
+      <div class="icn">🧠</div>
+      <h3>AI Moderation <span class="beta-tag">Beta</span></h3>
+      <p>Flags scam links, slurs, and mass-mention spam to a review channel. Never acts on its own.</p>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="beta-banner">
-    <span class="beta-tag">Beta</span>
+<section id="logging">
+  <div class="highlight">
     <div>
-      <h3>AI Moderation</h3>
-      <p>Unknown can quietly scan messages for scam links, slurs, and mass-mention spam, then flag anything suspicious to a review channel. It never takes action on its own &mdash; a human always makes the final call.</p>
+      <div class="section-eyebrow">Moderation Log</div>
+      <h2 style="font-size:clamp(1.4rem, 3vw, 1.9rem); margin-bottom:10px; font-weight:900;">Every action, logged twice.</h2>
+      <p style="color:var(--text-dim); font-weight:600; line-height:1.6; font-size:0.95rem;">A short line for the summary channel, a full case card for the detailed log.</p>
+      <ul class="highlight-list">
+        <li><span class="chev">▸</span> Records who, what, when, and why for every case</li>
+        <li><span class="chev">▸</span> Filter by user, case ID, or action type</li>
+        <li><span class="chev">▸</span> Edit a reason after the fact without losing the original timestamp</li>
+      </ul>
+    </div>
+    <div class="preview-stack">
+      <div class="preview-card p1">
+        <div class="ptop">unknown &bull; case log</div>
+        <div class="pbody"><span>Ban issued</span><div class="preview-sq" style="background:var(--red);"></div></div>
+      </div>
+      <div class="preview-card p2">
+        <div class="ptop">unknown &bull; case log</div>
+        <div class="pbody"><span>Warning logged</span><div class="preview-sq" style="background:var(--amber);"></div></div>
+      </div>
+      <div class="preview-card p3">
+        <div class="ptop">unknown &bull; case log</div>
+        <div class="pbody"><span>Mute expired</span><div class="preview-sq" style="background:var(--emerald);"></div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="commands">
   <div class="section-head">
+    <div class="section-eyebrow">Reference</div>
     <h2>Commands</h2>
     <p>Every command respects your mod role and Discord permissions together &mdash; both need to check out.</p>
   </div>
@@ -362,30 +366,31 @@
 <section id="ingame">
   <div class="callout">
     <div>
+      <div class="section-eyebrow">The Part Most Bots Don't Do</div>
       <h2 style="font-size:clamp(1.3rem, 2.8vw, 1.8rem); margin-bottom:14px; font-weight:900;">Run commands where the game actually lives.</h2>
       <p style="color:var(--text-dim); line-height:1.6; margin-bottom:24px; font-size:0.95rem; font-weight:600;">
         <span class="mono" style="color:var(--emerald);">/ingame</span> shows every live Roblox server tied to your game, public and private, with real player counts pulled straight from the servers themselves. Pick one, type a command, and it runs through Cmdr in that exact server.
       </p>
       <a href="dashboard.html" class="btn btn-secondary">Try it from the dashboard</a>
     </div>
-    <div class="server-list">
-      <div class="server-row"><span class="server-name"><span class="live-dot-inline"></span>Public Server 1</span><span class="server-count">14 players</span></div>
-      <div class="server-row"><span class="server-name"><span class="live-dot-inline"></span>Public Server 2</span><span class="server-count">9 players</span></div>
-      <div class="server-row"><span class="server-name"><span class="live-dot-inline"></span>Reserved Server</span><span class="server-count">3 players</span></div>
-      <div class="server-row"><span class="server-name"><span class="live-dot-inline"></span>Private Server</span><span class="server-count">1 player</span></div>
+    <div class="server-list" id="live-server-list">
+      <div class="server-row"><span class="server-name" style="color:var(--text-faint);">Loading live servers&hellip;</span></div>
     </div>
   </div>
 </section>
 
 <div class="final-cta">
-  <div class="blob" style="width:400px;height:400px;background:var(--emerald);top:-100px;left:50%;transform:translateX(-50%);"></div>
-  <h2>Ready to upgrade your server?</h2>
-  <p>Add Unknown, set your mod role and log channels, and you're covered.</p>
+  <div class="glow-blob" style="width:380px;height:380px;background:var(--emerald);top:-100px;left:50%;transform:translateX(-50%);"></div>
+  <h2>Ready to configure your server?</h2>
+  <p>Set your mod role and log channels once, and you're covered.</p>
   <a href="dashboard.html" class="btn btn-primary">Open Dashboard</a>
 </div>
 
 <footer>
-  <div>Unknown &mdash; built for Unknown RNG</div>
+  <div class="footer-brand">
+    <div class="brand-mark" style="width:24px;height:24px;font-size:0.7rem;">U</div>
+    Unknown.gg &mdash; built for Unknown RNG
+  </div>
   <div class="footer-links">
     <a href="docs.html">Docs</a>
     <a href="help.html">Help</a>
@@ -396,19 +401,35 @@
 </footer>
 
 <script>
-  const STATS_API = "https://unknown-bot-production.up.railway.app/stats";
-  let statsTimer = null;
+  var STATS_API = "https://unknown-bot-production.up.railway.app/stats";
+  var statsTimer = null;
 
   function fmt(n){ return (n === undefined || n === null) ? "\u2014" : n.toLocaleString(); }
 
+  function renderServerList(servers){
+    var box = document.getElementById('live-server-list');
+    if (!servers || !servers.length) {
+      box.innerHTML = '<div class="server-row"><span class="server-name" style="color:var(--text-faint);">No live servers reporting in right now.</span></div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < Math.min(servers.length, 6); i++) {
+      var s = servers[i];
+      html += '<div class="server-row"><span class="server-name"><span class="live-dot-inline"></span>' +
+        (s.visitType || 'Public') + ' Server ' + (i + 1) + '</span>' +
+        '<span class="server-count">' + (s.players ? s.players.length : 0) + ' player(s)</span></div>';
+    }
+    box.innerHTML = html;
+  }
+
   async function loadStats(){
-    const note   = document.getElementById('live-note');
-    const status = document.getElementById('live-status');
+    var note   = document.getElementById('live-note');
+    var status = document.getElementById('live-status');
 
     try {
-      const res = await fetch(STATS_API, { cache: "no-store" });
+      var res = await fetch(STATS_API, { cache: "no-store" });
       if (!res.ok) throw new Error("bad response");
-      const data = await res.json();
+      var data = await res.json();
 
       document.getElementById('stat-cases').textContent   = fmt(data.totalCases);
       document.getElementById('stat-servers').textContent = fmt(data.liveServers);
